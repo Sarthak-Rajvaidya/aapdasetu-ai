@@ -1,77 +1,1150 @@
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login | AapdaSetu AI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/brand.css">
-  <script src="assets/config.js"></script>
-  <script src="js/api.js"></script>
-</head>
-<body class="as-hero d-flex align-items-center" style="min-height:100vh;">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="text-center mb-4">
-          <a href="index.html" class="text-decoration-none text-white fw-bold fs-4">
-            <i class="bi bi-shield-check me-2"></i>AapdaSetu AI
-          </a>
-        </div>
-        <div class="as-card p-4 p-md-5 as-fade-in">
-          <h3 class="fw-bold mb-1">Welcome back</h3>
-          <p class="as-muted mb-4">Sign in to continue your disaster-readiness training.</p>
 
-          <form id="loginForm" novalidate>
-            <div class="mb-3">
-              <label class="form-label" for="userId">User ID</label>
-              <input type="text" class="form-control" id="userId" required autocomplete="username">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="Sign in to AapdaSetu AI — an AI-powered disaster preparedness, simulation and training platform."
+  >
+
+  <meta name="theme-color" content="#060f1f">
+
+  <title>Sign In | AapdaSetu AI</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+  >
+
+  <!-- AapdaSetu Design System -->
+  <link rel="stylesheet" href="css/brand.css">
+
+  <!-- Application configuration -->
+  <script src="assets/config.js"></script>
+
+  <!-- API client -->
+  <script src="js/api.js"></script>
+
+  <style>
+    /* =========================================================================
+       AapdaSetu AI — Login Page
+       Production authentication experience
+       ========================================================================= */
+
+    :root {
+      --login-bg: #060f1f;
+      --login-panel: #0b1a30;
+      --login-panel-soft: rgba(255, 255, 255, 0.055);
+      --login-border: rgba(255, 255, 255, 0.10);
+      --login-text: #f4f8ff;
+      --login-muted: #a9bad6;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 12% 15%,
+          rgba(47, 111, 237, 0.18),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 88% 80%,
+          rgba(34, 211, 238, 0.12),
+          transparent 32%
+        ),
+        var(--login-bg);
+      color: var(--login-text);
+      overflow-x: hidden;
+    }
+
+    /* ---------------------------- Page shell ---------------------------- */
+
+    .login-page {
+      min-height: 100vh;
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .login-page::before {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      top: -240px;
+      left: -180px;
+      border-radius: 50%;
+      background: rgba(47, 111, 237, 0.10);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .login-page::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -160px;
+      bottom: -180px;
+      border-radius: 50%;
+      background: rgba(34, 211, 238, 0.07);
+      pointer-events: none;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding: 2rem 0;
+    }
+
+    /* ---------------------------- Brand panel ---------------------------- */
+
+    .login-brand-panel {
+      height: 100%;
+      min-height: 620px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3.5rem 3rem 3.5rem 1rem;
+    }
+
+    .login-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: fit-content;
+      color: #fff;
+      text-decoration: none;
+      font-family: var(--as-font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 3.5rem;
+    }
+
+    .login-brand:hover {
+      color: #fff;
+    }
+
+    .login-brand-logo {
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--as-gradient-accent);
+      box-shadow:
+        0 10px 28px rgba(47, 111, 237, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      font-size: 1.25rem;
+    }
+
+    .login-brand-ai {
+      background: var(--as-gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .login-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: fit-content;
+      margin-bottom: 1.25rem;
+      color: var(--as-cyan-400);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .login-eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--as-cyan-400);
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+    }
+
+    .login-title {
+      max-width: 580px;
+      margin-bottom: 1.25rem;
+      font-family: var(--as-font-display);
+      font-size: clamp(2.5rem, 4vw, 4.1rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: #fff;
+    }
+
+    .login-title span {
+      background: linear-gradient(
+        135deg,
+        #4f8cff 0%,
+        #22d3ee 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .login-description {
+      max-width: 520px;
+      margin-bottom: 2rem;
+      color: var(--login-muted);
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    /* ---------------------------- Capability cards ---------------------------- */
+
+    .login-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      max-width: 500px;
+    }
+
+    .login-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--login-muted);
+      font-size: 0.84rem;
+    }
+
+    .login-feature-icon {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: rgba(79, 140, 255, 0.13);
+      color: var(--as-blue-400);
+    }
+
+    /* ---------------------------- Login card ---------------------------- */
+
+    .login-card-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 470px;
+      padding: 2.25rem;
+      border: 1px solid var(--login-border);
+      border-radius: 22px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18, 35, 61, 0.96),
+          rgba(8, 20, 37, 0.98)
+        );
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.055);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .login-card-header {
+      margin-bottom: 1.8rem;
+    }
+
+    .login-card-icon {
+      width: 48px;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      border-radius: 13px;
+      background: rgba(79, 140, 255, 0.12);
+      border: 1px solid rgba(79, 140, 255, 0.18);
+      color: var(--as-blue-400);
+      font-size: 1.25rem;
+    }
+
+    .login-card-title {
+      margin: 0 0 0.4rem;
+      color: #fff;
+      font-family: var(--as-font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+    }
+
+    .login-card-subtitle {
+      margin: 0;
+      color: var(--login-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ---------------------------- Form ---------------------------- */
+
+    .login-form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .login-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-label {
+      margin: 0;
+      color: #eaf1fb;
+      font-size: 0.83rem;
+      font-weight: 600;
+    }
+
+    .login-field {
+      position: relative;
+    }
+
+    .login-field-icon {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      z-index: 3;
+      transform: translateY(-50%);
+      color: #7f94b3;
+      pointer-events: none;
+      font-size: 1rem;
+    }
+
+    .login-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 0.75rem 1rem 0.75rem 2.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 11px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.045);
+      color: #fff;
+      font-family: var(--as-font-body);
+      font-size: 0.92rem;
+      transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .login-input::placeholder {
+      color: #71839f;
+    }
+
+    .login-input:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .login-input:focus {
+      border-color: rgba(79, 140, 255, 0.8);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.11);
+    }
+
+    .login-input.is-invalid {
+      border-color: rgba(239, 68, 68, 0.75);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+    }
+
+    .login-password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.55rem;
+      z-index: 4;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-50%);
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #8194af;
+      cursor: pointer;
+      transition:
+        color 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .login-password-toggle:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .login-password-input {
+      padding-right: 3.2rem;
+    }
+
+    /* ---------------------------- Submit ---------------------------- */
+
+    .login-submit {
+      position: relative;
+      width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+      border: 0;
+      border-radius: 11px;
+      background: var(--as-gradient-accent);
+      color: #fff;
+      font-family: var(--as-font-body);
+      font-size: 0.94rem;
+      font-weight: 700;
+      box-shadow:
+        0 10px 24px rgba(47, 111, 237, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+    }
+
+    .login-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow:
+        0 14px 30px rgba(47, 111, 237, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .login-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .login-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* ---------------------------- Error ---------------------------- */
+
+    .login-error {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin: 0 0 1rem;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid rgba(239, 68, 68, 0.22);
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #ffb4b4;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .login-error i {
+      margin-top: 1px;
+      color: #f87171;
+    }
+
+    /* ---------------------------- Divider / register ---------------------------- */
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+      color: #657996;
+      font-size: 0.72rem;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .login-register {
+      margin: 0;
+      color: var(--login-muted);
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    .login-register a {
+      color: var(--as-blue-400);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-register a:hover {
+      color: var(--as-cyan-400);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ---------------------------- Security notice ---------------------------- */
+
+    .login-security {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-top: 1.4rem;
+      color: #71839f;
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .login-security i {
+      color: var(--as-green-500);
+    }
+
+    /* ---------------------------- Back link ---------------------------- */
+
+    .login-back {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--login-muted);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+
+    .login-back:hover {
+      color: #fff;
+    }
+
+    /* ---------------------------- Responsive ---------------------------- */
+
+    @media (max-width: 991.98px) {
+      .login-page {
+        align-items: flex-start;
+      }
+
+      .login-container {
+        padding-top: 4.5rem;
+        padding-bottom: 2rem;
+      }
+
+      .login-brand-panel {
+        min-height: auto;
+        padding: 1rem 0 2.5rem;
+      }
+
+      .login-brand {
+        margin-bottom: 2rem;
+      }
+
+      .login-title {
+        font-size: clamp(2.25rem, 7vw, 3.3rem);
+      }
+
+      .login-description {
+        margin-bottom: 1.5rem;
+      }
+
+      .login-features {
+        max-width: 100%;
+      }
+
+      .login-card-wrap {
+        justify-content: stretch;
+      }
+
+      .login-card {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .login-container {
+        padding: 4rem 1rem 1.5rem;
+      }
+
+      .login-brand-panel {
+        padding-bottom: 2rem;
+      }
+
+      .login-brand {
+        font-size: 1.1rem;
+        margin-bottom: 1.75rem;
+      }
+
+      .login-brand-logo {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+
+      .login-title {
+        font-size: 2.25rem;
+      }
+
+      .login-description {
+        font-size: 0.92rem;
+        line-height: 1.65;
+      }
+
+      .login-features {
+        grid-template-columns: 1fr;
+      }
+
+      .login-card {
+        padding: 1.5rem;
+        border-radius: 18px;
+      }
+
+      .login-card-title {
+        font-size: 1.45rem;
+      }
+
+      .login-back {
+        top: 1rem;
+        left: 1rem;
+      }
+    }
+
+    /* ---------------------------- Reduced motion ---------------------------- */
+
+    @media (prefers-reduced-motion: reduce) {
+      .login-input,
+      .login-submit,
+      .login-password-toggle,
+      .login-register a {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="login-page">
+
+    <!-- Back to landing page -->
+    <a
+      href="index.html"
+      class="login-back"
+      aria-label="Back to AapdaSetu AI home page"
+    >
+      <i class="bi bi-arrow-left"></i>
+      Back to home
+    </a>
+
+    <div class="container login-container">
+      <div class="row align-items-center g-5">
+
+        <!-- ================================================================
+             BRAND / PLATFORM INFORMATION
+             ================================================================ -->
+        <div class="col-lg-7">
+
+          <section class="login-brand-panel">
+
+            <a
+              href="index.html"
+              class="login-brand"
+              aria-label="AapdaSetu AI home"
+            >
+              <span class="login-brand-logo" aria-hidden="true">
+                <i class="bi bi-shield-check"></i>
+              </span>
+
+              <span>
+                AapdaSetu <span class="login-brand-ai">AI</span>
+              </span>
+            </a>
+
+            <div class="login-eyebrow">
+              <span class="login-eyebrow-dot"></span>
+              AI-powered disaster preparedness
             </div>
-            <div class="mb-3">
-              <label class="form-label" for="password">Password</label>
-              <input type="password" class="form-control" id="password" required autocomplete="current-password">
+
+            <h1 class="login-title">
+              Prepare today.
+              <br>
+              <span>Respond better tomorrow.</span>
+            </h1>
+
+            <p class="login-description">
+              Access your personalized disaster-readiness workspace with
+              structured learning, realistic emergency simulations,
+              AI-assisted guidance, and readiness tracking.
+            </p>
+
+            <div class="login-features">
+
+              <div class="login-feature">
+                <span class="login-feature-icon" aria-hidden="true">
+                  <i class="bi bi-book"></i>
+                </span>
+                <span>Structured disaster learning</span>
+              </div>
+
+              <div class="login-feature">
+                <span class="login-feature-icon" aria-hidden="true">
+                  <i class="bi bi-broadcast"></i>
+                </span>
+                <span>Realistic emergency simulations</span>
+              </div>
+
+              <div class="login-feature">
+                <span class="login-feature-icon" aria-hidden="true">
+                  <i class="bi bi-robot"></i>
+                </span>
+                <span>AI-powered safety assistance</span>
+              </div>
+
+              <div class="login-feature">
+                <span class="login-feature-icon" aria-hidden="true">
+                  <i class="bi bi-graph-up-arrow"></i>
+                </span>
+                <span>Personal readiness tracking</span>
+              </div>
+
             </div>
-            <div id="loginError" class="alert alert-danger py-2 small d-none" role="alert"></div>
-            <button type="submit" class="btn btn-as-primary w-100 py-2" id="loginBtn">
-              <span id="loginBtnText">Login</span>
-            </button>
-          </form>
-          <p class="text-center small mt-4 mb-0">
-            Don't have an account? <a href="register.html">Register</a>
-          </p>
+
+          </section>
+
         </div>
+
+        <!-- ================================================================
+             LOGIN FORM
+             ================================================================ -->
+        <div class="col-lg-5">
+
+          <div class="login-card-wrap">
+
+            <section
+              class="login-card as-fade-in"
+              aria-labelledby="loginTitle"
+            >
+
+              <!-- Card header -->
+              <header class="login-card-header">
+
+                <div class="login-card-icon" aria-hidden="true">
+                  <i class="bi bi-person-lock"></i>
+                </div>
+
+                <h2 id="loginTitle" class="login-card-title">
+                  Welcome back
+                </h2>
+
+                <p class="login-card-subtitle">
+                  Sign in to continue your AapdaSetu AI journey.
+                </p>
+
+              </header>
+
+              <!-- Login form -->
+              <form
+                id="loginForm"
+                novalidate
+                autocomplete="on"
+              >
+
+                <!-- User ID -->
+                <div class="login-form-group">
+
+                  <div class="login-label-row">
+                    <label
+                      class="login-label"
+                      for="userId"
+                    >
+                      User ID
+                    </label>
+                  </div>
+
+                  <div class="login-field">
+
+                    <i
+                      class="bi bi-person login-field-icon"
+                      aria-hidden="true"
+                    ></i>
+
+                    <input
+                      type="text"
+                      class="login-input"
+                      id="userId"
+                      name="username"
+                      placeholder="Enter your user ID"
+                      autocomplete="username"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      minlength="3"
+                      maxlength="100"
+                      required
+                      aria-required="true"
+                      aria-describedby="userIdHint"
+                    >
+
+                  </div>
+
+                  <div
+                    id="userIdHint"
+                    class="visually-hidden"
+                  >
+                    Enter the user ID associated with your AapdaSetu account.
+                  </div>
+
+                </div>
+
+                <!-- Password -->
+                <div class="login-form-group">
+
+                  <div class="login-label-row">
+
+                    <label
+                      class="login-label"
+                      for="password"
+                    >
+                      Password
+                    </label>
+
+                  </div>
+
+                  <div class="login-field">
+
+                    <i
+                      class="bi bi-lock login-field-icon"
+                      aria-hidden="true"
+                    ></i>
+
+                    <input
+                      type="password"
+                      class="login-input login-password-input"
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      autocomplete="current-password"
+                      minlength="1"
+                      maxlength="128"
+                      required
+                      aria-required="true"
+                    >
+
+                    <button
+                      type="button"
+                      class="login-password-toggle"
+                      id="passwordToggle"
+                      aria-label="Show password"
+                      aria-controls="password"
+                      aria-pressed="false"
+                    >
+                      <i
+                        class="bi bi-eye"
+                        id="passwordToggleIcon"
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <!-- Server / authentication error -->
+                <div
+                  id="loginError"
+                  class="login-error d-none"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  <i
+                    class="bi bi-exclamation-triangle-fill"
+                    aria-hidden="true"
+                  ></i>
+
+                  <span id="loginErrorText"></span>
+                </div>
+
+                <!-- Submit -->
+                <button
+                  type="submit"
+                  class="login-submit"
+                  id="loginBtn"
+                >
+                  <span id="loginBtnIcon" aria-hidden="true">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                  </span>
+
+                  <span id="loginBtnText">
+                    Sign in
+                  </span>
+                </button>
+
+              </form>
+
+              <!-- Register -->
+              <div class="login-divider" aria-hidden="true">
+                <span>NEW TO AAPDASETU?</span>
+              </div>
+
+              <p class="login-register">
+                Don't have an account?
+                <a href="register.html">
+                  Create one
+                </a>
+              </p>
+
+              <!-- Security -->
+              <div class="login-security">
+                <i
+                  class="bi bi-shield-lock-fill"
+                  aria-hidden="true"
+                ></i>
+
+                <span>
+                  Your session is protected by token-based authentication.
+                </span>
+              </div>
+
+            </section>
+
+          </div>
+
+        </div>
+
       </div>
     </div>
-  </div>
 
+  </main>
+
+  <!-- Authentication -->
   <script src="js/auth.js"></script>
+
+  <!-- Toast notifications -->
   <script src="js/toast.js"></script>
+
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const userId = document.getElementById("userId").value.trim();
-      const password = document.getElementById("password").value;
-      const errEl = document.getElementById("loginError");
-      const btn = document.getElementById("loginBtn");
-      const btnText = document.getElementById("loginBtnText");
+    (() => {
+      "use strict";
 
-      errEl.classList.add("d-none");
-      btn.disabled = true;
-      btnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+      const form = document.getElementById("loginForm");
+      const userIdInput = document.getElementById("userId");
+      const passwordInput = document.getElementById("password");
 
-      const result = await login(userId, password);
-      btn.disabled = false;
-      btnText.textContent = "Login";
+      const errorBox = document.getElementById("loginError");
+      const errorText = document.getElementById("loginErrorText");
 
-      if (result.ok) {
-        showToast("Welcome back!", "success");
-        window.location.href = "dashboard.html";
-      } else {
-        errEl.textContent = result.message || "Invalid user ID or password.";
-        errEl.classList.remove("d-none");
+      const loginButton = document.getElementById("loginBtn");
+      const loginButtonText = document.getElementById("loginBtnText");
+      const loginButtonIcon = document.getElementById("loginBtnIcon");
+
+      const passwordToggle = document.getElementById("passwordToggle");
+      const passwordToggleIcon = document.getElementById("passwordToggleIcon");
+
+      /* ---------------------------------------------------------------
+         Password visibility
+         --------------------------------------------------------------- */
+
+      passwordToggle.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          isPassword ? "Hide password" : "Show password"
+        );
+
+        passwordToggle.setAttribute(
+          "aria-pressed",
+          String(isPassword)
+        );
+
+        passwordToggleIcon.className = isPassword
+          ? "bi bi-eye-slash"
+          : "bi bi-eye";
+
+        passwordInput.focus();
+      });
+
+      /* ---------------------------------------------------------------
+         Error handling
+         --------------------------------------------------------------- */
+
+      function clearError() {
+        errorBox.classList.add("d-none");
+        errorText.textContent = "";
+
+        userIdInput.classList.remove("is-invalid");
+        passwordInput.classList.remove("is-invalid");
       }
-    });
+
+      function showError(message, field = null) {
+        errorText.textContent = message;
+        errorBox.classList.remove("d-none");
+
+        if (field === "userId") {
+          userIdInput.classList.add("is-invalid");
+          userIdInput.focus();
+        }
+
+        if (field === "password") {
+          passwordInput.classList.add("is-invalid");
+          passwordInput.focus();
+        }
+      }
+
+      /* ---------------------------------------------------------------
+         Reset validation state while typing
+         --------------------------------------------------------------- */
+
+      userIdInput.addEventListener("input", () => {
+        userIdInput.classList.remove("is-invalid");
+
+        if (!errorBox.classList.contains("d-none")) {
+          clearError();
+        }
+      });
+
+      passwordInput.addEventListener("input", () => {
+        passwordInput.classList.remove("is-invalid");
+
+        if (!errorBox.classList.contains("d-none")) {
+          clearError();
+        }
+      });
+
+      /* ---------------------------------------------------------------
+         Login submission
+         --------------------------------------------------------------- */
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        clearError();
+
+        const userId = userIdInput.value.trim();
+        const password = passwordInput.value;
+
+        /* Client-side validation */
+
+        if (!userId) {
+          showError("Please enter your user ID.", "userId");
+          return;
+        }
+
+        if (userId.length < 3) {
+          showError(
+            "Your user ID must contain at least 3 characters.",
+            "userId"
+          );
+          return;
+        }
+
+        if (!password) {
+          showError("Please enter your password.", "password");
+          return;
+        }
+
+        /* Loading state */
+
+        loginButton.disabled = true;
+
+        loginButtonIcon.innerHTML =
+          '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>';
+
+        loginButtonText.textContent = "Signing in...";
+
+        try {
+          const result = await login(userId, password);
+
+          if (result.ok) {
+
+            loginButtonIcon.innerHTML =
+              '<i class="bi bi-check-circle-fill" aria-hidden="true"></i>';
+
+            loginButtonText.textContent = "Signed in";
+
+            if (typeof showToast === "function") {
+              showToast("Welcome back!", "success");
+            }
+
+            /*
+             * Give the success state a moment to render before navigation.
+             */
+            setTimeout(() => {
+              window.location.href = "dashboard.html";
+            }, 350);
+
+            return;
+          }
+
+          showError(
+            result.message ||
+            "Unable to sign in. Please check your user ID and password."
+          );
+
+        } catch (error) {
+
+          console.error("Login error:", error);
+
+          showError(
+            "Something went wrong while signing in. Please try again."
+          );
+
+        } finally {
+
+          /*
+           * Do not reset the button after a successful login because
+           * navigation is intentionally in progress.
+           */
+          if (!localStorage.getItem("token")) {
+            loginButton.disabled = false;
+
+            loginButtonIcon.innerHTML =
+              '<i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>';
+
+            loginButtonText.textContent = "Sign in";
+          }
+        }
+      });
+
+    })();
   </script>
+
 </body>
 </html>
