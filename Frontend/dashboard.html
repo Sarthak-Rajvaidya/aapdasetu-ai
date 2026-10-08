@@ -3,121 +3,949 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="AapdaSetu AI disaster readiness command center."
+  >
+
   <title>Dashboard | AapdaSetu AI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+  >
+
+  <!-- AapdaSetu Design System -->
   <link rel="stylesheet" href="css/brand.css">
+
+  <!-- Configuration -->
   <script src="assets/config.js"></script>
+
+  <!-- API -->
   <script src="js/api.js"></script>
+
+  <!-- Authentication -->
   <script src="js/auth.js" defer></script>
+
+  <!-- Toast -->
   <script src="js/toast.js" defer></script>
+
+  <!-- Navigation -->
   <script src="js/nav.js" defer></script>
 </head>
-<body>
-<div id="as-navbar-root"></div>
 
-<section class="as-section pb-3">
-  <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
-      <div>
-        <h2 class="fw-bold mb-1">Welcome back, <span data-user-name>there</span> 👋</h2>
-        <p class="as-muted mb-0">Here's where your disaster readiness stands today.</p>
-      </div>
-    </div>
 
-    <!-- Loading skeleton -->
-    <div id="dashboardSkeleton" class="row g-4">
-      <div class="col-md-4"><div class="as-skeleton" style="height:180px;"></div></div>
-      <div class="col-md-8"><div class="as-skeleton" style="height:180px;"></div></div>
-    </div>
+<body class="as-dashboard-page">
 
-    <div id="dashboardContent" class="d-none">
-      <div class="row g-4 mb-4">
-        <!-- Readiness ring -->
-        <div class="col-md-4">
-          <div class="as-card p-4 h-100 text-center">
-            <h6 class="as-muted mb-3">Disaster Readiness Score</h6>
-            <div class="as-readiness-ring mx-auto" id="readinessRing">
-              <div>
-                <div class="fs-3 fw-bold" id="readinessOverall">0%</div>
-                <div class="small as-muted">Overall</div>
+  <!-- Navbar -->
+  <div id="as-navbar-root"></div>
+
+
+  <main class="as-dashboard-shell">
+
+    <div class="container-fluid as-dashboard-container">
+
+
+      <!-- =========================================================
+           DASHBOARD HEADER
+      ========================================================== -->
+
+      <section class="as-dashboard-header">
+
+        <div>
+
+          <div class="as-dashboard-eyebrow">
+
+            <span class="as-status-dot"></span>
+
+            READINESS COMMAND CENTER
+
+          </div>
+
+
+          <h1 class="as-dashboard-title">
+
+            Good to see you,
+            <span data-user-name>there</span>
+
+            <span class="as-wave">
+              👋
+            </span>
+
+          </h1>
+
+
+          <p class="as-dashboard-subtitle">
+
+            Track your preparedness, improve weak areas,
+            and keep building real-world response confidence.
+
+          </p>
+
+        </div>
+
+
+        <div class="as-dashboard-meta">
+
+          <span class="as-live-dot"></span>
+
+          <span>
+            Personal dashboard
+          </span>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================================================
+           LOADING SKELETON
+      ========================================================== -->
+
+      <section
+        id="dashboardSkeleton"
+        class="as-dashboard-grid"
+      >
+
+        <div class="as-skeleton as-skeleton-kpi"></div>
+
+        <div class="as-skeleton as-skeleton-kpi"></div>
+
+        <div class="as-skeleton as-skeleton-kpi"></div>
+
+        <div class="as-skeleton as-skeleton-kpi"></div>
+
+        <div class="as-skeleton as-skeleton-wide"></div>
+
+        <div class="as-skeleton as-skeleton-side"></div>
+
+      </section>
+
+
+
+      <!-- =========================================================
+           MAIN DASHBOARD
+      ========================================================== -->
+
+      <section
+        id="dashboardContent"
+        class="d-none"
+      >
+
+
+        <!-- =======================================================
+             KPI CARDS
+        ======================================================== -->
+
+        <section class="row g-3 mb-4">
+
+
+          <!-- Readiness -->
+
+          <div class="col-xl-3 col-md-6">
+
+            <div class="as-kpi-card as-kpi-primary h-100">
+
+              <div class="as-kpi-top">
+
+                <span class="as-kpi-label">
+                  Overall readiness
+                </span>
+
+                <span class="as-kpi-icon">
+
+                  <i class="bi bi-shield-check"></i>
+
+                </span>
+
               </div>
-            </div>
-            <p class="small as-muted mt-3 mb-0">
-              Equal-weighted average of knowledge, decision-making, emergency response and disaster awareness.
-            </p>
-          </div>
-        </div>
 
-        <!-- Breakdown -->
-        <div class="col-md-8">
-          <div class="as-card p-4 h-100">
-            <h6 class="as-muted mb-3">Readiness Breakdown</h6>
-            <div id="readinessBreakdown" class="d-flex flex-column gap-3"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="row g-4 mb-4">
-        <!-- Recommended training -->
-        <div class="col-lg-6">
-          <div class="as-card p-4 h-100" id="recommendedCard" style="display:none;">
-            <div class="d-flex align-items-start gap-3">
-              <div class="as-icon-tile"><i class="bi bi-lightbulb"></i></div>
-              <div>
-                <h6 class="fw-bold mb-1">Recommended Training</h6>
-                <p class="as-muted small mb-2" id="recommendationReason"></p>
-                <p class="fw-semibold mb-3" id="recommendedTraining"></p>
-                <a href="simulation.html" class="btn btn-as-dark-outline btn-sm">Continue Learning <i class="bi bi-arrow-right"></i></a>
+              <div
+                class="as-kpi-value"
+                id="statReadiness"
+              >
+                0%
               </div>
+
+
+              <div class="as-kpi-foot">
+
+                <span
+                  id="readinessStatus"
+                  class="as-kpi-status"
+                >
+                  Getting started
+                </span>
+
+              </div>
+
             </div>
-          </div>
-          <div class="as-card p-4 h-100" id="noRecommendationCard" style="display:none;">
-            <h6 class="fw-bold mb-2"><i class="bi bi-check-circle text-success me-2"></i>You're on track</h6>
-            <p class="as-muted small mb-3">No urgent gaps detected in your recent safety performance. Keep exploring new scenarios.</p>
-            <a href="simulation.html" class="btn btn-as-dark-outline btn-sm">Explore Simulations <i class="bi bi-arrow-right"></i></a>
-          </div>
-        </div>
 
-        <!-- Achievements -->
-        <div class="col-lg-6">
-          <div class="as-card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="fw-bold mb-0"><i class="bi bi-award me-2"></i>Achievements</h6>
-              <span class="as-badge-soft" id="achievementCount">0 / 0</span>
+          </div>
+
+
+
+          <!-- Quiz -->
+
+          <div class="col-xl-3 col-md-6">
+
+            <div class="as-kpi-card h-100">
+
+              <div class="as-kpi-top">
+
+                <span class="as-kpi-label">
+                  Quiz performance
+                </span>
+
+                <span class="as-kpi-icon as-icon-blue">
+
+                  <i class="bi bi-patch-question"></i>
+
+                </span>
+
+              </div>
+
+
+              <div
+                class="as-kpi-value"
+                id="statQuiz"
+              >
+                0%
+              </div>
+
+
+              <div class="as-kpi-foot">
+
+                Average score across attempts
+
+              </div>
+
             </div>
-            <p class="as-muted small mb-2">Unlocked automatically as you complete real activity.</p>
-            <div class="small" id="streakText"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="row g-4">
-        <!-- Course progress -->
-        <div class="col-lg-6">
-          <div class="as-card p-4 h-100">
-            <h6 class="fw-bold mb-3"><i class="bi bi-journal-bookmark me-2"></i>Course Progress</h6>
-            <div id="courseProgressList" class="d-flex flex-column gap-3"></div>
           </div>
-        </div>
 
-        <!-- Recent activity -->
-        <div class="col-lg-6">
-          <div class="as-card p-4 h-100">
-            <h6 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Recent Activity</h6>
-            <div id="recentActivityList" class="d-flex flex-column gap-2"></div>
+
+
+          <!-- Simulations -->
+
+          <div class="col-xl-3 col-md-6">
+
+            <div class="as-kpi-card h-100">
+
+              <div class="as-kpi-top">
+
+                <span class="as-kpi-label">
+                  Simulations
+                </span>
+
+                <span class="as-kpi-icon as-icon-cyan">
+
+                  <i class="bi bi-controller"></i>
+
+                </span>
+
+              </div>
+
+
+              <div
+                class="as-kpi-value"
+                id="statSimulations"
+              >
+                0
+              </div>
+
+
+              <div class="as-kpi-foot">
+
+                <span id="statSimulationAvg">
+                  No attempts yet
+                </span>
+
+              </div>
+
+            </div>
+
           </div>
-        </div>
-      </div>
+
+
+
+          <!-- Courses -->
+
+          <div class="col-xl-3 col-md-6">
+
+            <div class="as-kpi-card h-100">
+
+              <div class="as-kpi-top">
+
+                <span class="as-kpi-label">
+                  Courses completed
+                </span>
+
+                <span class="as-kpi-icon as-icon-green">
+
+                  <i class="bi bi-journal-check"></i>
+
+                </span>
+
+              </div>
+
+
+              <div
+                class="as-kpi-value"
+                id="statCourses"
+              >
+                0 / 0
+              </div>
+
+
+              <div
+                class="as-kpi-foot"
+                id="statActivityDays"
+              >
+                No activity recorded yet
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             READINESS + CAPABILITY
+        ======================================================== -->
+
+        <section class="row g-4 mb-4">
+
+
+          <!-- Readiness -->
+
+          <div class="col-xl-5">
+
+            <div
+              class="as-dashboard-card as-readiness-card h-100"
+            >
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    READINESS
+                  </span>
+
+                  <h2>
+                    Overall readiness
+                  </h2>
+
+                </div>
+
+
+                <span
+                  class="as-soft-badge"
+                  id="readinessBadge"
+                >
+                  0%
+                </span>
+
+              </div>
+
+
+              <div class="as-readiness-main">
+
+
+                <div
+                  class="as-readiness-ring as-readiness-ring-lg"
+                  id="readinessRing"
+                >
+
+                  <div>
+
+                    <strong id="readinessOverall">
+                      0%
+                    </strong>
+
+                    <span>
+                      overall
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+
+                <div class="as-readiness-copy">
+
+                  <strong id="readinessStatusLarge">
+                    Getting started
+                  </strong>
+
+                  <p id="readinessMessage">
+
+                    Complete a course, quiz, or simulation
+                    to establish your readiness baseline.
+
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="as-readiness-note">
+
+                <i class="bi bi-info-circle"></i>
+
+                <span>
+
+                  Calculated from knowledge,
+                  decision-making, emergency response,
+                  and disaster awareness.
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Capability -->
+
+          <div class="col-xl-7">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    CAPABILITY BREAKDOWN
+                  </span>
+
+                  <h2>
+                    Where you stand
+                  </h2>
+
+                </div>
+
+              </div>
+
+
+              <div
+                id="readinessBreakdown"
+                class="as-capability-list"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             PERFORMANCE TREND
+        ======================================================== -->
+
+        <section class="as-dashboard-card mb-4">
+
+          <div class="as-card-heading">
+
+            <div>
+
+              <span class="as-section-kicker">
+                PERFORMANCE
+              </span>
+
+              <h2>
+                Performance trend
+              </h2>
+
+            </div>
+
+
+            <span class="as-card-note">
+              Latest 30 attempts
+            </span>
+
+          </div>
+
+
+          <div class="as-chart-wrap as-chart-trend">
+
+            <canvas
+              id="performanceChart"
+            ></canvas>
+
+          </div>
+
+
+          <div
+            id="performanceEmpty"
+            class="as-empty-chart d-none"
+          >
+
+            <i class="bi bi-activity"></i>
+
+            <strong>
+              Your performance history will appear here
+            </strong>
+
+            <span>
+              Complete a quiz or simulation to start
+              building your trend.
+            </span>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             SIMULATION + CAPABILITY CHARTS
+        ======================================================== -->
+
+        <section class="row g-4 mb-4">
+
+
+          <!-- Simulation Radar -->
+
+          <div class="col-xl-7">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    SIMULATION SKILLS
+                  </span>
+
+                  <h2>
+                    Response capability
+                  </h2>
+
+                </div>
+
+
+                <span class="as-card-note">
+                  Average across simulations
+                </span>
+
+              </div>
+
+
+              <div class="as-chart-wrap as-chart-radar">
+
+                <canvas
+                  id="simulationRadar"
+                ></canvas>
+
+              </div>
+
+
+              <div
+                id="simulationEmpty"
+                class="as-empty-chart d-none"
+              >
+
+                <i class="bi bi-controller"></i>
+
+                <strong>
+                  No simulation data yet
+                </strong>
+
+                <span>
+                  Complete your first scenario to
+                  unlock this profile.
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Capability Chart -->
+
+          <div class="col-xl-5">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    READINESS PILLARS
+                  </span>
+
+                  <h2>
+                    Capability scores
+                  </h2>
+
+                </div>
+
+              </div>
+
+
+              <div class="as-chart-wrap as-chart-bars">
+
+                <canvas
+                  id="capabilityChart"
+                ></canvas>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             COURSE PROGRESS + NEXT ACTION
+        ======================================================== -->
+
+        <section class="row g-4 mb-4">
+
+
+          <!-- Course Progress -->
+
+          <div class="col-xl-7">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    TRAINING
+                  </span>
+
+                  <h2>
+                    Course progress
+                  </h2>
+
+                </div>
+
+
+                <a
+                  href="modules.html"
+                  class="as-card-link"
+                >
+
+                  View all
+
+                  <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+
+              <div
+                id="courseProgressList"
+                class="as-course-list"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Next Action -->
+
+          <div class="col-xl-5">
+
+            <div
+              class="as-dashboard-card as-next-action h-100"
+            >
+
+              <div
+                class="as-next-action-icon"
+                id="nextActionIcon"
+              >
+
+                <i class="bi bi-lightbulb"></i>
+
+              </div>
+
+
+              <span
+                class="as-section-kicker"
+                id="nextActionEyebrow"
+              >
+                RECOMMENDED NEXT
+              </span>
+
+
+              <h2 id="nextActionTitle">
+                Keep building readiness
+              </h2>
+
+
+              <p id="nextActionDescription">
+
+                Complete a training activity to receive
+                a personalized recommendation.
+
+              </p>
+
+
+              <a
+                id="nextActionButton"
+                href="simulation.html"
+                class="btn btn-as-primary"
+              >
+
+                Explore simulations
+
+                <i class="bi bi-arrow-right ms-1"></i>
+
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             ACHIEVEMENTS + ACTIVITY
+        ======================================================== -->
+
+        <section class="row g-4 mb-4">
+
+
+          <!-- Achievements -->
+
+          <div class="col-xl-5">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    PROGRESS
+                  </span>
+
+                  <h2>
+                    Achievements
+                  </h2>
+
+                </div>
+
+
+                <span
+                  class="as-soft-badge"
+                  id="achievementCount"
+                >
+                  0 / 0
+                </span>
+
+              </div>
+
+
+              <div
+                id="achievementList"
+                class="as-achievement-list"
+              ></div>
+
+
+              <div class="as-streak-box">
+
+                <span class="as-streak-icon">
+
+                  <i class="bi bi-fire"></i>
+
+                </span>
+
+
+                <div>
+
+                  <strong id="streakText">
+                    0 active days
+                  </strong>
+
+                  <span>
+                    Learning activity recorded
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Activity -->
+
+          <div class="col-xl-7">
+
+            <div class="as-dashboard-card h-100">
+
+              <div class="as-card-heading">
+
+                <div>
+
+                  <span class="as-section-kicker">
+                    CONSISTENCY
+                  </span>
+
+                  <h2>
+                    Learning activity
+                  </h2>
+
+                </div>
+
+
+                <span class="as-card-note">
+                  Last 28 days
+                </span>
+
+              </div>
+
+
+              <div
+                id="activityHeatmap"
+                class="as-heatmap"
+              ></div>
+
+
+              <div class="as-heatmap-legend">
+
+                <span>
+                  Less
+                </span>
+
+                <i class="level-0"></i>
+
+                <i class="level-1"></i>
+
+                <i class="level-2"></i>
+
+                <i class="level-3"></i>
+
+                <span>
+                  More
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- =======================================================
+             RECENT ACTIVITY
+        ======================================================== -->
+
+        <section class="as-dashboard-card mb-5">
+
+          <div class="as-card-heading">
+
+            <div>
+
+              <span class="as-section-kicker">
+                ACTIVITY
+              </span>
+
+              <h2>
+                Recent activity
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="recentActivityList"
+            class="as-activity-list"
+          ></div>
+
+        </section>
+
+
+      </section>
+
+
+
+      <!-- Error -->
+
+      <div
+        id="dashboardError"
+        class="as-dashboard-error d-none"
+      ></div>
+
+
     </div>
 
-    <div id="dashboardError" class="alert alert-danger d-none mt-3"></div>
-  </div>
-</section>
+  </main>
 
-<div id="as-footer-root"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/dashboard.js"></script>
+
+  <!-- Footer -->
+
+  <div id="as-footer-root"></div>
+
+
+
+  <!-- Bootstrap -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+
+  <!-- Chart.js -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+  ></script>
+
+
+  <!-- Dashboard -->
+
+  <script src="js/dashboard.js"></script>
+
 </body>
 </html>
