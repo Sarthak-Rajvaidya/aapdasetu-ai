@@ -1,215 +1,1024 @@
 /**
- * Shared navbar + footer for AapdaSetu AI.
- * Pages include <div id="as-navbar-root"></div> and <div id="as-footer-root"></div>.
+ * AapdaSetu AI — Shared Navigation
+ * ---------------------------------
+ * Renders the platform navbar and footer.
  *
- * The navbar renders ONE of two states based on the cached login state:
- *   - Guest:  Login / Register buttons
- *   - Signed in: avatar chip with dropdown (Dashboard, Profile, Logout)
- * Logout uses a confirmation modal instead of the browser's confirm() box.
+ * Authentication-aware:
+ *   Guest  -> Login / Register
+ *   User   -> Profile chip + dropdown + Sign out
+ *
+ * Depends on:
+ *   - js/auth.js
+ *   - Bootstrap 5 bundle
  */
 
-const _AS_LINKS = [
-  { href: "dashboard.html",    icon: "bi-speedometer2",     label: "Dashboard",      match: ["dashboard.html"] },
-  { href: "modules.html",      icon: "bi-journal-bookmark", label: "Learn",          match: ["modules.html", "quiz.html"] },
-  { href: "simulation.html",   icon: "bi-controller",       label: "Simulations",    match: ["simulation.html", "simulation-play.html"] },
-  { href: "ai-assistant.html", icon: "bi-stars",            label: "AI Assistant",   match: ["ai-assistant.html"] },
-  { href: "predictor.html",    icon: "bi-graph-up-arrow",   label: "Risk Predictor", match: ["predictor.html"] },
-];
+"use strict";
+
+
+/* ============================================================================
+   PATH HELPERS
+   ============================================================================ */
 
 function _asPrefix() {
-  const inSubfolder = ["earthquake", "flood", "tornado", "wildfire", "cyclone"].some((f) =>
-    window.location.pathname.includes(`/${f}/`)
-  );
+
+  const subfolders = [
+    "earthquake",
+    "flood",
+    "tornado",
+    "wildfire",
+    "cyclone"
+  ];
+
+  const pathname =
+    window.location.pathname;
+
+  const inSubfolder =
+    subfolders.some(
+      (folder) =>
+        pathname.includes(`/${folder}/`)
+    );
+
   return inSubfolder ? "../" : "";
 }
 
-function _asEscape(str) {
-  const d = document.createElement("div");
-  d.textContent = str == null ? "" : String(str);
-  return d.innerHTML;
+
+/* ============================================================================
+   CURRENT PAGE
+   ============================================================================ */
+
+function _asCurrentPage() {
+
+  const pathname =
+    window.location.pathname;
+
+  const page =
+    pathname.split("/").pop();
+
+  return page || "index.html";
 }
 
-function _asInitials(name) {
-  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
-  if (!parts.length) return "U";
-  const first = parts[0][0];
-  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
-  return (first + last).toUpperCase();
-}
 
-function _asRoleLabel(role) {
-  const map = { student: "Learner", elderly: "Senior learner", admin: "Administrator" };
-  return map[role] || "Learner";
-}
+/* ============================================================================
+   NAVIGATION LINK
+   ============================================================================ */
 
-function _asNavItem(link, prefix) {
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  const active = link.match.includes(current);
+function _asNavLink(
+  href,
+  icon,
+  label
+) {
+
+  const current =
+    _asCurrentPage();
+
+  const cleanHref =
+    href.replace("../", "");
+
+  const isActive =
+    current === cleanHref;
+
   return `
     <li class="nav-item">
-      <a class="nav-link${active ? " active" : ""}" href="${prefix}${link.href}"${active ? ' aria-current="page"' : ""}>
-        <i class="bi ${link.icon}" aria-hidden="true"></i><span>${link.label}</span>
+
+      <a
+        class="nav-link${isActive ? " active" : ""}"
+        href="${href}"
+        ${isActive ? 'aria-current="page"' : ""}
+      >
+
+        <i
+          class="bi ${icon}"
+          aria-hidden="true"
+        ></i>
+
+        <span>${label}</span>
+
       </a>
-    </li>`;
+
+    </li>
+  `;
 }
 
-function _asGuestActions(p) {
-  return `
-    <div class="as-nav-actions">
-      <a href="${p}login.html" class="btn btn-as-outline btn-sm">Log in</a>
-      <a href="${p}register.html" class="btn btn-as-primary btn-sm">Get started</a>
-    </div>`;
+
+/* ============================================================================
+   USER HELPERS
+   ============================================================================ */
+
+function _asGetUser() {
+
+  try {
+
+    if (typeof getCurrentUser === "function") {
+      return getCurrentUser();
+    }
+
+    const raw =
+      localStorage.getItem("user");
+
+    return raw
+      ? JSON.parse(raw)
+      : null;
+
+  } catch (error) {
+
+    console.warn(
+      "AapdaSetu: unable to read cached user.",
+      error
+    );
+
+    return null;
+  }
 }
 
-function _asUserActions(user, p) {
-  const name = user.name || user.user_id || "User";
-  return `
-    <div class="as-nav-actions">
-      <div class="dropdown as-user-dropdown">
-        <button class="as-user-chip" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                aria-label="Account menu for ${_asEscape(name)}">
-          <span class="as-avatar" aria-hidden="true">${_asEscape(_asInitials(name))}</span>
-          <span class="as-user-meta">
-            <span class="as-user-name" data-user-name>${_asEscape(name)}</span>
-            <span class="as-user-role">${_asEscape(_asRoleLabel(user.role))}</span>
-          </span>
-          <i class="bi bi-chevron-down as-chevron" aria-hidden="true"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end as-user-menu">
-          <li class="as-user-menu-header">
-            <span class="as-avatar as-avatar-lg" aria-hidden="true">${_asEscape(_asInitials(name))}</span>
-            <div>
-              <div class="fw-semibold">${_asEscape(name)}</div>
-              <div class="small text-secondary">@${_asEscape(user.user_id || "")}</div>
-            </div>
-          </li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="${p}dashboard.html"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-          <li><a class="dropdown-item" href="${p}profile.html"><i class="bi bi-person-circle me-2"></i>My profile</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li>
-            <button type="button" class="dropdown-item text-danger" data-as-logout>
-              <i class="bi bi-box-arrow-right me-2"></i>Log out
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>`;
+
+function _asInitials(user) {
+
+  if (!user) {
+    return "G";
+  }
+
+  const name =
+    String(
+      user.name ||
+      user.user_id ||
+      "User"
+    ).trim();
+
+
+  const parts =
+    name
+      .split(/\s+/)
+      .filter(Boolean);
+
+
+  if (parts.length >= 2) {
+
+    return (
+      parts[0][0] +
+      parts[parts.length - 1][0]
+    ).toUpperCase();
+
+  }
+
+
+  return name
+    .substring(0, 2)
+    .toUpperCase();
 }
 
-function _asEnsureLogoutModal() {
-  if (document.getElementById("asLogoutModal")) return;
-  const wrap = document.createElement("div");
-  wrap.innerHTML = `
-    <div class="modal fade" id="asLogoutModal" tabindex="-1" aria-labelledby="asLogoutTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content border-0 shadow-lg" style="border-radius:18px;">
-          <div class="modal-body text-center p-4">
-            <div class="mb-3" style="font-size:2rem;color:#ef4444;"><i class="bi bi-box-arrow-right"></i></div>
-            <h5 class="fw-bold mb-1" id="asLogoutTitle">Log out?</h5>
-            <p class="text-secondary small mb-4">You'll need to sign in again to continue your training.</p>
-            <div class="d-flex gap-2">
-              <button type="button" class="btn btn-light flex-fill" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger flex-fill" id="asLogoutConfirm">Log out</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  document.body.appendChild(wrap.firstElementChild);
-  document.getElementById("asLogoutConfirm").addEventListener("click", () => {
-    if (typeof logout === "function") logout();
-  });
+
+function _asRoleLabel(role) {
+
+  const roles = {
+    student: "Student",
+    elderly: "Learner",
+    admin: "Administrator"
+  };
+
+  return roles[role] ||
+    "Learner";
 }
 
-function _asBindLogout(root) {
-  root.querySelectorAll("[data-as-logout]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      _asEnsureLogoutModal();
-      if (window.bootstrap && bootstrap.Modal) {
-        bootstrap.Modal.getOrCreateInstance(document.getElementById("asLogoutModal")).show();
-      } else if (confirm("Log out of AapdaSetu AI?") && typeof logout === "function") {
-        logout();
-      }
-    });
-  });
-}
+
+/* ============================================================================
+   NAVBAR
+   ============================================================================ */
 
 function renderNavbar() {
-  const root = document.getElementById("as-navbar-root");
-  if (!root) return;
 
-  const p = _asPrefix();
-  const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+  const root =
+    document.getElementById(
+      "as-navbar-root"
+    );
+
+  if (!root) {
+    return;
+  }
+
+
+  const prefix =
+    _asPrefix();
+
 
   root.innerHTML = `
-  <nav class="navbar navbar-expand-xl as-navbar sticky-top" data-bs-theme="dark" aria-label="Main navigation">
-    <div class="container-xl">
-      <a class="navbar-brand" href="${p}index.html" aria-label="AapdaSetu AI home">
-        <span class="as-logo-badge"><i class="bi bi-shield-check" aria-hidden="true"></i></span>
-        <span class="as-brand-text">AapdaSetu <span class="as-brand-ai">AI</span></span>
-      </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#asNavCollapse"
-              aria-controls="asNavCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <nav
+      class="navbar
+             navbar-expand-lg
+             as-navbar
+             sticky-top"
+      aria-label="Primary navigation"
+    >
 
-      <div class="collapse navbar-collapse" id="asNavCollapse">
-        <ul class="navbar-nav mx-xl-auto mb-3 mb-xl-0">
-          ${_AS_LINKS.map((l) => _asNavItem(l, p)).join("")}
-        </ul>
-        ${user ? _asUserActions(user, p) : _asGuestActions(p)}
+      <div class="container-fluid px-3 px-xl-4">
+
+
+        <!-- ================================================================
+             BRAND
+             ================================================================ -->
+
+        <a
+          class="navbar-brand"
+          href="${prefix}index.html"
+          aria-label="AapdaSetu AI home"
+        >
+
+          <span
+            class="as-logo-badge"
+            aria-hidden="true"
+          >
+            <i class="bi bi-shield-check"></i>
+          </span>
+
+          <span>
+            AapdaSetu
+            <span class="as-brand-ai">AI</span>
+          </span>
+
+        </a>
+
+
+        <!-- ================================================================
+             MOBILE TOGGLER
+             ================================================================ -->
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#asNavCollapse"
+          aria-controls="asNavCollapse"
+          aria-expanded="false"
+          aria-label="Open navigation menu"
+        >
+
+          <span
+            class="navbar-toggler-icon"
+          ></span>
+
+        </button>
+
+
+        <!-- ================================================================
+             NAVIGATION
+             ================================================================ -->
+
+        <div
+          class="collapse navbar-collapse"
+          id="asNavCollapse"
+        >
+
+
+          <ul
+            class="navbar-nav
+                   mx-auto
+                   mb-2
+                   mb-lg-0"
+          >
+
+            ${_asNavLink(
+              prefix + "dashboard.html",
+              "bi-speedometer2",
+              "Dashboard"
+            )}
+
+            ${_asNavLink(
+              prefix + "modules.html",
+              "bi-journal-bookmark",
+              "Learn"
+            )}
+
+            ${_asNavLink(
+              prefix + "simulation.html",
+              "bi-broadcast",
+              "Simulations"
+            )}
+
+            ${_asNavLink(
+              prefix + "ai-assistant.html",
+              "bi-stars",
+              "AI Assistant"
+            )}
+
+            ${_asNavLink(
+              prefix + "predictor.html",
+              "bi-graph-up-arrow",
+              "Risk Predictor"
+            )}
+
+          </ul>
+
+
+          <!-- ==============================================================
+               RIGHT SIDE — GUEST
+               ============================================================== -->
+
+          <div
+            class="as-nav-actions"
+            data-guest-show
+          >
+
+            <a
+              href="${prefix}login.html"
+              class="btn btn-as-outline"
+            >
+              Sign in
+            </a>
+
+            <a
+              href="${prefix}register.html"
+              class="btn btn-as-primary"
+            >
+              Get started
+            </a>
+
+          </div>
+
+
+          <!-- ==============================================================
+               RIGHT SIDE — AUTHENTICATED USER
+               ============================================================== -->
+
+          <div
+            class="as-nav-actions"
+            data-auth-show
+            style="display:none;"
+          >
+
+            <div
+              class="dropdown as-user-dropdown"
+            >
+
+              <button
+                class="as-user-chip
+                       dropdown-toggle"
+                type="button"
+
+                id="asUserMenuButton"
+
+                data-bs-toggle="dropdown"
+
+                data-bs-display="static"
+
+                aria-expanded="false"
+
+                aria-label="Open account menu"
+              >
+
+                <!-- Avatar -->
+
+                <span
+                  class="as-avatar"
+                  data-user-initials
+                  aria-hidden="true"
+                >
+                  U
+                </span>
+
+
+                <!-- User information -->
+
+                <span class="as-user-meta">
+
+                  <span
+                    class="as-user-name"
+                    data-user-name
+                  >
+                    User
+                  </span>
+
+                  <span
+                    class="as-user-role"
+                    data-user-role
+                  >
+                    Learner
+                  </span>
+
+                </span>
+
+
+                <i
+                  class="bi bi-chevron-down as-chevron"
+                  aria-hidden="true"
+                ></i>
+
+              </button>
+
+
+              <!-- ==========================================================
+                   USER DROPDOWN
+                   ========================================================== -->
+
+              <ul
+                class="dropdown-menu
+                       dropdown-menu-end
+                       as-user-menu"
+                aria-labelledby="asUserMenuButton"
+              >
+
+                <li>
+
+                  <div
+                    class="as-user-menu-header"
+                  >
+
+                    <span
+                      class="as-avatar as-avatar-lg"
+                      data-user-initials
+                      aria-hidden="true"
+                    >
+                      U
+                    </span>
+
+                    <div
+                      class="overflow-hidden"
+                    >
+
+                      <div
+                        class="fw-semibold
+                               text-truncate"
+                        data-user-name
+                      >
+                        User
+                      </div>
+
+                      <div
+                        class="small
+                               text-white-50
+                               text-truncate"
+                        data-user-role
+                      >
+                        Learner
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </li>
+
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+
+                <li>
+
+                  <a
+                    class="dropdown-item"
+                    href="${prefix}dashboard.html"
+                  >
+
+                    <i
+                      class="bi bi-speedometer2"
+                      aria-hidden="true"
+                    ></i>
+
+                    <span>
+                      Dashboard
+                    </span>
+
+                  </a>
+
+                </li>
+
+
+                <li>
+
+                  <a
+                    class="dropdown-item"
+                    href="${prefix}profile.html"
+                  >
+
+                    <i
+                      class="bi bi-person-circle"
+                      aria-hidden="true"
+                    ></i>
+
+                    <span>
+                      My Profile
+                    </span>
+
+                  </a>
+
+                </li>
+
+
+                <li>
+
+                  <a
+                    class="dropdown-item"
+                    href="${prefix}ai-assistant.html"
+                  >
+
+                    <i
+                      class="bi bi-stars"
+                      aria-hidden="true"
+                    ></i>
+
+                    <span>
+                      AI Assistant
+                    </span>
+
+                  </a>
+
+                </li>
+
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+
+                <li>
+
+                  <button
+                    type="button"
+                    class="dropdown-item text-danger"
+                    data-as-logout
+                  >
+
+                    <i
+                      class="bi bi-box-arrow-right"
+                      aria-hidden="true"
+                    ></i>
+
+                    <span>
+                      Sign out
+                    </span>
+
+                  </button>
+
+                </li>
+
+              </ul>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
-    </div>
-  </nav>`;
 
-  _asBindLogout(root);
-  if (typeof paintUserName === "function") paintUserName();
+    </nav>
+  `;
+
+
+  /*
+   * Populate user information.
+   */
+
+  paintNavbarUser();
+
+
+  /*
+   * Logout handler.
+   */
+
+  const logoutButton =
+    root.querySelector(
+      "[data-as-logout]"
+    );
+
+
+  if (logoutButton) {
+
+    logoutButton.addEventListener(
+      "click",
+      () => {
+
+        const confirmed =
+          window.confirm(
+            "Are you sure you want to sign out of AapdaSetu AI?"
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        if (
+          typeof logout === "function"
+        ) {
+
+          logout();
+
+        } else {
+
+          localStorage.removeItem(
+            "token"
+          );
+
+          localStorage.removeItem(
+            "user"
+          );
+
+          window.location.href =
+            prefix + "login.html";
+        }
+
+      }
+    );
+
+  }
+
+
+  /*
+   * Close mobile navbar after selecting a link.
+   */
+
+  root
+    .querySelectorAll(
+      ".navbar-nav .nav-link"
+    )
+    .forEach((link) => {
+
+      link.addEventListener(
+        "click",
+        () => {
+
+          const collapseElement =
+            document.getElementById(
+              "asNavCollapse"
+            );
+
+
+          if (
+            collapseElement &&
+            window.bootstrap
+          ) {
+
+            const collapse =
+              bootstrap.Collapse.getInstance(
+                collapseElement
+              );
+
+            if (collapse) {
+              collapse.hide();
+            }
+
+          }
+
+        }
+      );
+
+    });
+
 }
+
+
+/* ============================================================================
+   USER PAINTING
+   ============================================================================ */
+
+function paintNavbarUser() {
+
+  const user =
+    _asGetUser();
+
+
+  const authElements =
+    document.querySelectorAll(
+      "[data-auth-show]"
+    );
+
+  const guestElements =
+    document.querySelectorAll(
+      "[data-guest-show]"
+    );
+
+
+  const isAuthenticated =
+    Boolean(
+      user &&
+      (
+        user.user_id ||
+        user.name
+      )
+    );
+
+
+  /*
+   * Toggle guest/auth UI.
+   */
+
+  authElements.forEach((element) => {
+
+    element.style.display =
+      isAuthenticated
+        ? ""
+        : "none";
+
+  });
+
+
+  guestElements.forEach((element) => {
+
+    element.style.display =
+      isAuthenticated
+        ? "none"
+        : "";
+
+  });
+
+
+  if (!isAuthenticated) {
+    return;
+  }
+
+
+  /*
+   * Name.
+   */
+
+  const displayName =
+    user.name ||
+    user.user_id ||
+    "User";
+
+
+  document
+    .querySelectorAll(
+      "[data-user-name]"
+    )
+    .forEach((element) => {
+
+      element.textContent =
+        displayName;
+
+  });
+
+
+  /*
+   * Role.
+   */
+
+  const role =
+    _asRoleLabel(
+      user.role
+    );
+
+
+  document
+    .querySelectorAll(
+      "[data-user-role]"
+    )
+    .forEach((element) => {
+
+      element.textContent =
+        role;
+
+  });
+
+
+  /*
+   * Initials.
+   */
+
+  const initials =
+    _asInitials(user);
+
+
+  document
+    .querySelectorAll(
+      "[data-user-initials]"
+    )
+    .forEach((element) => {
+
+      element.textContent =
+        initials;
+
+  });
+
+
+  /*
+   * Keep existing auth.js helper in sync.
+   */
+
+  if (
+    typeof paintUserName === "function"
+  ) {
+
+    paintUserName();
+
+  }
+
+}
+
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
 
 function renderFooter() {
-  const root = document.getElementById("as-footer-root");
-  if (!root) return;
-  const p = _asPrefix();
-  const year = new Date().getFullYear();
+
+  const root =
+    document.getElementById(
+      "as-footer-root"
+    );
+
+  if (!root) {
+    return;
+  }
+
+
+  const prefix =
+    _asPrefix();
+
+  const year =
+    new Date().getFullYear();
+
+
   root.innerHTML = `
-  <footer class="as-footer">
-    <div class="container">
-      <div class="row gy-4">
-        <div class="col-md-4">
-          <div class="as-footer-brand mb-2"><i class="bi bi-shield-check me-2"></i>AapdaSetu AI</div>
-          <p class="small mb-0">Learn. Simulate. Prepare. Respond.<br>An AI-powered disaster preparedness, training and simulation platform.</p>
+
+    <footer
+      class="as-footer"
+      aria-label="Footer"
+    >
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+
+          <!-- Brand -->
+
+          <div class="col-md-5">
+
+            <div
+              class="as-footer-brand mb-2"
+            >
+
+              <i
+                class="bi bi-shield-check me-2"
+                aria-hidden="true"
+              ></i>
+
+              AapdaSetu AI
+
+            </div>
+
+            <p class="small mb-2">
+
+              Learn. Simulate. Prepare. Respond.
+
+            </p>
+
+            <p class="small mb-0">
+
+              An AI-powered educational platform for
+              disaster preparedness, training and simulation.
+
+            </p>
+
+          </div>
+
+
+          <!-- Platform -->
+
+          <div class="col-6 col-md-2">
+
+            <h6 class="text-white">
+              Platform
+            </h6>
+
+            <ul class="list-unstyled small">
+
+              <li>
+                <a href="${prefix}modules.html">
+                  Learn
+                </a>
+              </li>
+
+              <li>
+                <a href="${prefix}simulation.html">
+                  Simulations
+                </a>
+              </li>
+
+              <li>
+                <a href="${prefix}predictor.html">
+                  Risk Predictor
+                </a>
+              </li>
+
+              <li>
+                <a href="${prefix}ai-assistant.html">
+                  AI Assistant
+                </a>
+              </li>
+
+            </ul>
+
+          </div>
+
+
+          <!-- Account -->
+
+          <div class="col-6 col-md-2">
+
+            <h6 class="text-white">
+              Account
+            </h6>
+
+            <ul class="list-unstyled small">
+
+              <li>
+                <a href="${prefix}dashboard.html">
+                  Dashboard
+                </a>
+              </li>
+
+              <li>
+                <a href="${prefix}profile.html">
+                  Profile
+                </a>
+              </li>
+
+              <li>
+                <a href="${prefix}login.html">
+                  Sign in
+                </a>
+              </li>
+
+            </ul>
+
+          </div>
+
+
+          <!-- Safety -->
+
+          <div class="col-md-3">
+
+            <h6 class="text-white">
+              Safety notice
+            </h6>
+
+            <p class="small mb-0">
+
+              AapdaSetu AI is an educational preparedness
+              platform. During a real emergency, always
+              follow official local authority guidance.
+
+            </p>
+
+          </div>
+
         </div>
-        <div class="col-6 col-md-2">
-          <h6 class="text-white">Platform</h6>
-          <ul class="list-unstyled small">
-            <li><a href="${p}modules.html">Learn</a></li>
-            <li><a href="${p}simulation.html">Simulations</a></li>
-            <li><a href="${p}predictor.html">Risk Predictor</a></li>
-            <li><a href="${p}ai-assistant.html">AI Assistant</a></li>
-          </ul>
+
+
+        <hr
+          class="border-secondary my-4"
+        >
+
+
+        <div
+          class="d-flex
+                 flex-column
+                 flex-md-row
+                 justify-content-between
+                 align-items-center
+                 gap-2"
+        >
+
+          <p class="small mb-0">
+
+            &copy;
+            ${year}
+            AapdaSetu AI.
+
+          </p>
+
+
+          <p class="small mb-0">
+
+            Built for disaster-preparedness education.
+
+          </p>
+
         </div>
-        <div class="col-6 col-md-3">
-          <h6 class="text-white">Account</h6>
-          <ul class="list-unstyled small">
-            <li><a href="${p}dashboard.html">Dashboard</a></li>
-            <li><a href="${p}profile.html">Profile</a></li>
-            <li><a href="${p}login.html">Log in</a></li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <h6 class="text-white">Important</h6>
-          <p class="small mb-0">AapdaSetu AI is an educational preparedness platform. It does not replace official emergency services — always follow local authority guidance in a real emergency.</p>
-        </div>
+
       </div>
-      <hr class="border-secondary my-4">
-      <p class="small mb-0 text-center">&copy; ${year} AapdaSetu AI. Built for education and disaster-preparedness training.</p>
-    </div>
-  </footer>`;
+
+    </footer>
+  `;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderNavbar();
-  renderFooter();
-});
+
+/* ============================================================================
+   INITIALIZATION
+   ============================================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderNavbar();
+
+    renderFooter();
+
+  }
+);
