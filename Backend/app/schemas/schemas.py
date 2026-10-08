@@ -177,7 +177,7 @@ class ReadinessBreakdown(BaseModel):
 
 class PerformanceTrendPoint(BaseModel):
     """
-    Single point used for the dashboard performance trend chart.
+    Single point used by the dashboard performance trend chart.
     """
 
     date: str
@@ -187,7 +187,7 @@ class PerformanceTrendPoint(BaseModel):
 
 class SimulationCapabilities(BaseModel):
     """
-    Average performance across simulation capability metrics.
+    Average simulation capability scores.
     """
 
     decision_accuracy: int
@@ -198,7 +198,7 @@ class SimulationCapabilities(BaseModel):
 
 class CapabilityScores(BaseModel):
     """
-    Overall capability scores used for the dashboard capability chart.
+    Overall capability scores displayed on the dashboard.
     """
 
     knowledge: int
@@ -209,18 +209,22 @@ class CapabilityScores(BaseModel):
 
 class ActivityHistoryPoint(BaseModel):
     """
-    Daily learning activity for the dashboard 28-day activity heatmap.
+    Daily learning activity used by the dashboard activity heatmap.
+
+    dashboard.py currently returns:
+        {
+            "date": "...",
+            "count": 0
+        }
     """
 
     date: str
-    quiz_count: int
-    simulation_count: int
-    total: int
+    count: int
 
 
 class RecentActivityItem(BaseModel):
     """
-    Recent quiz/simulation activity displayed on the dashboard.
+    Recent quiz or simulation activity.
     """
 
     type: Literal["quiz", "simulation"]
@@ -230,19 +234,20 @@ class RecentActivityItem(BaseModel):
 
 
 class DashboardOut(BaseModel):
+    # User
     name: str
 
     # Readiness
     readiness: ReadinessBreakdown
 
-    # Courses
+    # Course progress
     course_progress: List[CourseProgressOut]
 
     # Recent attempts
     recent_simulations: list
     recent_quizzes: list
 
-    # Dashboard analytics
+    # Analytics
     performance_trend: List[PerformanceTrendPoint]
     simulation_capabilities: SimulationCapabilities
     capability_scores: CapabilityScores
