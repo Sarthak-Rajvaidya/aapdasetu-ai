@@ -10,47 +10,14 @@
 
   <meta
     name="description"
-    content="AapdaSetu AI is an AI-powered disaster preparedness, learning, simulation and risk-awareness platform."
+    content="Sign in to AapdaSetu AI — an AI-powered disaster preparedness, simulation and training platform."
   >
 
-  <meta
-    name="theme-color"
-    content="#060f1f"
-  >
+  <meta name="theme-color" content="#060f1f">
 
-  <meta
-    name="robots"
-    content="index, follow"
-  >
+  <title>Sign In | AapdaSetu AI</title>
 
-  <title>
-    AapdaSetu AI | Learn. Simulate. Prepare. Respond.
-  </title>
-
-  <!-- ================================================================
-       Open Graph / Social Preview
-       ================================================================ -->
-
-  <meta
-    property="og:title"
-    content="AapdaSetu AI"
-  >
-
-  <meta
-    property="og:description"
-    content="AI-powered disaster preparedness, learning, simulations and risk awareness."
-  >
-
-  <meta
-    property="og:type"
-    content="website"
-  >
-
-
-  <!-- ================================================================
-       Bootstrap
-       ================================================================ -->
-
+  <!-- Bootstrap -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -63,167 +30,286 @@
   >
 
   <!-- AapdaSetu Design System -->
-  <link
-    rel="stylesheet"
-    href="css/brand.css"
-  >
+  <link rel="stylesheet" href="css/brand.css">
 
-  <!-- Favicon -->
-  <link
-    rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>"
-  >
+  <!-- Application configuration -->
+  <script src="assets/config.js"></script>
 
-
-  <!-- ================================================================
-       Page-level styling
-       ================================================================ -->
+  <!-- Shared API client -->
+  <script src="js/api.js"></script>
 
   <style>
+    /* =========================================================================
+       AapdaSetu AI
+       Production Login Experience
+       ========================================================================= */
 
-    /* ==============================================================
-       Homepage enhancements
-       ============================================================== */
+    :root {
+      --login-bg: #060f1f;
+      --login-bg-2: #0b1a30;
+      --login-card: rgba(12, 29, 52, 0.88);
 
-    .as-home {
+      --login-text: #f4f8ff;
+      --login-muted: #9eb0ca;
+      --login-border: rgba(255, 255, 255, 0.10);
+
+      --login-blue: #4f8cff;
+      --login-cyan: #22d3ee;
+      --login-green: #22c55e;
+      --login-red: #ef4444;
+    }
+
+    /* -------------------------------------------------------------------------
+       Page
+       ------------------------------------------------------------------------- */
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+
+      font-family: var(--as-font-body);
+
+      color: var(--login-text);
+
+      background:
+        radial-gradient(
+          circle at 12% 15%,
+          rgba(47, 111, 237, 0.20),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 88% 80%,
+          rgba(34, 211, 238, 0.12),
+          transparent 32%
+        ),
+        linear-gradient(
+          135deg,
+          #060f1f 0%,
+          #09182c 45%,
+          #0b2538 100%
+        );
+
       overflow-x: hidden;
     }
 
-    /* Skip navigation for keyboard users */
-
-    .as-skip-link {
-      position: fixed;
-      top: -100px;
-      left: 1rem;
-      z-index: 9999;
-
-      padding: 0.7rem 1rem;
-
-      border-radius: 8px;
-
-      background: #fff;
-      color: var(--as-text-primary);
-
-      font-weight: 700;
-
-      text-decoration: none;
-
-      box-shadow: var(--as-shadow-md);
-
-      transition: top 0.2s ease;
-    }
-
-    .as-skip-link:focus {
-      top: 1rem;
-    }
-
-
-    /* ==============================================================
-       Hero
-       ============================================================== */
-
-    .as-home-hero {
+    .login-page {
       position: relative;
-
-      min-height: 680px;
+      min-height: 100vh;
+      min-height: 100svh;
 
       display: flex;
       align-items: center;
 
       overflow: hidden;
-
-      background:
-        linear-gradient(
-          90deg,
-          rgba(6, 15, 31, 0.98) 0%,
-          rgba(6, 15, 31, 0.91) 36%,
-          rgba(6, 15, 31, 0.72) 63%,
-          rgba(6, 15, 31, 0.82) 100%
-        ),
-        url("assets/hero-bg.png")
-        center center / cover no-repeat;
     }
 
-    .as-home-hero::before {
+    /* Ambient background grid */
+    .login-page::before {
       content: "";
 
       position: absolute;
       inset: 0;
 
-      background:
-        radial-gradient(
-          circle at 15% 25%,
-          rgba(47, 111, 237, 0.22),
-          transparent 32%
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
         ),
-        radial-gradient(
-          circle at 80% 65%,
-          rgba(34, 211, 238, 0.13),
-          transparent 30%
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
         );
+
+      background-size: 60px 60px;
+
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 90%
+      );
 
       pointer-events: none;
     }
 
-    .as-home-hero-content {
-      position: relative;
-      z-index: 2;
+    /* Ambient glow */
+    .login-page::after {
+      content: "";
+
+      position: absolute;
+
+      width: 600px;
+      height: 600px;
+
+      right: -260px;
+      bottom: -300px;
+
+      border-radius: 50%;
+
+      background: rgba(34, 211, 238, 0.08);
+
+      filter: blur(10px);
+
+      pointer-events: none;
     }
 
-    .as-home-eyebrow {
+    .login-shell {
+      position: relative;
+      z-index: 2;
+
+      width: 100%;
+
+      padding: 2rem 0;
+    }
+
+    /* -------------------------------------------------------------------------
+       Back button
+       ------------------------------------------------------------------------- */
+
+    .login-back {
+      position: absolute;
+
+      top: 1.5rem;
+      left: 1.5rem;
+
+      z-index: 10;
+
       display: inline-flex;
       align-items: center;
+      gap: 0.45rem;
 
+      color: #91a5c2;
+
+      font-size: 0.82rem;
+      font-weight: 500;
+
+      text-decoration: none;
+
+      transition:
+        color 0.18s ease,
+        transform 0.18s ease;
+    }
+
+    .login-back:hover {
+      color: #fff;
+      transform: translateX(-2px);
+    }
+
+    /* -------------------------------------------------------------------------
+       Left brand section
+       ------------------------------------------------------------------------- */
+
+    .login-intro {
+      padding: 2rem 2rem 2rem 0;
+    }
+
+    .login-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+
+      margin-bottom: 3.5rem;
+
+      color: #fff;
+
+      font-family: var(--as-font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+
+      text-decoration: none;
+    }
+
+    .login-brand:hover {
+      color: #fff;
+    }
+
+    .login-brand-logo {
+      width: 42px;
+      height: 42px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background: var(--as-gradient-accent);
+
+      color: #fff;
+
+      box-shadow:
+        0 10px 28px rgba(47, 111, 237, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+      font-size: 1.2rem;
+    }
+
+    .login-brand-ai {
+      background: var(--as-gradient-accent);
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      color: transparent;
+    }
+
+    .login-eyebrow {
+      display: inline-flex;
+      align-items: center;
       gap: 0.55rem;
 
       margin-bottom: 1.25rem;
 
-      color: var(--as-cyan-400);
+      color: var(--login-cyan);
 
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       font-weight: 700;
 
-      letter-spacing: 0.12em;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
     }
 
-    .as-home-eyebrow-dot {
+    .login-eyebrow-dot {
       width: 7px;
       height: 7px;
 
       border-radius: 50%;
 
-      background: var(--as-cyan-400);
+      background: var(--login-cyan);
 
       box-shadow:
         0 0 0 4px rgba(34, 211, 238, 0.08),
-        0 0 16px rgba(34, 211, 238, 0.65);
+        0 0 15px rgba(34, 211, 238, 0.8);
     }
 
-    .as-home-title {
-      max-width: 760px;
+    .login-title {
+      max-width: 600px;
 
-      margin-bottom: 1.4rem;
+      margin: 0 0 1.35rem;
 
       color: #fff;
 
       font-family: var(--as-font-display);
 
-      font-size: clamp(3rem, 6vw, 5.7rem);
+      font-size: clamp(2.6rem, 4.4vw, 4.4rem);
 
       font-weight: 700;
 
-      line-height: 0.98;
+      line-height: 1.04;
 
-      letter-spacing: -0.055em;
+      letter-spacing: -0.045em;
     }
 
-    .as-home-title-gradient {
+    .login-title-highlight {
       background:
         linear-gradient(
           135deg,
-          #ffffff 0%,
-          #8db3ff 45%,
+          #6c9cff 0%,
           #22d3ee 100%
         );
 
@@ -233,260 +319,134 @@
       color: transparent;
     }
 
-    .as-home-tagline {
-      margin-bottom: 1rem;
+    .login-description {
+      max-width: 560px;
 
-      color: #d9e6f8;
+      margin: 0 0 2rem;
 
-      font-family: var(--as-font-display);
-
-      font-size: clamp(1.05rem, 2vw, 1.3rem);
-
-      font-weight: 600;
-    }
-
-    .as-home-description {
-      max-width: 650px;
-
-      margin-bottom: 2rem;
-
-      color: var(--as-text-on-dark-muted);
+      color: var(--login-muted);
 
       font-size: 1rem;
 
-      line-height: 1.8;
+      line-height: 1.75;
     }
 
+    /* -------------------------------------------------------------------------
+       Platform capabilities
+       ------------------------------------------------------------------------- */
 
-    /* Hero buttons */
+    .login-features {
+      display: grid;
 
-    .as-home-actions {
-      display: flex;
-      flex-wrap: wrap;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
 
       gap: 0.75rem;
+
+      max-width: 540px;
     }
 
-    .as-home-actions .btn {
-      min-height: 50px;
+    .login-feature {
+      display: flex;
+      align-items: center;
+
+      gap: 0.75rem;
+
+      padding: 0.8rem 0.9rem;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+      border-radius: 12px;
+
+      background:
+        rgba(255, 255, 255, 0.035);
+
+      color: #9cafc8;
+
+      font-size: 0.81rem;
+    }
+
+    .login-feature-icon {
+      width: 34px;
+      height: 34px;
+
+      flex: 0 0 34px;
 
       display: inline-flex;
       align-items: center;
       justify-content: center;
 
-      gap: 0.4rem;
+      border-radius: 9px;
 
-      padding-left: 1.3rem;
-      padding-right: 1.3rem;
-    }
-
-
-    /* ==============================================================
-       Hero platform panel
-       ============================================================== */
-
-    .as-hero-panel {
-      position: relative;
-      z-index: 2;
+      background:
+        rgba(79, 140, 255, 0.12);
 
       border:
-        1px solid rgba(255, 255, 255, 0.13);
+        1px solid rgba(79, 140, 255, 0.12);
+
+      color: var(--login-blue);
+
+      font-size: 0.95rem;
+    }
+
+    /* -------------------------------------------------------------------------
+       Login card
+       ------------------------------------------------------------------------- */
+
+    .login-card-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 455px;
+
+      padding: 2.25rem;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
 
       border-radius: 22px;
 
       background:
         linear-gradient(
           145deg,
-          rgba(18, 37, 63, 0.88),
-          rgba(6, 15, 31, 0.86)
+          rgba(18, 37, 63, 0.96),
+          rgba(7, 19, 35, 0.98)
         );
 
       box-shadow:
-        0 30px 80px rgba(0, 0, 0, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 30px 80px rgba(0, 0, 0, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.015),
+        inset 0 1px 0 rgba(255, 255, 255, 0.055);
 
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
-    .as-hero-panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Small top accent */
+    .login-card::before {
+      content: "";
 
-      padding: 1rem 1.15rem;
+      display: block;
 
-      border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
+      width: 52px;
+      height: 4px;
+
+      margin-bottom: 1.6rem;
+
+      border-radius: 999px;
 
       background:
-        rgba(255, 255, 255, 0.025);
+        linear-gradient(
+          90deg,
+          var(--login-blue),
+          var(--login-cyan)
+        );
     }
 
-    .as-hero-panel-status {
-      display: inline-flex;
-      align-items: center;
-
-      gap: 0.45rem;
-
-      color: #c8d7ea;
-
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-
-    .as-status-dot {
-      width: 7px;
-      height: 7px;
-
-      border-radius: 50%;
-
-      background: var(--as-green-500);
-
-      box-shadow:
-        0 0 0 4px rgba(34, 197, 94, 0.08),
-        0 0 12px rgba(34, 197, 94, 0.45);
-    }
-
-    .as-hero-panel-body {
-      padding: 1.3rem;
-    }
-
-    .as-hero-metric {
-      padding: 1rem;
-
-      border:
-        1px solid rgba(255, 255, 255, 0.07);
-
-      border-radius: 14px;
-
-      background:
-        rgba(255, 255, 255, 0.035);
-    }
-
-    .as-hero-metric-value {
-      margin-bottom: 0.15rem;
-
-      color: #fff;
-
-      font-family: var(--as-font-display);
-
-      font-size: 1.55rem;
-      font-weight: 700;
-    }
-
-    .as-hero-metric-label {
-      color: #8fa3be;
-
-      font-size: 0.72rem;
-    }
-
-
-    /* ==============================================================
-       Trust strip
-       ============================================================== */
-
-    .as-trust-strip {
-      position: relative;
-      z-index: 3;
-
-      margin-top: -34px;
-    }
-
-    .as-trust-inner {
-      padding: 1rem 1.25rem;
-
-      border:
-        1px solid var(--as-border);
-
-      border-radius: 16px;
-
-      background: rgba(255, 255, 255, 0.97);
-
-      box-shadow: var(--as-shadow-md);
-    }
-
-    .as-trust-item {
-      display: flex;
-      align-items: center;
-
-      gap: 0.65rem;
-
-      color: var(--as-text-muted);
-
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-
-    .as-trust-item i {
-      color: var(--as-blue-500);
-
-      font-size: 1rem;
-    }
-
-
-    /* ==============================================================
-       Section headers
-       ============================================================== */
-
-    .as-home-section-heading {
-      max-width: 700px;
-
-      margin-left: auto;
-      margin-right: auto;
-
-      text-align: center;
-    }
-
-    .as-home-section-kicker {
-      margin-bottom: 0.6rem;
-
-      color: var(--as-blue-500);
-
-      font-size: 0.75rem;
-      font-weight: 700;
-
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-
-    /* ==============================================================
-       Feature cards
-       ============================================================== */
-
-    .as-feature-card {
-      height: 100%;
-
-      padding: 1.5rem;
-
-      border:
-        1px solid var(--as-border);
-
-      border-radius: 18px;
-
-      background: #fff;
-
-      box-shadow: var(--as-shadow-sm);
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .as-feature-card:hover {
-      transform: translateY(-4px);
-
-      border-color:
-        rgba(47, 111, 237, 0.18);
-
-      box-shadow: var(--as-shadow-md);
-    }
-
-    .as-feature-icon {
+    .login-card-icon {
       width: 48px;
       height: 48px;
 
@@ -499,1563 +459,854 @@
       border-radius: 13px;
 
       background:
-        rgba(47, 111, 237, 0.09);
+        rgba(79, 140, 255, 0.10);
 
-      color: var(--as-blue-500);
+      border:
+        1px solid rgba(79, 140, 255, 0.17);
+
+      color: var(--login-blue);
 
       font-size: 1.2rem;
     }
 
-    .as-feature-card h3 {
-      margin-bottom: 0.55rem;
-
-      font-size: 1.05rem;
-    }
-
-    .as-feature-card p {
-      margin-bottom: 0;
-
-      color: var(--as-text-muted);
-
-      font-size: 0.88rem;
-
-      line-height: 1.65;
-    }
-
-
-    /* ==============================================================
-       Workflow
-       ============================================================== */
-
-    .as-workflow-step {
-      position: relative;
-
-      height: 100%;
-
-      padding: 1.25rem;
-
-      border:
-        1px solid rgba(11, 26, 48, 0.08);
-
-      border-radius: 16px;
-
-      background: #fff;
-    }
-
-    .as-workflow-number {
-      width: 34px;
-      height: 34px;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      margin-bottom: 0.9rem;
-
-      border-radius: 10px;
-
-      background:
-        rgba(47, 111, 237, 0.10);
-
-      color: var(--as-blue-500);
-
-      font-size: 0.75rem;
-      font-weight: 800;
-    }
-
-
-    /* ==============================================================
-       Simulation cards
-       ============================================================== */
-
-    .as-scenario-card {
-      height: 100%;
-
-      padding: 1.2rem;
-
-      border:
-        1px solid var(--as-border);
-
-      border-radius: 16px;
-
-      background: #fff;
-
-      box-shadow: var(--as-shadow-sm);
-
-      transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease;
-    }
-
-    .as-scenario-card:hover {
-      transform: translateY(-3px);
-
-      box-shadow: var(--as-shadow-md);
-    }
-
-    .as-scenario-icon {
-      width: 44px;
-      height: 44px;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      margin-bottom: 0.8rem;
-
-      border-radius: 12px;
-
-      background:
-        rgba(47, 111, 237, 0.08);
-
-      color: var(--as-blue-500);
-
-      font-size: 1.15rem;
-    }
-
-
-    /* ==============================================================
-       Technology section
-       ============================================================== */
-
-    .as-tech-section {
-      position: relative;
-
-      overflow: hidden;
-
-      background:
-        linear-gradient(
-          135deg,
-          #060f1f,
-          #0b1a30 55%,
-          #102a43
-        );
+    .login-card-title {
+      margin: 0 0 0.45rem;
 
       color: #fff;
+
+      font-family: var(--as-font-display);
+
+      font-size: 1.65rem;
+      font-weight: 700;
     }
 
-    .as-tech-section::before {
-      content: "";
+    .login-card-subtitle {
+      margin: 0 0 1.8rem;
 
-      position: absolute;
-      width: 500px;
-      height: 500px;
+      color: var(--login-muted);
 
-      top: -300px;
-      right: -200px;
-
-      border-radius: 50%;
-
-      background:
-        rgba(34, 211, 238, 0.08);
-
-      filter: blur(5px);
-    }
-
-    .as-tech-card {
-      height: 100%;
-
-      padding: 1.25rem;
-
-      border:
-        1px solid rgba(255, 255, 255, 0.08);
-
-      border-radius: 15px;
-
-      background:
-        rgba(255, 255, 255, 0.045);
-    }
-
-    .as-tech-card-icon {
-      color: var(--as-cyan-400);
-
-      font-size: 1.15rem;
-    }
-
-    .as-tech-card p {
-      color: var(--as-text-on-dark-muted);
-
-      font-size: 0.8rem;
+      font-size: 0.88rem;
 
       line-height: 1.6;
     }
 
+    /* -------------------------------------------------------------------------
+       Form
+       ------------------------------------------------------------------------- */
 
-    /* ==============================================================
-       Emergency disclaimer
-       ============================================================== */
+    .login-form-group {
+      margin-bottom: 1.15rem;
+    }
 
-    .as-disclaimer {
-      border-top:
-        1px solid rgba(245, 158, 11, 0.15);
+    .login-label {
+      display: block;
 
-      border-bottom:
-        1px solid rgba(245, 158, 11, 0.15);
+      margin-bottom: 0.5rem;
+
+      color: #e8eff9;
+
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .login-field {
+      position: relative;
+    }
+
+    .login-field-icon {
+      position: absolute;
+
+      top: 50%;
+      left: 1rem;
+
+      z-index: 2;
+
+      transform: translateY(-50%);
+
+      color: #7387a4;
+
+      pointer-events: none;
+    }
+
+    .login-input {
+      width: 100%;
+      min-height: 50px;
+
+      padding:
+        0.75rem
+        1rem
+        0.75rem
+        2.75rem;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
+
+      border-radius: 11px;
+
+      outline: none;
 
       background:
-        rgba(245, 158, 11, 0.055);
+        rgba(255, 255, 255, 0.045);
 
-      color: var(--as-text-muted);
+      color: #fff;
 
-      font-size: 0.78rem;
+      font-family: var(--as-font-body);
+
+      font-size: 0.9rem;
+
+      transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
     }
 
-    .as-disclaimer i {
-      color: var(--as-amber-500);
+    .login-input::placeholder {
+      color: #667b98;
     }
 
+    .login-input:hover {
+      border-color:
+        rgba(255, 255, 255, 0.18);
+    }
 
-    /* ==============================================================
-       CTA
-       ============================================================== */
+    .login-input:focus {
+      border-color:
+        rgba(79, 140, 255, 0.85);
 
-    .as-final-cta {
-      position: relative;
+      background:
+        rgba(255, 255, 255, 0.065);
 
-      overflow: hidden;
+      box-shadow:
+        0 0 0 4px
+        rgba(79, 140, 255, 0.10);
+    }
+
+    .login-input.invalid {
+      border-color:
+        rgba(239, 68, 68, 0.75);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(239, 68, 68, 0.08);
+    }
+
+    /* Password */
+    .login-password-input {
+      padding-right: 3.2rem;
+    }
+
+    .login-password-toggle {
+      position: absolute;
+
+      top: 50%;
+      right: 0.45rem;
+
+      z-index: 3;
+
+      width: 38px;
+      height: 38px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      transform: translateY(-50%);
+
+      border: 0;
+      border-radius: 8px;
+
+      background: transparent;
+
+      color: #8194ae;
+
+      cursor: pointer;
+
+      transition:
+        color 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .login-password-toggle:hover {
+      color: #fff;
+
+      background:
+        rgba(255, 255, 255, 0.07);
+    }
+
+    /* -------------------------------------------------------------------------
+       Error
+       ------------------------------------------------------------------------- */
+
+    .login-error {
+      display: flex;
+      align-items: flex-start;
+
+      gap: 0.65rem;
+
+      margin-bottom: 1rem;
+
+      padding: 0.8rem 0.9rem;
+
+      border:
+        1px solid rgba(239, 68, 68, 0.23);
+
+      border-radius: 10px;
+
+      background:
+        rgba(239, 68, 68, 0.08);
+
+      color: #ffb7b7;
+
+      font-size: 0.81rem;
+
+      line-height: 1.5;
+    }
+
+    .login-error i {
+      margin-top: 2px;
+
+      color: #f87171;
+    }
+
+    /* -------------------------------------------------------------------------
+       Submit
+       ------------------------------------------------------------------------- */
+
+    .login-submit {
+      width: 100%;
+      min-height: 52px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 0.55rem;
+
+      margin-top: 0.3rem;
+
+      border: 0;
+      border-radius: 11px;
 
       background:
         linear-gradient(
           135deg,
-          #0b1a30,
-          #122d4a
+          #2f6fed,
+          #22c6e7
         );
 
       color: #fff;
+
+      font-family: var(--as-font-body);
+
+      font-size: 0.92rem;
+      font-weight: 700;
+
+      box-shadow:
+        0 10px 25px
+        rgba(47, 111, 237, 0.25),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.18);
+
+      cursor: pointer;
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
     }
 
-    .as-final-cta::before {
+    .login-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 14px 32px
+        rgba(47, 111, 237, 0.34),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.18);
+    }
+
+    .login-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .login-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    /* -------------------------------------------------------------------------
+       Divider
+       ------------------------------------------------------------------------- */
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+
+      gap: 0.8rem;
+
+      margin: 1.5rem 0;
+
+      color: #627792;
+
+      font-size: 0.67rem;
+      font-weight: 600;
+
+      letter-spacing: 0.08em;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
       content: "";
 
-      position: absolute;
+      height: 1px;
 
-      width: 420px;
-      height: 420px;
-
-      left: -220px;
-      top: -260px;
-
-      border-radius: 50%;
+      flex: 1;
 
       background:
-        rgba(47, 111, 237, 0.14);
+        rgba(255, 255, 255, 0.08);
     }
 
-    .as-final-cta-content {
-      position: relative;
-      z-index: 2;
+    /* -------------------------------------------------------------------------
+       Register
+       ------------------------------------------------------------------------- */
+
+    .login-register {
+      margin: 0;
+
+      color: var(--login-muted);
+
+      font-size: 0.84rem;
+
+      text-align: center;
     }
 
+    .login-register a {
+      color: var(--login-blue);
 
-    /* ==============================================================
+      font-weight: 600;
+
+      text-decoration: none;
+    }
+
+    .login-register a:hover {
+      color: var(--login-cyan);
+
+      text-decoration: underline;
+
+      text-underline-offset: 3px;
+    }
+
+    /* -------------------------------------------------------------------------
+       Security
+       ------------------------------------------------------------------------- */
+
+    .login-security {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 0.45rem;
+
+      margin-top: 1.35rem;
+
+      color: #6e829e;
+
+      font-size: 0.69rem;
+
+      text-align: center;
+    }
+
+    .login-security i {
+      color: var(--login-green);
+    }
+
+    /* -------------------------------------------------------------------------
+       Animation
+       ------------------------------------------------------------------------- */
+
+    .login-animate {
+      animation:
+        loginFadeUp
+        0.55s
+        cubic-bezier(.22, 1, .36, 1)
+        both;
+    }
+
+    @keyframes loginFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* -------------------------------------------------------------------------
        Responsive
-       ============================================================== */
+       ------------------------------------------------------------------------- */
 
     @media (max-width: 991.98px) {
 
-      .as-home-hero {
-        min-height: auto;
-
-        padding-top: 5rem;
-        padding-bottom: 5rem;
-
-        background-position: 62% center;
+      .login-page {
+        align-items: flex-start;
       }
 
-      .as-home-title {
-        font-size: clamp(2.8rem, 9vw, 4.5rem);
+      .login-shell {
+        padding-top: 4.5rem;
       }
 
-      .as-hero-panel {
-        margin-top: 1rem;
+      .login-intro {
+        padding: 1rem 0 2rem;
       }
 
-      .as-trust-strip {
-        margin-top: -24px;
+      .login-brand {
+        margin-bottom: 2rem;
+      }
+
+      .login-title {
+        font-size: clamp(2.4rem, 7vw, 3.5rem);
+      }
+
+      .login-description {
+        max-width: 650px;
+      }
+
+      .login-card-container {
+        justify-content: stretch;
+      }
+
+      .login-card {
+        max-width: none;
       }
     }
 
     @media (max-width: 575.98px) {
 
-      .as-home-hero {
-        padding-top: 4rem;
-        padding-bottom: 4rem;
+      .login-shell {
+        padding:
+          4rem
+          1rem
+          1.5rem;
       }
 
-      .as-home-title {
-        font-size: 2.75rem;
+      .login-back {
+        top: 1rem;
+        left: 1rem;
       }
 
-      .as-home-description {
+      .login-intro {
+        padding-bottom: 1.5rem;
+      }
+
+      .login-brand {
+        font-size: 1.1rem;
+      }
+
+      .login-brand-logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .login-title {
+        font-size: 2.25rem;
+      }
+
+      .login-description {
         font-size: 0.9rem;
       }
 
-      .as-home-actions {
-        flex-direction: column;
+      .login-features {
+        grid-template-columns: 1fr;
       }
 
-      .as-home-actions .btn {
-        width: 100%;
+      .login-card {
+        padding: 1.5rem;
+
+        border-radius: 18px;
       }
 
-      .as-trust-inner {
-        padding: 1rem;
-      }
-
-      .as-trust-item {
-        font-size: 0.76rem;
+      .login-card-title {
+        font-size: 1.45rem;
       }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+
+      .login-animate {
+        animation: none;
+      }
+
+      .login-input,
+      .login-submit,
+      .login-password-toggle,
+      .login-back {
+        transition: none;
+      }
+    }
   </style>
-
-
-  <!-- ================================================================
-       Application configuration
-       ================================================================ -->
-
-  <script src="assets/config.js"></script>
-
-  <!-- API client -->
-  <script src="js/api.js"></script>
-
-  <!-- Authentication -->
-  <script src="js/auth.js" defer></script>
-
-  <!-- Toast system -->
-  <script src="js/toast.js" defer></script>
-
-  <!-- Shared navigation -->
-  <script src="js/nav.js" defer></script>
-
 </head>
 
+<body>
 
-<body class="as-home">
+  <main class="login-page">
 
-  <!-- ================================================================
-       Accessibility
-       ================================================================ -->
-
-  <a
-    href="#main-content"
-    class="as-skip-link"
-  >
-    Skip to main content
-  </a>
-
-
-  <!-- ================================================================
-       NAVBAR
-       Generated by js/nav.js
-       ================================================================ -->
-
-  <div id="as-navbar-root"></div>
-
-
-  <!-- ================================================================
-       MAIN CONTENT
-       ================================================================ -->
-
-  <main id="main-content">
-
-
-    <!-- ==============================================================
-         HERO
-         ============================================================== -->
-
-    <section
-      class="as-home-hero"
-      aria-labelledby="hero-title"
+    <!-- Back to home -->
+    <a
+      href="index.html"
+      class="login-back"
+      aria-label="Back to AapdaSetu AI home"
     >
+      <i class="bi bi-arrow-left"></i>
+      Back to home
+    </a>
 
-      <div class="container">
+    <div class="container login-shell">
 
-        <div class="row align-items-center g-5">
+      <div class="row align-items-center g-5">
 
-          <!-- Hero copy -->
+        <!-- ===================================================================
+             LEFT — BRAND / PLATFORM
+             =================================================================== -->
 
-          <div class="col-lg-7">
+        <div class="col-lg-7">
 
-            <div class="as-home-hero-content as-fade-in">
+          <section class="login-intro login-animate">
 
-              <div class="as-home-eyebrow">
+            <!-- Brand -->
+            <a
+              href="index.html"
+              class="login-brand"
+              aria-label="AapdaSetu AI home"
+            >
+
+              <span
+                class="login-brand-logo"
+                aria-hidden="true"
+              >
+                <i class="bi bi-shield-check"></i>
+              </span>
+
+              <span>
+                AapdaSetu
+                <span class="login-brand-ai">AI</span>
+              </span>
+
+            </a>
+
+            <!-- Eyebrow -->
+            <div class="login-eyebrow">
+
+              <span
+                class="login-eyebrow-dot"
+                aria-hidden="true"
+              ></span>
+
+              AI-powered disaster preparedness
+
+            </div>
+
+            <!-- Main heading -->
+            <h1 class="login-title">
+
+              Prepare today.
+              <br>
+
+              <span class="login-title-highlight">
+                Respond better tomorrow.
+              </span>
+
+            </h1>
+
+            <!-- Description -->
+            <p class="login-description">
+              Build practical disaster-readiness skills through
+              structured learning, realistic emergency simulations,
+              AI-assisted guidance, and personalized readiness tracking.
+            </p>
+
+            <!-- Capabilities -->
+            <div class="login-features">
+
+              <div class="login-feature">
 
                 <span
-                  class="as-home-eyebrow-dot"
+                  class="login-feature-icon"
                   aria-hidden="true"
-                ></span>
+                >
+                  <i class="bi bi-book"></i>
+                </span>
 
-                AI-powered disaster preparedness
+                <span>
+                  Structured disaster learning
+                </span>
 
               </div>
 
+              <div class="login-feature">
 
-              <h1
-                id="hero-title"
-                class="as-home-title"
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
+                  <i class="bi bi-broadcast"></i>
+                </span>
+
+                <span>
+                  Emergency simulations
+                </span>
+
+              </div>
+
+              <div class="login-feature">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
+                  <i class="bi bi-robot"></i>
+                </span>
+
+                <span>
+                  AI safety assistance
+                </span>
+
+              </div>
+
+              <div class="login-feature">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
+                  <i class="bi bi-graph-up-arrow"></i>
+                </span>
+
+                <span>
+                  Readiness tracking
+                </span>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+        <!-- ===================================================================
+             RIGHT — LOGIN
+             =================================================================== -->
+
+        <div class="col-lg-5">
+
+          <div class="login-card-container">
+
+            <section
+              class="login-card login-animate"
+              aria-labelledby="loginTitle"
+              style="animation-delay: 80ms;"
+            >
+
+              <!-- Card icon -->
+              <div
+                class="login-card-icon"
+                aria-hidden="true"
+              >
+                <i class="bi bi-person-lock"></i>
+              </div>
+
+              <!-- Heading -->
+              <h2
+                id="loginTitle"
+                class="login-card-title"
+              >
+                Welcome back
+              </h2>
+
+              <p class="login-card-subtitle">
+                Sign in to continue to your AapdaSetu AI
+                readiness workspace.
+              </p>
+
+
+              <!-- =============================================================
+                   LOGIN FORM
+                   ============================================================= -->
+
+              <form
+                id="loginForm"
+                novalidate
+                autocomplete="on"
               >
 
-                Prepare with
-                <span class="as-home-title-gradient">
-                  purpose.
-                </span>
+                <!-- User ID -->
+                <div class="login-form-group">
 
-                <br>
-
-                Respond with
-                <span class="as-home-title-gradient">
-                  confidence.
-                </span>
-
-              </h1>
-
-
-              <p class="as-home-tagline">
-                Learn. Simulate. Prepare. Respond.
-              </p>
-
-
-              <p class="as-home-description">
-                AapdaSetu AI combines structured disaster education,
-                decision-based emergency simulations, machine-learning
-                risk awareness and a domain-focused AI assistant into one
-                connected preparedness platform.
-              </p>
-
-
-              <div class="as-home-actions">
-
-                <a
-                  href="modules.html"
-                  class="btn btn-as-primary btn-lg"
-                >
-                  <i
-                    class="bi bi-play-circle-fill"
-                    aria-hidden="true"
-                  ></i>
-
-                  Start Training
-                </a>
-
-
-                <a
-                  href="simulation.html"
-                  class="btn btn-as-outline btn-lg"
-                >
-                  <i
-                    class="bi bi-broadcast"
-                    aria-hidden="true"
-                  ></i>
-
-                  Explore Simulations
-                </a>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- Hero platform panel -->
-
-          <div class="col-lg-5">
-
-            <div class="as-hero-panel">
-
-              <div class="as-hero-panel-header">
-
-                <div class="d-flex align-items-center gap-2">
-
-                  <span
-                    class="as-logo-badge"
-                    style="
-                      width:32px;
-                      height:32px;
-                      border-radius:9px;
-                    "
+                  <label
+                    class="login-label"
+                    for="userId"
                   >
+                    User ID
+                  </label>
+
+                  <div class="login-field">
+
                     <i
-                      class="bi bi-shield-check"
+                      class="bi bi-person login-field-icon"
                       aria-hidden="true"
                     ></i>
+
+                    <input
+                      type="text"
+                      class="login-input"
+                      id="userId"
+                      name="username"
+                      placeholder="Enter your user ID"
+                      autocomplete="username"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      minlength="3"
+                      maxlength="100"
+                      required
+                      aria-required="true"
+                    >
+
+                  </div>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="login-form-group">
+
+                  <label
+                    class="login-label"
+                    for="password"
+                  >
+                    Password
+                  </label>
+
+                  <div class="login-field">
+
+                    <i
+                      class="bi bi-lock login-field-icon"
+                      aria-hidden="true"
+                    ></i>
+
+                    <input
+                      type="password"
+                      class="login-input login-password-input"
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      autocomplete="current-password"
+                      maxlength="128"
+                      required
+                      aria-required="true"
+                    >
+
+                    <button
+                      type="button"
+                      class="login-password-toggle"
+                      id="passwordToggle"
+                      aria-label="Show password"
+                      aria-controls="password"
+                      aria-pressed="false"
+                    >
+
+                      <i
+                        class="bi bi-eye"
+                        id="passwordToggleIcon"
+                        aria-hidden="true"
+                      ></i>
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Error -->
+                <div
+                  id="loginError"
+                  class="login-error d-none"
+                  role="alert"
+                  aria-live="assertive"
+                >
+
+                  <i
+                    class="bi bi-exclamation-triangle-fill"
+                    aria-hidden="true"
+                  ></i>
+
+                  <span id="loginErrorText"></span>
+
+                </div>
+
+
+                <!-- Submit -->
+                <button
+                  type="submit"
+                  class="login-submit"
+                  id="loginBtn"
+                >
+
+                  <span id="loginBtnIcon" aria-hidden="true">
+                    <i class="bi bi-box-arrow-in-right"></i>
                   </span>
 
-                  <div>
+                  <span id="loginBtnText">
+                    Sign in
+                  </span>
 
-                    <div
-                      class="fw-semibold"
-                      style="font-size:.84rem;"
-                    >
-                      AapdaSetu AI
-                    </div>
+                </button>
 
-                    <div
-                      style="
-                        color:#7890ad;
-                        font-size:.65rem;
-                      "
-                    >
-                      Preparedness workspace
-                    </div>
+              </form>
 
-                  </div>
 
-                </div>
-
-
-                <div class="as-hero-panel-status">
-
-                  <span
-                    class="as-status-dot"
-                    aria-hidden="true"
-                  ></span>
-
-                  Platform active
-
-                </div>
-
-              </div>
-
-
-              <div class="as-hero-panel-body">
-
-                <div class="row g-3">
-
-                  <div class="col-6">
-
-                    <div class="as-hero-metric">
-
-                      <div class="as-hero-metric-value">
-                        5
-                      </div>
-
-                      <div class="as-hero-metric-label">
-                        Disaster scenarios
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="col-6">
-
-                    <div class="as-hero-metric">
-
-                      <div class="as-hero-metric-value">
-                        4
-                      </div>
-
-                      <div class="as-hero-metric-label">
-                        Core learning areas
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="col-6">
-
-                    <div class="as-hero-metric">
-
-                      <div class="as-hero-metric-value">
-                        AI
-                      </div>
-
-                      <div class="as-hero-metric-label">
-                        Safety assistance
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="col-6">
-
-                    <div class="as-hero-metric">
-
-                      <div class="as-hero-metric-value">
-                        ML
-                      </div>
-
-                      <div class="as-hero-metric-label">
-                        Risk awareness
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                <div
-                  class="mt-3 p-3"
-                  style="
-                    border:
-                      1px solid rgba(255,255,255,.07);
-                    border-radius:13px;
-                    background:rgba(255,255,255,.025);
-                  "
-                >
-
-                  <div
-                    class="d-flex
-                           align-items-center
-                           gap-2
-                           mb-2"
-                  >
-
-                    <i
-                      class="bi bi-shield-lock-fill"
-                      style="color:var(--as-cyan-400);"
-                      aria-hidden="true"
-                    ></i>
-
-                    <span
-                      class="fw-semibold"
-                      style="font-size:.78rem;"
-                    >
-                      Readiness journey
-                    </span>
-
-                  </div>
-
-                  <div
-                    class="d-flex
-                           justify-content-between
-                           small"
-                    style="color:#8da2be;"
-                  >
-
-                    <span>
-                      Learn
-                    </span>
-
-                    <i
-                      class="bi bi-arrow-right"
-                      aria-hidden="true"
-                    ></i>
-
-                    <span>
-                      Simulate
-                    </span>
-
-                    <i
-                      class="bi bi-arrow-right"
-                      aria-hidden="true"
-                    ></i>
-
-                    <span>
-                      Improve
-                    </span>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         TRUST / PRODUCT POSITIONING
-         ============================================================== -->
-
-    <section
-      class="as-trust-strip"
-      aria-label="Platform capabilities"
-    >
-
-      <div class="container">
-
-        <div class="as-trust-inner">
-
-          <div class="row g-3 align-items-center">
-
-            <div class="col-md-3">
-
-              <div class="as-trust-item">
-
-                <i
-                  class="bi bi-book"
-                  aria-hidden="true"
-                ></i>
-
-                Structured learning
-
-              </div>
-
-            </div>
-
-
-            <div class="col-md-3">
-
-              <div class="as-trust-item">
-
-                <i
-                  class="bi bi-broadcast"
-                  aria-hidden="true"
-                ></i>
-
-                Decision simulations
-
-              </div>
-
-            </div>
-
-
-            <div class="col-md-3">
-
-              <div class="as-trust-item">
-
-                <i
-                  class="bi bi-robot"
-                  aria-hidden="true"
-                ></i>
-
-                AI safety assistance
-
-              </div>
-
-            </div>
-
-
-            <div class="col-md-3">
-
-              <div class="as-trust-item">
-
-                <i
-                  class="bi bi-graph-up-arrow"
-                  aria-hidden="true"
-                ></i>
-
-                Readiness tracking
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         WHY AAPDASETU
-         ============================================================== -->
-
-    <section
-      class="as-section"
-      aria-labelledby="why-title"
-    >
-
-      <div class="container">
-
-        <div class="as-home-section-heading mb-5">
-
-          <div class="as-home-section-kicker">
-            One connected platform
-          </div>
-
-          <h2
-            id="why-title"
-            class="fw-bold mb-3"
-          >
-            From learning to real decisions
-          </h2>
-
-          <p class="as-muted mb-0">
-            AapdaSetu is designed as a preparedness workflow,
-            not simply a collection of quizzes and static content.
-          </p>
-
-        </div>
-
-
-        <div class="row g-4">
-
-          <!-- Learn -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-journal-bookmark"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Learn
-              </h3>
-
-              <p>
-                Structured disaster courses with objectives,
-                safety guidance, checklists and knowledge checks.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <!-- Simulate -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-controller"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Simulate
-              </h3>
-
-              <p>
-                Practice emergency decisions through scenario-based
-                simulations where choices affect the outcome.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <!-- Predict -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-graph-up-arrow"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Assess
-              </h3>
-
-              <p>
-                Explore machine-learning based risk awareness using
-                environmental and disaster-related indicators.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <!-- AI -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-stars"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Ask AI
-              </h3>
-
-              <p>
-                Get domain-focused disaster guidance through an
-                AI assistant backed by a dedicated safety knowledge base.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <!-- Track -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-speedometer2"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Track
-              </h3>
-
-              <p>
-                Monitor your disaster readiness through actual
-                learning, simulation and assessment activity.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <!-- Achieve -->
-
-          <div class="col-md-6 col-lg-4">
-
-            <article class="as-feature-card">
-
-              <div class="as-feature-icon">
-                <i
-                  class="bi bi-award"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h3>
-                Achieve
-              </h3>
-
-              <p>
-                Build measurable progress through completed learning,
-                simulations, quizzes and readiness milestones.
-              </p>
-
-            </article>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         HOW IT WORKS
-         ============================================================== -->
-
-    <section
-      class="as-section"
-      style="background:var(--as-surface);"
-      aria-labelledby="workflow-title"
-    >
-
-      <div class="container">
-
-        <div class="as-home-section-heading mb-5">
-
-          <div class="as-home-section-kicker">
-            Preparedness workflow
-          </div>
-
-          <h2
-            id="workflow-title"
-            class="fw-bold mb-3"
-          >
-            A simple path to better readiness
-          </h2>
-
-        </div>
-
-
-        <div class="row g-4">
-
-          <div class="col-md-6 col-lg-3">
-
-            <div class="as-workflow-step">
-
-              <div class="as-workflow-number">
-                01
-              </div>
-
-              <h5>
-                Register & assess
-              </h5>
-
-              <p class="as-muted small mb-0">
-                Create your account and establish your starting
-                preparedness profile.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-3">
-
-            <div class="as-workflow-step">
-
-              <div class="as-workflow-number">
-                02
-              </div>
-
-              <h5>
-                Learn
-              </h5>
-
-              <p class="as-muted small mb-0">
-                Complete structured disaster learning modules
-                and knowledge checks.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-3">
-
-            <div class="as-workflow-step">
-
-              <div class="as-workflow-number">
-                03
-              </div>
-
-              <h5>
-                Simulate
-              </h5>
-
-              <p class="as-muted small mb-0">
-                Apply what you learned in realistic decision-based
-                emergency scenarios.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-3">
-
-            <div class="as-workflow-step">
-
-              <div class="as-workflow-number">
-                04
-              </div>
-
-              <h5>
-                Track & improve
-              </h5>
-
-              <p class="as-muted small mb-0">
-                Review your performance and identify areas that
-                need additional preparation.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         SIMULATIONS
-         ============================================================== -->
-
-    <section
-      class="as-section"
-      aria-labelledby="simulation-title"
-    >
-
-      <div class="container">
-
-        <div class="as-home-section-heading mb-5">
-
-          <div class="as-home-section-kicker">
-            Scenario training
-          </div>
-
-          <h2
-            id="simulation-title"
-            class="fw-bold mb-3"
-          >
-            Practice before the emergency
-          </h2>
-
-          <p class="as-muted mb-0">
-            Explore decision-driven scenarios designed to turn
-            theoretical safety knowledge into practical response habits.
-          </p>
-
-        </div>
-
-
-        <div class="row g-3">
-
-          <div class="col-md-6 col-lg">
-
-            <article class="as-scenario-card">
-
-              <div class="as-scenario-icon">
-                <i
-                  class="bi bi-globe-americas"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Seismic Shield
-              </h6>
-
-              <p class="small as-muted mb-0">
-                Earthquake preparedness
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg">
-
-            <article class="as-scenario-card">
-
-              <div class="as-scenario-icon">
-                <i
-                  class="bi bi-water"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Rising Waters
-              </h6>
-
-              <p class="small as-muted mb-0">
-                Flood response
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg">
-
-            <article class="as-scenario-card">
-
-              <div class="as-scenario-icon">
-                <i
-                  class="bi bi-fire"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Fireline
-              </h6>
-
-              <p class="small as-muted mb-0">
-                Wildfire awareness
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg">
-
-            <article class="as-scenario-card">
-
-              <div class="as-scenario-icon">
-                <i
-                  class="bi bi-tornado"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Vortex
-              </h6>
-
-              <p class="small as-muted mb-0">
-                Tornado response
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg">
-
-            <article class="as-scenario-card">
-
-              <div class="as-scenario-icon">
-                <i
-                  class="bi bi-wind"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Cyclone Watch
-              </h6>
-
-              <p class="small as-muted mb-0">
-                Cyclone preparedness
-              </p>
-
-            </article>
-
-          </div>
-
-        </div>
-
-
-        <div class="text-center mt-4">
-
-          <a
-            href="simulation.html"
-            class="btn btn-as-dark-outline"
-          >
-            Explore all simulations
-
-            <i
-              class="bi bi-arrow-right ms-1"
-              aria-hidden="true"
-            ></i>
-
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         TECHNOLOGY
-         ============================================================== -->
-
-    <section
-      class="as-section as-tech-section"
-      aria-labelledby="technology-title"
-    >
-
-      <div class="container position-relative">
-
-        <div class="as-home-section-heading mb-5">
-
-          <div
-            class="as-home-section-kicker"
-            style="color:var(--as-cyan-400);"
-          >
-            Under the hood
-          </div>
-
-          <h2
-            id="technology-title"
-            class="fw-bold mb-3"
-          >
-            Built as a real full-stack platform
-          </h2>
-
-          <p
-            class="mb-0"
-            style="color:var(--as-text-on-dark-muted);"
-          >
-            AapdaSetu combines a web frontend, API backend,
-            database, authentication, machine learning and
-            AI-assisted retrieval.
-          </p>
-
-        </div>
-
-
-        <div class="row g-3">
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-window as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Frontend
-              </h6>
-
-              <p class="mb-0">
-                HTML5, CSS3, JavaScript and Bootstrap-based
-                responsive interfaces.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-hdd-network as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Backend
-              </h6>
-
-              <p class="mb-0">
-                FastAPI and Python with modular API routers
-                and service-layer architecture.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-database as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Database
-              </h6>
-
-              <p class="mb-0">
-                SQLAlchemy-backed persistence with local
-                SQLite and PostgreSQL-ready configuration.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-stars as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                AI / RAG
-              </h6>
-
-              <p class="mb-0">
-                Retrieval-based disaster knowledge assistance
-                designed to ground responses in safety information.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-cpu as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Machine Learning
-              </h6>
-
-              <p class="mb-0">
-                Scikit-learn based risk-awareness and
-                environmental prediction workflows.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="col-md-6 col-lg-4">
-
-            <div class="as-tech-card">
-
-              <div class="mb-2">
-                <i
-                  class="bi bi-shield-lock as-tech-card-icon"
-                  aria-hidden="true"
-                ></i>
-              </div>
-
-              <h6>
-                Authentication
-              </h6>
-
-              <p class="mb-0">
-                JWT-based authentication with password hashing
-                and protected API routes.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         EMERGENCY DISCLAIMER
-         ============================================================== -->
-
-    <section
-      class="as-disclaimer py-3"
-      aria-label="Important safety notice"
-    >
-
-      <div class="container">
-
-        <div class="d-flex align-items-start gap-2">
-
-          <i
-            class="bi bi-exclamation-triangle-fill mt-1"
-            aria-hidden="true"
-          ></i>
-
-          <p class="mb-0">
-            <strong>Important:</strong>
-            AapdaSetu AI is an educational preparedness and
-            training platform. It is not a replacement for
-            emergency services or official government guidance.
-            During a real emergency, follow instructions from
-            local authorities and emergency services.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==============================================================
-         FINAL CTA
-         ============================================================== -->
-
-    <section
-      class="as-section as-final-cta text-center"
-      aria-labelledby="cta-title"
-    >
-
-      <div class="container">
-
-        <div class="as-final-cta-content">
-
-          <div
-            class="as-home-section-kicker"
-            style="color:var(--as-cyan-400);"
-          >
-            Start preparing
-          </div>
-
-          <h2
-            id="cta-title"
-            class="fw-bold mb-3"
-          >
-            Build readiness before you need it.
-          </h2>
-
-          <p
-            class="mb-4"
-            style="color:var(--as-text-on-dark-muted);"
-          >
-            Learn the fundamentals, practice your decisions
-            and understand where you can improve.
-          </p>
-
-          <div
-            class="d-flex
-                   justify-content-center
-                   flex-wrap
-                   gap-2"
-          >
-
-            <a
-              href="register.html"
-              class="btn btn-as-primary btn-lg"
-            >
-              Create your account
-
-              <i
-                class="bi bi-arrow-right ms-1"
+              <!-- Divider -->
+              <div
+                class="login-divider"
                 aria-hidden="true"
-              ></i>
+              >
+                <span>NEW TO AAPDASETU?</span>
+              </div>
 
-            </a>
+
+              <!-- Register -->
+              <p class="login-register">
+
+                Don't have an account?
+
+                <a href="register.html">
+                  Create one
+                </a>
+
+              </p>
 
 
-            <a
-              href="modules.html"
-              class="btn btn-as-outline btn-lg"
-            >
-              Explore learning
+              <!-- Security -->
+              <div class="login-security">
 
-            </a>
+                <i
+                  class="bi bi-shield-lock-fill"
+                  aria-hidden="true"
+                ></i>
+
+                <span>
+                  Secure token-based authentication
+                </span>
+
+              </div>
+
+            </section>
 
           </div>
 
@@ -2063,139 +1314,289 @@
 
       </div>
 
-    </section>
+    </div>
 
   </main>
 
 
-  <!-- ================================================================
-       FOOTER
-       Generated by js/nav.js
-       ================================================================ -->
+  <!-- =======================================================================
+       APPLICATION SCRIPTS
+       ======================================================================= -->
 
-  <div id="as-footer-root"></div>
-
-
-  <!-- ================================================================
-       Bootstrap JavaScript
-       ================================================================ -->
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
-
-
-  <!-- ================================================================
-       Homepage behaviour
-       ================================================================ -->
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
 
   <script>
+    (() => {
+      "use strict";
 
-    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("loginForm");
 
-      /*
-       * Respect reduced-motion preference.
-       */
+      const userIdInput =
+        document.getElementById("userId");
 
-      const reducedMotion =
-        window.matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        ).matches;
+      const passwordInput =
+        document.getElementById("password");
 
+      const errorBox =
+        document.getElementById("loginError");
 
-      /*
-       * Lightweight reveal animation.
-       */
+      const errorText =
+        document.getElementById("loginErrorText");
 
-      if (!reducedMotion) {
+      const loginButton =
+        document.getElementById("loginBtn");
 
-        const revealItems =
-          document.querySelectorAll(
-            ".as-feature-card, .as-workflow-step, .as-scenario-card"
-          );
+      const loginButtonText =
+        document.getElementById("loginBtnText");
 
-        revealItems.forEach((item, index) => {
+      const loginButtonIcon =
+        document.getElementById("loginBtnIcon");
 
-          item.style.opacity = "0";
-          item.style.transform = "translateY(10px)";
+      const passwordToggle =
+        document.getElementById("passwordToggle");
 
-          item.style.transition =
-            "opacity .45s ease, transform .45s ease";
-
-          item.style.transitionDelay =
-            `${Math.min(index * 35, 240)}ms`;
-
-        });
+      const passwordToggleIcon =
+        document.getElementById("passwordToggleIcon");
 
 
-        if ("IntersectionObserver" in window) {
+      /* -----------------------------------------------------------------------
+         Error
+         ----------------------------------------------------------------------- */
 
-          const observer =
-            new IntersectionObserver(
-              (entries, obs) => {
+      function clearError() {
 
-                entries.forEach((entry) => {
+        errorBox.classList.add("d-none");
 
-                  if (!entry.isIntersecting) {
-                    return;
-                  }
+        errorText.textContent = "";
 
-                  entry.target.style.opacity = "1";
-                  entry.target.style.transform = "translateY(0)";
-
-                  obs.unobserve(entry.target);
-
-                });
-
-              },
-              {
-                threshold: 0.12
-              }
-            );
-
-
-          revealItems.forEach((item) => {
-            observer.observe(item);
-          });
-
-        } else {
-
-          revealItems.forEach((item) => {
-
-            item.style.opacity = "1";
-            item.style.transform = "translateY(0)";
-
-          });
-
-        }
-
+        userIdInput.classList.remove("invalid");
+        passwordInput.classList.remove("invalid");
       }
 
-    });
 
+      function showError(message, field = null) {
+
+        errorText.textContent = message;
+
+        errorBox.classList.remove("d-none");
+
+        if (field === "userId") {
+
+          userIdInput.classList.add("invalid");
+
+          userIdInput.focus();
+
+        } else if (field === "password") {
+
+          passwordInput.classList.add("invalid");
+
+          passwordInput.focus();
+        }
+      }
+
+
+      /* -----------------------------------------------------------------------
+         Password visibility
+         ----------------------------------------------------------------------- */
+
+      passwordToggle.addEventListener("click", () => {
+
+        const showPassword =
+          passwordInput.type === "password";
+
+        passwordInput.type =
+          showPassword ? "text" : "password";
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          showPassword
+            ? "Hide password"
+            : "Show password"
+        );
+
+        passwordToggle.setAttribute(
+          "aria-pressed",
+          String(showPassword)
+        );
+
+        passwordToggleIcon.className =
+          showPassword
+            ? "bi bi-eye-slash"
+            : "bi bi-eye";
+
+        passwordInput.focus();
+      });
+
+
+      /* -----------------------------------------------------------------------
+         Clear validation while typing
+         ----------------------------------------------------------------------- */
+
+      userIdInput.addEventListener("input", () => {
+
+        userIdInput.classList.remove("invalid");
+
+        if (!errorBox.classList.contains("d-none")) {
+          clearError();
+        }
+      });
+
+
+      passwordInput.addEventListener("input", () => {
+
+        passwordInput.classList.remove("invalid");
+
+        if (!errorBox.classList.contains("d-none")) {
+          clearError();
+        }
+      });
+
+
+      /* -----------------------------------------------------------------------
+         Login
+         ----------------------------------------------------------------------- */
+
+      form.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        clearError();
+
+        const userId =
+          userIdInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
+
+        /* Client-side validation */
+
+        if (!userId) {
+
+          showError(
+            "Please enter your user ID.",
+            "userId"
+          );
+
+          return;
+        }
+
+
+        if (userId.length < 3) {
+
+          showError(
+            "User ID must contain at least 3 characters.",
+            "userId"
+          );
+
+          return;
+        }
+
+
+        if (!password) {
+
+          showError(
+            "Please enter your password.",
+            "password"
+          );
+
+          return;
+        }
+
+
+        /* Loading */
+
+        loginButton.disabled = true;
+
+        loginButtonIcon.innerHTML =
+          '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>';
+
+        loginButtonText.textContent =
+          "Signing in...";
+
+
+        try {
+
+          /*
+           * IMPORTANT:
+           * This calls the existing auth.js login()
+           * and therefore preserves the current backend.
+           */
+
+          const result =
+            await login(userId, password);
+
+
+          if (result.ok) {
+
+            loginButtonIcon.innerHTML =
+              '<i class="bi bi-check-circle-fill" aria-hidden="true"></i>';
+
+            loginButtonText.textContent =
+              "Signed in";
+
+
+            if (typeof showToast === "function") {
+
+              showToast(
+                "Welcome back!",
+                "success"
+              );
+
+            }
+
+
+            setTimeout(() => {
+
+              window.location.href =
+                "dashboard.html";
+
+            }, 300);
+
+            return;
+          }
+
+
+          showError(
+            result.message ||
+            "Invalid user ID or password."
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Login error:",
+            error
+          );
+
+          showError(
+            "Unable to sign in right now. Please check that the backend is running and try again."
+          );
+
+        } finally {
+
+          /*
+           * If authentication succeeded, navigation is already
+           * in progress. Otherwise restore the button.
+           */
+
+          if (!localStorage.getItem("token")) {
+
+            loginButton.disabled = false;
+
+            loginButtonIcon.innerHTML =
+              '<i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>';
+
+            loginButtonText.textContent =
+              "Sign in";
+          }
+        }
+
+      });
+
+    })();
   </script>
-
-
-  <noscript>
-
-    <div
-      style="
-        position:fixed;
-        left:0;
-        right:0;
-        bottom:0;
-        z-index:9999;
-        padding:1rem;
-        background:#060f1f;
-        color:#fff;
-        text-align:center;
-      "
-    >
-      AapdaSetu AI requires JavaScript for authentication,
-      navigation and interactive training features.
-    </div>
-
-  </noscript>
 
 </body>
 </html>
