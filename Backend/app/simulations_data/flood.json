@@ -1,0 +1,72 @@
+{
+  "slug": "flood",
+  "codename": "OPERATION: RISING WATERS",
+  "disaster_type": "Flood",
+  "difficulty": "Standard",
+  "estimated_duration_minutes": 7,
+  "description": "Heavy rainfall is causing rapid flooding in a residential area. Interpret warnings correctly, evacuate at the right time, and choose safe routes.",
+  "objectives": [
+    "Interpret flood warnings correctly",
+    "Decide when to evacuate rather than wait",
+    "Choose safe routes and avoid floodwater",
+    "Protect essential documents and assist vulnerable people"
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "The First Warning",
+      "narrative": "Local authorities issue a flood watch for your area after continuous heavy rainfall. Water is not yet visible on your street. What do you do?",
+      "options": [
+        {"id": "a", "text": "Start preparing now — pack an emergency kit and important documents", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Wait until water is actually visible before doing anything", "correct": false, "safety": true, "mistake": "Waiting for visible water wastes valuable preparation time — a watch means conditions are favorable for flooding."},
+        {"id": "c", "text": "Ignore it, warnings are usually exaggerated", "correct": false, "safety": true, "mistake": "Dismissing an official warning is one of the most common causes of preventable flood casualties."}
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Water Rises",
+      "narrative": "Water is now visible on the street and rising quickly. An evacuation advisory is issued for low-lying areas, which includes your home.",
+      "options": [
+        {"id": "a", "text": "Evacuate now, on foot or by vehicle, following the advisory", "correct": true, "safety": true},
+        {"id": "b", "text": "Wait to see if the water keeps rising before deciding", "correct": false, "safety": true, "mistake": "Delaying evacuation after an advisory is issued for your area sharply increases risk as routes can become impassable."}
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Choosing a Route",
+      "narrative": "Your usual route out is now partially underwater. A message says a stretch of the main road is flooded. What do you do?",
+      "options": [
+        {"id": "a", "text": "Take the alternate, higher-ground route even though it's longer", "correct": true, "safety": true},
+        {"id": "b", "text": "Drive through the flooded road since your car looks high enough", "correct": false, "safety": true, "mistake": "Just 30 cm of moving water can sweep away most vehicles — never drive through flooded roads."},
+        {"id": "c", "text": "Walk through the flooded section instead", "correct": false, "safety": true, "mistake": "Floodwater can hide strong currents, open drains, and debris — walking through it is dangerous."}
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "A Vulnerable Neighbour",
+      "narrative": "On your way, you pass an elderly neighbour who hasn't evacuated and has no transport.",
+      "options": [
+        {"id": "a", "text": "Help them evacuate safely if you can, or alert emergency responders to their location", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Continue on your own way — it's not your responsibility", "correct": false, "safety": false, "mistake": "Assisting vulnerable people when it is safe to do so, or alerting responders, is a core part of community disaster response."}
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Resource Check",
+      "narrative": "You reach a temporary shelter. Supplies are limited. You have your emergency kit with you.",
+      "options": [
+        {"id": "a", "text": "Register with shelter staff and share your situation and needs clearly", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Keep to yourself and don't tell anyone you're there", "correct": false, "safety": false, "resource": true, "mistake": "Not registering at a shelter makes it harder for responders to track who is safe and who needs help."}
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "After the Peak",
+      "narrative": "Reports say the water level is dropping in your neighbourhood. Should you return home immediately?",
+      "options": [
+        {"id": "a", "text": "Wait for an official all-clear before returning; floodwater can hide hazards afterward", "correct": true, "safety": true},
+        {"id": "b", "text": "Go back immediately since the water looks lower now", "correct": false, "safety": true, "mistake": "Returning before an official all-clear risks contact with contaminated water, damaged electrical systems, or structural damage."}
+      ]
+    }
+  ]
+}

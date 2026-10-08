@@ -1,0 +1,81 @@
+Year,State,Rainfall,Temperature,Humidity,Disaster_Type,Occurred
+2014,Maharashtra,323,32,55,Flood,1
+2014,Kerala,317,36,95,Flood,1
+2014,Tamil Nadu,221,37,72,None,0
+2014,Gujarat,229,22,62,None,0
+2014,Assam,323,39,78,Flood,1
+2014,Bihar,243,23,51,None,0
+2014,Odisha,59,40,78,None,0
+2014,Karnataka,58,37,74,None,0
+2015,Maharashtra,294,39,45,Flood,1
+2015,Kerala,395,39,44,Flood,1
+2015,Tamil Nadu,62,22,54,None,0
+2015,Gujarat,336,38,89,Flood,1
+2015,Assam,310,29,40,Flood,1
+2015,Bihar,94,29,51,None,0
+2015,Odisha,60,31,83,None,0
+2015,Karnataka,231,25,92,Cyclone,1
+2016,Maharashtra,376,26,50,Flood,1
+2016,Kerala,347,30,67,Flood,1
+2016,Tamil Nadu,310,27,65,Flood,1
+2016,Gujarat,370,36,61,Flood,1
+2016,Assam,120,27,70,None,0
+2016,Bihar,111,28,69,None,0
+2016,Odisha,267,24,87,Flood,1
+2016,Karnataka,206,23,49,None,0
+2017,Maharashtra,311,29,87,Flood,1
+2017,Kerala,323,32,80,Flood,1
+2017,Tamil Nadu,245,31,61,None,0
+2017,Gujarat,344,36,59,Flood,1
+2017,Assam,189,23,49,None,0
+2017,Bihar,348,29,72,Flood,1
+2017,Odisha,240,22,60,None,0
+2017,Karnataka,181,29,86,Cyclone,1
+2018,Maharashtra,274,39,76,Flood,1
+2018,Kerala,92,22,73,None,0
+2018,Tamil Nadu,105,40,53,None,0
+2018,Gujarat,400,25,53,Flood,1
+2018,Assam,230,29,64,None,0
+2018,Bihar,150,33,47,None,0
+2018,Odisha,400,28,54,Flood,1
+2018,Karnataka,227,32,63,None,0
+2019,Maharashtra,336,26,74,Flood,1
+2019,Kerala,149,25,64,None,0
+2019,Tamil Nadu,270,37,48,Flood,1
+2019,Gujarat,137,23,71,None,0
+2019,Assam,278,37,45,Flood,1
+2019,Bihar,79,34,92,Cyclone,1
+2019,Odisha,215,30,57,None,0
+2019,Karnataka,181,27,72,None,0
+2020,Maharashtra,365,24,45,Flood,1
+2020,Kerala,105,21,58,None,0
+2020,Tamil Nadu,339,36,62,Flood,1
+2020,Gujarat,157,34,80,None,0
+2020,Assam,236,33,46,None,0
+2020,Bihar,355,36,54,Flood,1
+2020,Odisha,138,26,53,None,0
+2020,Karnataka,149,39,56,None,0
+2021,Maharashtra,396,33,49,Flood,1
+2021,Kerala,146,33,86,Cyclone,1
+2021,Tamil Nadu,251,32,64,Flood,1
+2021,Gujarat,85,32,93,Cyclone,1
+2021,Assam,305,39,42,Flood,1
+2021,Bihar,146,32,51,None,0
+2021,Odisha,375,40,88,Flood,1
+2021,Karnataka,274,22,54,Flood,1
+2022,Maharashtra,356,24,46,Flood,1
+2022,Kerala,258,21,49,Flood,1
+2022,Tamil Nadu,258,26,80,Flood,1
+2022,Gujarat,290,23,51,Flood,1
+2022,Assam,63,30,60,None,0
+2022,Bihar,299,22,45,Flood,1
+2022,Odisha,202,39,92,Cyclone,1
+2022,Karnataka,241,35,86,Cyclone,1
+2023,Maharashtra,215,22,47,None,0
+2023,Kerala,377,39,52,Flood,1
+2023,Tamil Nadu,388,20,79,Flood,1
+2023,Gujarat,322,37,49,Flood,1
+2023,Assam,353,21,44,Flood,1
+2023,Bihar,136,20,88,Cyclone,1
+2023,Odisha,104,21,86,Cyclone,1
+2023,Karnataka,273,26,46,Flood,1

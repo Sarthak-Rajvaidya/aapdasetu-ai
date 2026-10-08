@@ -1,0 +1,72 @@
+{
+  "slug": "wildfire",
+  "codename": "OPERATION: FIRELINE",
+  "disaster_type": "Wildfire",
+  "difficulty": "Standard",
+  "estimated_duration_minutes": 7,
+  "description": "A wildfire is approaching a semi-urban settlement. Focus on preparedness, evacuation timing, and safety — not on fighting the fire yourself.",
+  "objectives": [
+    "Assess wildfire warnings and wind direction correctly",
+    "Prepare defensible space and an emergency kit",
+    "Evacuate before routes are cut off",
+    "Avoid unsafe, untrained firefighting behavior"
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Smoke on the Horizon",
+      "narrative": "You see smoke a few kilometres away and hear a wildfire is spreading in dry, windy conditions. No evacuation order yet.",
+      "options": [
+        {"id": "a", "text": "Prepare an emergency kit, clear flammable material near your home, and monitor official updates", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Assume it's far enough away and carry on as normal", "correct": false, "safety": true, "mistake": "Wildfires can move very fast when wind-driven — early preparation buys critical time later."},
+        {"id": "c", "text": "Go closer to see how bad it is", "correct": false, "safety": true, "mistake": "Approaching an active wildfire is dangerous and provides no safety benefit."}
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Wind Shift",
+      "narrative": "The wind shifts and now blows toward the settlement, pushing the fire in your direction faster than expected.",
+      "options": [
+        {"id": "a", "text": "Treat this as your cue to finalize evacuation readiness immediately", "correct": true, "safety": true},
+        {"id": "b", "text": "Wait for an official evacuation order before doing anything further", "correct": false, "safety": true, "mistake": "Waiting passively when conditions clearly worsen can cost you your evacuation window."}
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Evacuation Order",
+      "narrative": "An evacuation order is issued for your zone. You have a family member with limited mobility.",
+      "options": [
+        {"id": "a", "text": "Evacuate immediately, helping your family member and taking your emergency kit", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Try to stay and defend the house yourself with a garden hose", "correct": false, "safety": true, "mistake": "Untrained residents should never attempt to fight a large wildfire — evacuation is the safe choice."},
+        {"id": "c", "text": "Delay leaving until you're fully certain it's necessary", "correct": false, "safety": true, "mistake": "Delaying evacuation after an official order risks routes being cut off by fire or smoke."}
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Choosing a Route",
+      "narrative": "One evacuation route runs through an area with heavy smoke and low visibility; another is longer but clearer.",
+      "options": [
+        {"id": "a", "text": "Take the longer, clearer route even though it takes more time", "correct": true, "safety": true},
+        {"id": "b", "text": "Take the smoky shortcut to save time", "correct": false, "safety": true, "mistake": "Driving through heavy smoke drastically reduces visibility and increases accident and inhalation risk."}
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "On the Road",
+      "narrative": "Embers are visibly landing near the road ahead. Traffic has slowed. What's the safest approach?",
+      "options": [
+        {"id": "a", "text": "Keep windows up, use recirculated air, and follow official traffic directions calmly", "correct": true, "safety": true},
+        {"id": "b", "text": "Get out of the car to see what's causing the slowdown", "correct": false, "safety": true, "mistake": "Exiting your vehicle near active embers and heavy traffic is unnecessary and increases exposure risk."}
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Reaching Safety",
+      "narrative": "You arrive at a designated safe zone away from the fire.",
+      "options": [
+        {"id": "a", "text": "Check in with officials, and wait for an official all-clear before considering returning home", "correct": true, "safety": true},
+        {"id": "b", "text": "Head back home as soon as the smoke looks a little lighter", "correct": false, "safety": true, "mistake": "Returning before an official all-clear risks encountering active fire, hot spots, or blocked roads."}
+      ]
+    }
+  ]
+}

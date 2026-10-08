@@ -1,0 +1,76 @@
+{
+  "slug": "earthquake",
+  "codename": "OPERATION: SEISMIC SHIELD",
+  "disaster_type": "Earthquake",
+  "difficulty": "Standard",
+  "estimated_duration_minutes": 6,
+  "description": "A strong earthquake strikes an urban area while you are inside a multi-storey building. Make the right calls, in order, to keep yourself and others safe.",
+  "objectives": [
+    "Respond correctly to the initial shaking (Drop, Cover, Hold On)",
+    "Avoid high-risk locations (windows, elevators)",
+    "Make a safe post-shaking assessment",
+    "Evacuate correctly and behave safely at the assembly point"
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "The Shaking Begins",
+      "narrative": "You are on the 4th floor of an office building. The floor starts shaking violently. Furniture rattles. What do you do in the first few seconds?",
+      "options": [
+        {"id": "a", "text": "Run toward the elevator to get out fast", "correct": false, "safety": true, "mistake": "Elevators can fail or trap you during an earthquake — never use them during or right after shaking."},
+        {"id": "b", "text": "Stand near the window to see what's happening", "correct": false, "safety": true, "mistake": "Windows can shatter and glass is a major injury risk during shaking."},
+        {"id": "c", "text": "Drop, Cover, and Hold On under a sturdy desk", "correct": true, "safety": true},
+        {"id": "d", "text": "Run down the stairs immediately while it's still shaking", "correct": false, "safety": true, "mistake": "Moving through a shaking building increases your risk of falling or being hit by debris."}
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Still Shaking",
+      "narrative": "The shaking continues and a light fixture crashes to the ground a few metres away. What now?",
+      "options": [
+        {"id": "a", "text": "Stay covered and hold on until the shaking fully stops", "correct": true, "safety": true},
+        {"id": "b", "text": "Get up to move to what looks like a safer spot", "correct": false, "safety": true, "mistake": "Moving during active shaking is when most injuries happen — stay covered until it stops."}
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "The Shaking Stops",
+      "narrative": "The shaking has stopped. Dust is settling. What should you do next?",
+      "options": [
+        {"id": "a", "text": "Check yourself and people nearby for injuries before moving", "correct": true, "safety": true},
+        {"id": "b", "text": "Immediately sprint for the nearest exit", "correct": false, "safety": true, "mistake": "Rushing without checking for injuries or hazards can make things worse for you and others."},
+        {"id": "c", "text": "Go back to your desk to grab your belongings", "correct": false, "safety": false, "mistake": "Personal belongings are not worth the delay or risk — prioritize safety first."}
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Hazard Check",
+      "narrative": "You smell something like gas near the kitchen area. What is the correct response?",
+      "options": [
+        {"id": "a", "text": "Avoid open flames/switches, report it, and move away from the area", "correct": true, "safety": true},
+        {"id": "b", "text": "Try to locate and fix the leak yourself", "correct": false, "safety": true, "mistake": "Attempting to fix a gas leak yourself is dangerous — leave it to trained personnel and move away."},
+        {"id": "c", "text": "Ignore it and continue working", "correct": false, "safety": true, "mistake": "Ignoring a possible gas leak risks fire or explosion — it must be treated seriously."}
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Evacuation Decision",
+      "narrative": "Building wardens announce an evacuation. The stairwell is intact but crowded. How do you proceed?",
+      "options": [
+        {"id": "a", "text": "Use the stairs calmly, keeping to one side, helping anyone who needs it", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Push through the crowd to exit faster", "correct": false, "safety": true, "mistake": "Pushing through crowds during an evacuation increases the risk of falls and injuries for everyone."},
+        {"id": "c", "text": "Wait alone in the office until the crowd clears", "correct": false, "safety": false, "mistake": "Delaying evacuation without reason increases exposure to aftershock risk."}
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "At the Assembly Point",
+      "narrative": "You're outside at the designated assembly point. Aftershocks are possible. What's the right behavior now?",
+      "options": [
+        {"id": "a", "text": "Stay in the open away from buildings, report your status, and wait for official instructions", "correct": true, "safety": true},
+        {"id": "b", "text": "Head back inside to check on the building", "correct": false, "safety": true, "mistake": "Re-entering a shaken building before it's cleared by authorities risks injury from aftershocks or structural damage."},
+        {"id": "c", "text": "Leave the assembly area immediately to go home without informing anyone", "correct": false, "safety": false, "mistake": "Leaving without checking in makes it harder for responders to know everyone is accounted for."}
+      ]
+    }
+  ]
+}

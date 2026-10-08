@@ -1,0 +1,70 @@
+{
+  "slug": "cyclone",
+  "codename": "OPERATION: COASTAL GUARD",
+  "disaster_type": "Cyclone",
+  "difficulty": "Standard",
+  "estimated_duration_minutes": 7,
+  "description": "A tropical cyclone is approaching a coastal district in India. Track the warning stages, prepare an emergency kit, and evacuate coastal areas before landfall.",
+  "objectives": [
+    "Interpret cyclone warning stages issued by IMD-style bulletins",
+    "Prepare an emergency kit and secure your home",
+    "Evacuate low-lying coastal areas before landfall",
+    "Stay safe from wind and storm-surge hazards after landfall"
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Cyclone Alert",
+      "narrative": "A cyclone alert (72 hours' notice) is issued for the coast near you. What should you do?",
+      "options": [
+        {"id": "a", "text": "Start preparing: charge devices, secure loose outdoor items, and prepare an emergency kit", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Wait for the storm to get closer before doing anything", "correct": false, "safety": true, "mistake": "Early preparation during the alert stage saves critical time — supplies and transport get harder to arrange later."}
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Cyclone Warning",
+      "narrative": "The alert is upgraded to a cyclone warning (24 hours' notice). You live in a low-lying coastal zone.",
+      "options": [
+        {"id": "a", "text": "Plan your evacuation to a designated cyclone shelter or safe relative's house inland", "correct": true, "safety": true},
+        {"id": "b", "text": "Decide to stay and 'wait it out' at home near the coast", "correct": false, "safety": true, "mistake": "Low-lying coastal homes are highly vulnerable to storm surge — evacuation is strongly advised at this stage."}
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Final Evacuation Order",
+      "narrative": "Local authorities issue a mandatory evacuation order as landfall nears.",
+      "options": [
+        {"id": "a", "text": "Evacuate immediately with your emergency kit and important documents", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Delay to secure a few more household items first", "correct": false, "safety": true, "mistake": "Delaying a mandatory evacuation risks being caught by storm surge or high winds before reaching safety."}
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "At the Shelter",
+      "narrative": "You reach a cyclone shelter. It's crowded and a family with small children arrives after you.",
+      "options": [
+        {"id": "a", "text": "Help make room and assist shelter staff where you can", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Keep to your space and ignore the situation", "correct": false, "safety": false, "mistake": "Cooperating and assisting vulnerable arrivals is part of safe, effective shelter behavior."}
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "During Landfall",
+      "narrative": "The cyclone makes landfall. Winds are extremely strong outside the shelter.",
+      "options": [
+        {"id": "a", "text": "Stay inside the shelter, away from windows and doors, until officials say it's safe", "correct": true, "safety": true},
+        {"id": "b", "text": "Step outside briefly during a lull to check conditions", "correct": false, "safety": true, "mistake": "The calm 'eye' of a cyclone is temporary — dangerous winds return quickly from the opposite direction."}
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "After the Storm",
+      "narrative": "Winds have died down and officials say the storm has moved on. Roads have flooding and debris.",
+      "options": [
+        {"id": "a", "text": "Wait for an official all-clear, then return home carefully avoiding flooded and debris-covered roads", "correct": true, "safety": true},
+        {"id": "b", "text": "Head home right away through whatever route is fastest", "correct": false, "safety": true, "mistake": "Post-cyclone roads can have hidden hazards like downed lines, flooding, and structural debris."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "slug": "tornado",
+  "codename": "OPERATION: VORTEX",
+  "disaster_type": "Tornado",
+  "difficulty": "Standard",
+  "estimated_duration_minutes": 6,
+  "description": "A severe storm and tornado warning has been issued for your area. Identify safe shelter quickly and respond correctly as the warning evolves.",
+  "objectives": [
+    "Tell the difference between a watch and a warning",
+    "Identify appropriate shelter and move away from windows",
+    "Protect yourself correctly during the tornado",
+    "Respond safely to post-event hazards"
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Tornado Watch",
+      "narrative": "A tornado watch is issued: conditions are favorable for tornadoes to form, but none has been sighted yet.",
+      "options": [
+        {"id": "a", "text": "Identify your safe shelter spot now and keep a radio/phone alert on", "correct": true, "safety": true},
+        {"id": "b", "text": "Ignore it since no tornado has actually been seen", "correct": false, "safety": true, "mistake": "A watch is the time to prepare — waiting until a warning can leave too little time to find shelter."}
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Tornado Warning",
+      "narrative": "The watch upgrades to a tornado warning: a tornado has been spotted or indicated by radar near your location.",
+      "options": [
+        {"id": "a", "text": "Move immediately to your safe shelter location", "correct": true, "safety": true},
+        {"id": "b", "text": "Go outside to look for the tornado first", "correct": false, "safety": true, "mistake": "Trying to see the tornado wastes critical seconds and exposes you to flying debris."}
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Choosing Shelter",
+      "narrative": "You're indoors. Which location should you shelter in?",
+      "options": [
+        {"id": "a", "text": "A small interior room or hallway on the lowest floor, away from windows", "correct": true, "safety": true},
+        {"id": "b", "text": "Near a window so you can watch the storm", "correct": false, "safety": true, "mistake": "Windows can shatter under high winds and flying debris — always move away from them."},
+        {"id": "c", "text": "The garage, since it's a separate room", "correct": false, "safety": true, "mistake": "Garages often have weaker structures and large doors that fail easily under tornado winds."}
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Bracing for Impact",
+      "narrative": "You're in your shelter spot as the tornado approaches. What should you do with your body position?",
+      "options": [
+        {"id": "a", "text": "Crouch low, cover your head and neck, and use a mattress or heavy furniture for protection if available", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Stand upright to see when it passes", "correct": false, "safety": true, "mistake": "Standing exposes your head and body to debris — crouching and covering up reduces injury risk significantly."}
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "After the Tornado Passes",
+      "narrative": "The winds have died down. There's debris everywhere and you smell gas nearby.",
+      "options": [
+        {"id": "a", "text": "Stay cautious, avoid downed power lines and gas leaks, and wait for official updates before moving around freely", "correct": true, "safety": true},
+        {"id": "b", "text": "Go outside immediately to inspect the damage", "correct": false, "safety": true, "mistake": "Downed power lines, gas leaks, and unstable structures are common and dangerous immediately after a tornado."}
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Checking In",
+      "narrative": "You are safe. Communication lines are partially working.",
+      "options": [
+        {"id": "a", "text": "Send a brief status update to family/authorities and keep phone lines free for emergencies", "correct": true, "safety": true, "resource": true},
+        {"id": "b", "text": "Make multiple long calls to everyone you know right away", "correct": false, "safety": false, "resource": true, "mistake": "Tying up communication lines with non-urgent calls can prevent emergency communications from getting through."}
+      ]
+    }
+  ]
+}
