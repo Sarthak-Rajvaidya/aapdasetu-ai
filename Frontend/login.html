@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,23 +35,33 @@
   <!-- Application configuration -->
   <script src="assets/config.js"></script>
 
-  <!-- API client -->
+  <!-- Shared API client -->
   <script src="js/api.js"></script>
 
   <style>
     /* =========================================================================
-       AapdaSetu AI — Login Page
-       Production authentication experience
+       AapdaSetu AI
+       Production Login Experience
        ========================================================================= */
 
     :root {
       --login-bg: #060f1f;
-      --login-panel: #0b1a30;
-      --login-panel-soft: rgba(255, 255, 255, 0.055);
-      --login-border: rgba(255, 255, 255, 0.10);
+      --login-bg-2: #0b1a30;
+      --login-card: rgba(12, 29, 52, 0.88);
+
       --login-text: #f4f8ff;
-      --login-muted: #a9bad6;
+      --login-muted: #9eb0ca;
+      --login-border: rgba(255, 255, 255, 0.10);
+
+      --login-blue: #4f8cff;
+      --login-cyan: #22d3ee;
+      --login-green: #22c55e;
+      --login-red: #ef4444;
     }
+
+    /* -------------------------------------------------------------------------
+       Page
+       ------------------------------------------------------------------------- */
 
     html,
     body {
@@ -60,12 +69,17 @@
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
+      margin: 0;
+
+      font-family: var(--as-font-body);
+
+      color: var(--login-text);
+
       background:
         radial-gradient(
           circle at 12% 15%,
-          rgba(47, 111, 237, 0.18),
+          rgba(47, 111, 237, 0.20),
           transparent 30%
         ),
         radial-gradient(
@@ -73,77 +87,141 @@
           rgba(34, 211, 238, 0.12),
           transparent 32%
         ),
-        var(--login-bg);
-      color: var(--login-text);
+        linear-gradient(
+          135deg,
+          #060f1f 0%,
+          #09182c 45%,
+          #0b2538 100%
+        );
+
       overflow-x: hidden;
     }
 
-    /* ---------------------------- Page shell ---------------------------- */
-
     .login-page {
+      position: relative;
       min-height: 100vh;
       min-height: 100svh;
-      position: relative;
+
       display: flex;
       align-items: center;
+
       overflow: hidden;
     }
 
+    /* Ambient background grid */
     .login-page::before {
       content: "";
+
       position: absolute;
-      width: 520px;
-      height: 520px;
-      top: -240px;
-      left: -180px;
-      border-radius: 50%;
-      background: rgba(47, 111, 237, 0.10);
-      filter: blur(2px);
+      inset: 0;
+
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
+        );
+
+      background-size: 60px 60px;
+
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 90%
+      );
+
       pointer-events: none;
     }
 
+    /* Ambient glow */
     .login-page::after {
       content: "";
+
       position: absolute;
-      width: 420px;
-      height: 420px;
-      right: -160px;
-      bottom: -180px;
+
+      width: 600px;
+      height: 600px;
+
+      right: -260px;
+      bottom: -300px;
+
       border-radius: 50%;
-      background: rgba(34, 211, 238, 0.07);
+
+      background: rgba(34, 211, 238, 0.08);
+
+      filter: blur(10px);
+
       pointer-events: none;
     }
 
-    .login-container {
+    .login-shell {
       position: relative;
       z-index: 2;
+
       width: 100%;
+
       padding: 2rem 0;
     }
 
-    /* ---------------------------- Brand panel ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Back button
+       ------------------------------------------------------------------------- */
 
-    .login-brand-panel {
-      height: 100%;
-      min-height: 620px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 3.5rem 3rem 3.5rem 1rem;
+    .login-back {
+      position: absolute;
+
+      top: 1.5rem;
+      left: 1.5rem;
+
+      z-index: 10;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+
+      color: #91a5c2;
+
+      font-size: 0.82rem;
+      font-weight: 500;
+
+      text-decoration: none;
+
+      transition:
+        color 0.18s ease,
+        transform 0.18s ease;
+    }
+
+    .login-back:hover {
+      color: #fff;
+      transform: translateX(-2px);
+    }
+
+    /* -------------------------------------------------------------------------
+       Left brand section
+       ------------------------------------------------------------------------- */
+
+    .login-intro {
+      padding: 2rem 2rem 2rem 0;
     }
 
     .login-brand {
       display: inline-flex;
       align-items: center;
       gap: 0.7rem;
-      width: fit-content;
+
+      margin-bottom: 3.5rem;
+
       color: #fff;
-      text-decoration: none;
+
       font-family: var(--as-font-display);
       font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 3.5rem;
+
+      text-decoration: none;
     }
 
     .login-brand:hover {
@@ -153,185 +231,281 @@
     .login-brand-logo {
       width: 42px;
       height: 42px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       border-radius: 12px;
+
       background: var(--as-gradient-accent);
+
+      color: #fff;
+
       box-shadow:
-        0 10px 28px rgba(47, 111, 237, 0.32),
+        0 10px 28px rgba(47, 111, 237, 0.35),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      font-size: 1.25rem;
+
+      font-size: 1.2rem;
     }
 
     .login-brand-ai {
       background: var(--as-gradient-accent);
+
       -webkit-background-clip: text;
       background-clip: text;
+
       color: transparent;
     }
 
     .login-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      width: fit-content;
+      gap: 0.55rem;
+
       margin-bottom: 1.25rem;
-      color: var(--as-cyan-400);
-      font-size: 0.76rem;
+
+      color: var(--login-cyan);
+
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+
+      letter-spacing: 0.13em;
       text-transform: uppercase;
     }
 
     .login-eyebrow-dot {
       width: 7px;
       height: 7px;
+
       border-radius: 50%;
-      background: var(--as-cyan-400);
-      box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+
+      background: var(--login-cyan);
+
+      box-shadow:
+        0 0 0 4px rgba(34, 211, 238, 0.08),
+        0 0 15px rgba(34, 211, 238, 0.8);
     }
 
     .login-title {
-      max-width: 580px;
-      margin-bottom: 1.25rem;
-      font-family: var(--as-font-display);
-      font-size: clamp(2.5rem, 4vw, 4.1rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
+      max-width: 600px;
+
+      margin: 0 0 1.35rem;
+
       color: #fff;
+
+      font-family: var(--as-font-display);
+
+      font-size: clamp(2.6rem, 4.4vw, 4.4rem);
+
+      font-weight: 700;
+
+      line-height: 1.04;
+
+      letter-spacing: -0.045em;
     }
 
-    .login-title span {
-      background: linear-gradient(
-        135deg,
-        #4f8cff 0%,
-        #22d3ee 100%
-      );
+    .login-title-highlight {
+      background:
+        linear-gradient(
+          135deg,
+          #6c9cff 0%,
+          #22d3ee 100%
+        );
+
       -webkit-background-clip: text;
       background-clip: text;
+
       color: transparent;
     }
 
     .login-description {
-      max-width: 520px;
-      margin-bottom: 2rem;
+      max-width: 560px;
+
+      margin: 0 0 2rem;
+
       color: var(--login-muted);
-      font-size: 1.02rem;
+
+      font-size: 1rem;
+
       line-height: 1.75;
     }
 
-    /* ---------------------------- Capability cards ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Platform capabilities
+       ------------------------------------------------------------------------- */
 
     .login-features {
       display: grid;
+
       grid-template-columns: repeat(2, minmax(0, 1fr));
+
       gap: 0.75rem;
-      max-width: 500px;
+
+      max-width: 540px;
     }
 
     .login-feature {
       display: flex;
       align-items: center;
+
       gap: 0.75rem;
-      padding: 0.85rem 0.95rem;
-      border: 1px solid rgba(255, 255, 255, 0.07);
+
+      padding: 0.8rem 0.9rem;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.07);
+
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--login-muted);
-      font-size: 0.84rem;
+
+      background:
+        rgba(255, 255, 255, 0.035);
+
+      color: #9cafc8;
+
+      font-size: 0.81rem;
     }
 
     .login-feature-icon {
       width: 34px;
       height: 34px;
+
       flex: 0 0 34px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       border-radius: 9px;
-      background: rgba(79, 140, 255, 0.13);
-      color: var(--as-blue-400);
+
+      background:
+        rgba(79, 140, 255, 0.12);
+
+      border:
+        1px solid rgba(79, 140, 255, 0.12);
+
+      color: var(--login-blue);
+
+      font-size: 0.95rem;
     }
 
-    /* ---------------------------- Login card ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Login card
+       ------------------------------------------------------------------------- */
 
-    .login-card-wrap {
+    .login-card-container {
       display: flex;
       justify-content: center;
     }
 
     .login-card {
       width: 100%;
-      max-width: 470px;
+      max-width: 455px;
+
       padding: 2.25rem;
-      border: 1px solid var(--login-border);
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
+
       border-radius: 22px;
+
       background:
         linear-gradient(
           145deg,
-          rgba(18, 35, 61, 0.96),
-          rgba(8, 20, 37, 0.98)
+          rgba(18, 37, 63, 0.96),
+          rgba(7, 19, 35, 0.98)
         );
+
       box-shadow:
-        0 30px 80px rgba(0, 0, 0, 0.34),
+        0 30px 80px rgba(0, 0, 0, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.015),
         inset 0 1px 0 rgba(255, 255, 255, 0.055);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
-    .login-card-header {
-      margin-bottom: 1.8rem;
+    /* Small top accent */
+    .login-card::before {
+      content: "";
+
+      display: block;
+
+      width: 52px;
+      height: 4px;
+
+      margin-bottom: 1.6rem;
+
+      border-radius: 999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--login-blue),
+          var(--login-cyan)
+        );
     }
 
     .login-card-icon {
       width: 48px;
       height: 48px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       margin-bottom: 1rem;
+
       border-radius: 13px;
-      background: rgba(79, 140, 255, 0.12);
-      border: 1px solid rgba(79, 140, 255, 0.18);
-      color: var(--as-blue-400);
-      font-size: 1.25rem;
+
+      background:
+        rgba(79, 140, 255, 0.10);
+
+      border:
+        1px solid rgba(79, 140, 255, 0.17);
+
+      color: var(--login-blue);
+
+      font-size: 1.2rem;
     }
 
     .login-card-title {
-      margin: 0 0 0.4rem;
+      margin: 0 0 0.45rem;
+
       color: #fff;
+
       font-family: var(--as-font-display);
+
       font-size: 1.65rem;
       font-weight: 700;
     }
 
     .login-card-subtitle {
-      margin: 0;
+      margin: 0 0 1.8rem;
+
       color: var(--login-muted);
-      font-size: 0.9rem;
+
+      font-size: 0.88rem;
+
       line-height: 1.6;
     }
 
-    /* ---------------------------- Form ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Form
+       ------------------------------------------------------------------------- */
 
     .login-form-group {
       margin-bottom: 1.15rem;
     }
 
-    .login-label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
     .login-label {
-      margin: 0;
-      color: #eaf1fb;
-      font-size: 0.83rem;
+      display: block;
+
+      margin-bottom: 0.5rem;
+
+      color: #e8eff9;
+
+      font-size: 0.82rem;
       font-weight: 600;
     }
 
@@ -341,26 +515,45 @@
 
     .login-field-icon {
       position: absolute;
+
       top: 50%;
       left: 1rem;
-      z-index: 3;
+
+      z-index: 2;
+
       transform: translateY(-50%);
-      color: #7f94b3;
+
+      color: #7387a4;
+
       pointer-events: none;
-      font-size: 1rem;
     }
 
     .login-input {
       width: 100%;
       min-height: 50px;
-      padding: 0.75rem 1rem 0.75rem 2.8rem;
-      border: 1px solid rgba(255, 255, 255, 0.11);
+
+      padding:
+        0.75rem
+        1rem
+        0.75rem
+        2.75rem;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
+
       border-radius: 11px;
+
       outline: none;
-      background: rgba(255, 255, 255, 0.045);
+
+      background:
+        rgba(255, 255, 255, 0.045);
+
       color: #fff;
+
       font-family: var(--as-font-body);
-      font-size: 0.92rem;
+
+      font-size: 0.9rem;
+
       transition:
         border-color 0.18s ease,
         background 0.18s ease,
@@ -368,40 +561,66 @@
     }
 
     .login-input::placeholder {
-      color: #71839f;
+      color: #667b98;
     }
 
     .login-input:hover {
-      border-color: rgba(255, 255, 255, 0.18);
+      border-color:
+        rgba(255, 255, 255, 0.18);
     }
 
     .login-input:focus {
-      border-color: rgba(79, 140, 255, 0.8);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.11);
+      border-color:
+        rgba(79, 140, 255, 0.85);
+
+      background:
+        rgba(255, 255, 255, 0.065);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(79, 140, 255, 0.10);
     }
 
-    .login-input.is-invalid {
-      border-color: rgba(239, 68, 68, 0.75);
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+    .login-input.invalid {
+      border-color:
+        rgba(239, 68, 68, 0.75);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(239, 68, 68, 0.08);
+    }
+
+    /* Password */
+    .login-password-input {
+      padding-right: 3.2rem;
     }
 
     .login-password-toggle {
       position: absolute;
+
       top: 50%;
-      right: 0.55rem;
-      z-index: 4;
+      right: 0.45rem;
+
+      z-index: 3;
+
       width: 38px;
       height: 38px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       transform: translateY(-50%);
+
       border: 0;
       border-radius: 8px;
+
       background: transparent;
-      color: #8194af;
+
+      color: #8194ae;
+
       cursor: pointer;
+
       transition:
         color 0.18s ease,
         background 0.18s ease;
@@ -409,34 +628,88 @@
 
     .login-password-toggle:hover {
       color: #fff;
-      background: rgba(255, 255, 255, 0.07);
+
+      background:
+        rgba(255, 255, 255, 0.07);
     }
 
-    .login-password-input {
-      padding-right: 3.2rem;
+    /* -------------------------------------------------------------------------
+       Error
+       ------------------------------------------------------------------------- */
+
+    .login-error {
+      display: flex;
+      align-items: flex-start;
+
+      gap: 0.65rem;
+
+      margin-bottom: 1rem;
+
+      padding: 0.8rem 0.9rem;
+
+      border:
+        1px solid rgba(239, 68, 68, 0.23);
+
+      border-radius: 10px;
+
+      background:
+        rgba(239, 68, 68, 0.08);
+
+      color: #ffb7b7;
+
+      font-size: 0.81rem;
+
+      line-height: 1.5;
     }
 
-    /* ---------------------------- Submit ---------------------------- */
+    .login-error i {
+      margin-top: 2px;
+
+      color: #f87171;
+    }
+
+    /* -------------------------------------------------------------------------
+       Submit
+       ------------------------------------------------------------------------- */
 
     .login-submit {
-      position: relative;
       width: 100%;
       min-height: 52px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      margin-top: 0.35rem;
+
+      gap: 0.55rem;
+
+      margin-top: 0.3rem;
+
       border: 0;
       border-radius: 11px;
-      background: var(--as-gradient-accent);
+
+      background:
+        linear-gradient(
+          135deg,
+          #2f6fed,
+          #22c6e7
+        );
+
       color: #fff;
+
       font-family: var(--as-font-body);
-      font-size: 0.94rem;
+
+      font-size: 0.92rem;
       font-weight: 700;
+
       box-shadow:
-        0 10px 24px rgba(47, 111, 237, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 10px 25px
+        rgba(47, 111, 237, 0.25),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.18);
+
+      cursor: pointer;
+
       transition:
         transform 0.15s ease,
         box-shadow 0.15s ease,
@@ -445,9 +718,13 @@
 
     .login-submit:hover:not(:disabled) {
       transform: translateY(-1px);
+
       box-shadow:
-        0 14px 30px rgba(47, 111, 237, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 14px 32px
+        rgba(47, 111, 237, 0.34),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.18);
     }
 
     .login-submit:active:not(:disabled) {
@@ -456,120 +733,135 @@
 
     .login-submit:disabled {
       cursor: not-allowed;
-      opacity: 0.7;
+      opacity: 0.65;
     }
 
-    /* ---------------------------- Error ---------------------------- */
-
-    .login-error {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      margin: 0 0 1rem;
-      padding: 0.8rem 0.9rem;
-      border: 1px solid rgba(239, 68, 68, 0.22);
-      border-radius: 10px;
-      background: rgba(239, 68, 68, 0.08);
-      color: #ffb4b4;
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
-
-    .login-error i {
-      margin-top: 1px;
-      color: #f87171;
-    }
-
-    /* ---------------------------- Divider / register ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Divider
+       ------------------------------------------------------------------------- */
 
     .login-divider {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+
+      gap: 0.8rem;
+
       margin: 1.5rem 0;
-      color: #657996;
-      font-size: 0.72rem;
+
+      color: #627792;
+
+      font-size: 0.67rem;
+      font-weight: 600;
+
+      letter-spacing: 0.08em;
     }
 
     .login-divider::before,
     .login-divider::after {
       content: "";
+
       height: 1px;
+
       flex: 1;
-      background: rgba(255, 255, 255, 0.08);
+
+      background:
+        rgba(255, 255, 255, 0.08);
     }
+
+    /* -------------------------------------------------------------------------
+       Register
+       ------------------------------------------------------------------------- */
 
     .login-register {
       margin: 0;
+
       color: var(--login-muted);
+
+      font-size: 0.84rem;
+
       text-align: center;
-      font-size: 0.85rem;
     }
 
     .login-register a {
-      color: var(--as-blue-400);
+      color: var(--login-blue);
+
       font-weight: 600;
+
       text-decoration: none;
     }
 
     .login-register a:hover {
-      color: var(--as-cyan-400);
+      color: var(--login-cyan);
+
       text-decoration: underline;
+
       text-underline-offset: 3px;
     }
 
-    /* ---------------------------- Security notice ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Security
+       ------------------------------------------------------------------------- */
 
     .login-security {
       display: flex;
       align-items: center;
       justify-content: center;
+
       gap: 0.45rem;
-      margin-top: 1.4rem;
-      color: #71839f;
-      font-size: 0.72rem;
+
+      margin-top: 1.35rem;
+
+      color: #6e829e;
+
+      font-size: 0.69rem;
+
       text-align: center;
     }
 
     .login-security i {
-      color: var(--as-green-500);
+      color: var(--login-green);
     }
 
-    /* ---------------------------- Back link ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Animation
+       ------------------------------------------------------------------------- */
 
-    .login-back {
-      position: absolute;
-      top: 1.5rem;
-      left: 1.5rem;
-      z-index: 5;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--login-muted);
-      font-size: 0.8rem;
-      text-decoration: none;
-      transition: color 0.18s ease;
+    .login-animate {
+      animation:
+        loginFadeUp
+        0.55s
+        cubic-bezier(.22, 1, .36, 1)
+        both;
     }
 
-    .login-back:hover {
-      color: #fff;
+    @keyframes loginFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* ---------------------------- Responsive ---------------------------- */
+    /* -------------------------------------------------------------------------
+       Responsive
+       ------------------------------------------------------------------------- */
 
     @media (max-width: 991.98px) {
+
       .login-page {
         align-items: flex-start;
       }
 
-      .login-container {
+      .login-shell {
         padding-top: 4.5rem;
-        padding-bottom: 2rem;
       }
 
-      .login-brand-panel {
-        min-height: auto;
-        padding: 1rem 0 2.5rem;
+      .login-intro {
+        padding: 1rem 0 2rem;
       }
 
       .login-brand {
@@ -577,18 +869,14 @@
       }
 
       .login-title {
-        font-size: clamp(2.25rem, 7vw, 3.3rem);
+        font-size: clamp(2.4rem, 7vw, 3.5rem);
       }
 
       .login-description {
-        margin-bottom: 1.5rem;
+        max-width: 650px;
       }
 
-      .login-features {
-        max-width: 100%;
-      }
-
-      .login-card-wrap {
+      .login-card-container {
         justify-content: stretch;
       }
 
@@ -598,23 +886,30 @@
     }
 
     @media (max-width: 575.98px) {
-      .login-container {
-        padding: 4rem 1rem 1.5rem;
+
+      .login-shell {
+        padding:
+          4rem
+          1rem
+          1.5rem;
       }
 
-      .login-brand-panel {
-        padding-bottom: 2rem;
+      .login-back {
+        top: 1rem;
+        left: 1rem;
+      }
+
+      .login-intro {
+        padding-bottom: 1.5rem;
       }
 
       .login-brand {
         font-size: 1.1rem;
-        margin-bottom: 1.75rem;
       }
 
       .login-brand-logo {
         width: 38px;
         height: 38px;
-        font-size: 1.1rem;
       }
 
       .login-title {
@@ -622,8 +917,7 @@
       }
 
       .login-description {
-        font-size: 0.92rem;
-        line-height: 1.65;
+        font-size: 0.9rem;
       }
 
       .login-features {
@@ -632,26 +926,25 @@
 
       .login-card {
         padding: 1.5rem;
+
         border-radius: 18px;
       }
 
       .login-card-title {
         font-size: 1.45rem;
       }
-
-      .login-back {
-        top: 1rem;
-        left: 1rem;
-      }
     }
 
-    /* ---------------------------- Reduced motion ---------------------------- */
-
     @media (prefers-reduced-motion: reduce) {
+
+      .login-animate {
+        animation: none;
+      }
+
       .login-input,
       .login-submit,
       .login-password-toggle,
-      .login-register a {
+      .login-back {
         transition: none;
       }
     }
@@ -662,85 +955,141 @@
 
   <main class="login-page">
 
-    <!-- Back to landing page -->
+    <!-- Back to home -->
     <a
       href="index.html"
       class="login-back"
-      aria-label="Back to AapdaSetu AI home page"
+      aria-label="Back to AapdaSetu AI home"
     >
       <i class="bi bi-arrow-left"></i>
       Back to home
     </a>
 
-    <div class="container login-container">
+    <div class="container login-shell">
+
       <div class="row align-items-center g-5">
 
-        <!-- ================================================================
-             BRAND / PLATFORM INFORMATION
-             ================================================================ -->
+        <!-- ===================================================================
+             LEFT — BRAND / PLATFORM
+             =================================================================== -->
+
         <div class="col-lg-7">
 
-          <section class="login-brand-panel">
+          <section class="login-intro login-animate">
 
+            <!-- Brand -->
             <a
               href="index.html"
               class="login-brand"
               aria-label="AapdaSetu AI home"
             >
-              <span class="login-brand-logo" aria-hidden="true">
+
+              <span
+                class="login-brand-logo"
+                aria-hidden="true"
+              >
                 <i class="bi bi-shield-check"></i>
               </span>
 
               <span>
-                AapdaSetu <span class="login-brand-ai">AI</span>
+                AapdaSetu
+                <span class="login-brand-ai">AI</span>
               </span>
+
             </a>
 
+            <!-- Eyebrow -->
             <div class="login-eyebrow">
-              <span class="login-eyebrow-dot"></span>
+
+              <span
+                class="login-eyebrow-dot"
+                aria-hidden="true"
+              ></span>
+
               AI-powered disaster preparedness
+
             </div>
 
+            <!-- Main heading -->
             <h1 class="login-title">
+
               Prepare today.
               <br>
-              <span>Respond better tomorrow.</span>
+
+              <span class="login-title-highlight">
+                Respond better tomorrow.
+              </span>
+
             </h1>
 
+            <!-- Description -->
             <p class="login-description">
-              Access your personalized disaster-readiness workspace with
+              Build practical disaster-readiness skills through
               structured learning, realistic emergency simulations,
-              AI-assisted guidance, and readiness tracking.
+              AI-assisted guidance, and personalized readiness tracking.
             </p>
 
+            <!-- Capabilities -->
             <div class="login-features">
 
               <div class="login-feature">
-                <span class="login-feature-icon" aria-hidden="true">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
                   <i class="bi bi-book"></i>
                 </span>
-                <span>Structured disaster learning</span>
+
+                <span>
+                  Structured disaster learning
+                </span>
+
               </div>
 
               <div class="login-feature">
-                <span class="login-feature-icon" aria-hidden="true">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
                   <i class="bi bi-broadcast"></i>
                 </span>
-                <span>Realistic emergency simulations</span>
+
+                <span>
+                  Emergency simulations
+                </span>
+
               </div>
 
               <div class="login-feature">
-                <span class="login-feature-icon" aria-hidden="true">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
                   <i class="bi bi-robot"></i>
                 </span>
-                <span>AI-powered safety assistance</span>
+
+                <span>
+                  AI safety assistance
+                </span>
+
               </div>
 
               <div class="login-feature">
-                <span class="login-feature-icon" aria-hidden="true">
+
+                <span
+                  class="login-feature-icon"
+                  aria-hidden="true"
+                >
                   <i class="bi bi-graph-up-arrow"></i>
                 </span>
-                <span>Personal readiness tracking</span>
+
+                <span>
+                  Readiness tracking
+                </span>
+
               </div>
 
             </div>
@@ -749,36 +1098,47 @@
 
         </div>
 
-        <!-- ================================================================
-             LOGIN FORM
-             ================================================================ -->
+
+        <!-- ===================================================================
+             RIGHT — LOGIN
+             =================================================================== -->
+
         <div class="col-lg-5">
 
-          <div class="login-card-wrap">
+          <div class="login-card-container">
 
             <section
-              class="login-card as-fade-in"
+              class="login-card login-animate"
               aria-labelledby="loginTitle"
+              style="animation-delay: 80ms;"
             >
 
-              <!-- Card header -->
-              <header class="login-card-header">
+              <!-- Card icon -->
+              <div
+                class="login-card-icon"
+                aria-hidden="true"
+              >
+                <i class="bi bi-person-lock"></i>
+              </div>
 
-                <div class="login-card-icon" aria-hidden="true">
-                  <i class="bi bi-person-lock"></i>
-                </div>
+              <!-- Heading -->
+              <h2
+                id="loginTitle"
+                class="login-card-title"
+              >
+                Welcome back
+              </h2>
 
-                <h2 id="loginTitle" class="login-card-title">
-                  Welcome back
-                </h2>
+              <p class="login-card-subtitle">
+                Sign in to continue to your AapdaSetu AI
+                readiness workspace.
+              </p>
 
-                <p class="login-card-subtitle">
-                  Sign in to continue your AapdaSetu AI journey.
-                </p>
 
-              </header>
+              <!-- =============================================================
+                   LOGIN FORM
+                   ============================================================= -->
 
-              <!-- Login form -->
               <form
                 id="loginForm"
                 novalidate
@@ -788,14 +1148,12 @@
                 <!-- User ID -->
                 <div class="login-form-group">
 
-                  <div class="login-label-row">
-                    <label
-                      class="login-label"
-                      for="userId"
-                    >
-                      User ID
-                    </label>
-                  </div>
+                  <label
+                    class="login-label"
+                    for="userId"
+                  >
+                    User ID
+                  </label>
 
                   <div class="login-field">
 
@@ -817,33 +1175,22 @@
                       maxlength="100"
                       required
                       aria-required="true"
-                      aria-describedby="userIdHint"
                     >
 
-                  </div>
-
-                  <div
-                    id="userIdHint"
-                    class="visually-hidden"
-                  >
-                    Enter the user ID associated with your AapdaSetu account.
                   </div>
 
                 </div>
 
+
                 <!-- Password -->
                 <div class="login-form-group">
 
-                  <div class="login-label-row">
-
-                    <label
-                      class="login-label"
-                      for="password"
-                    >
-                      Password
-                    </label>
-
-                  </div>
+                  <label
+                    class="login-label"
+                    for="password"
+                  >
+                    Password
+                  </label>
 
                   <div class="login-field">
 
@@ -859,7 +1206,6 @@
                       name="password"
                       placeholder="Enter your password"
                       autocomplete="current-password"
-                      minlength="1"
                       maxlength="128"
                       required
                       aria-required="true"
@@ -873,31 +1219,37 @@
                       aria-controls="password"
                       aria-pressed="false"
                     >
+
                       <i
                         class="bi bi-eye"
                         id="passwordToggleIcon"
                         aria-hidden="true"
                       ></i>
+
                     </button>
 
                   </div>
 
                 </div>
 
-                <!-- Server / authentication error -->
+
+                <!-- Error -->
                 <div
                   id="loginError"
                   class="login-error d-none"
                   role="alert"
                   aria-live="assertive"
                 >
+
                   <i
                     class="bi bi-exclamation-triangle-fill"
                     aria-hidden="true"
                   ></i>
 
                   <span id="loginErrorText"></span>
+
                 </div>
+
 
                 <!-- Submit -->
                 <button
@@ -905,6 +1257,7 @@
                   class="login-submit"
                   id="loginBtn"
                 >
+
                   <span id="loginBtnIcon" aria-hidden="true">
                     <i class="bi bi-box-arrow-in-right"></i>
                   </span>
@@ -912,32 +1265,45 @@
                   <span id="loginBtnText">
                     Sign in
                   </span>
+
                 </button>
 
               </form>
 
-              <!-- Register -->
-              <div class="login-divider" aria-hidden="true">
+
+              <!-- Divider -->
+              <div
+                class="login-divider"
+                aria-hidden="true"
+              >
                 <span>NEW TO AAPDASETU?</span>
               </div>
 
+
+              <!-- Register -->
               <p class="login-register">
+
                 Don't have an account?
+
                 <a href="register.html">
                   Create one
                 </a>
+
               </p>
+
 
               <!-- Security -->
               <div class="login-security">
+
                 <i
                   class="bi bi-shield-lock-fill"
                   aria-hidden="true"
                 ></i>
 
                 <span>
-                  Your session is protected by token-based authentication.
+                  Secure token-based authentication
                 </span>
+
               </div>
 
             </section>
@@ -947,14 +1313,17 @@
         </div>
 
       </div>
+
     </div>
 
   </main>
 
-  <!-- Authentication -->
-  <script src="js/auth.js"></script>
 
-  <!-- Toast notifications -->
+  <!-- =======================================================================
+       APPLICATION SCRIPTS
+       ======================================================================= -->
+
+  <script src="js/auth.js"></script>
   <script src="js/toast.js"></script>
 
   <script>
@@ -962,185 +1331,268 @@
       "use strict";
 
       const form = document.getElementById("loginForm");
-      const userIdInput = document.getElementById("userId");
-      const passwordInput = document.getElementById("password");
 
-      const errorBox = document.getElementById("loginError");
-      const errorText = document.getElementById("loginErrorText");
+      const userIdInput =
+        document.getElementById("userId");
 
-      const loginButton = document.getElementById("loginBtn");
-      const loginButtonText = document.getElementById("loginBtnText");
-      const loginButtonIcon = document.getElementById("loginBtnIcon");
+      const passwordInput =
+        document.getElementById("password");
 
-      const passwordToggle = document.getElementById("passwordToggle");
-      const passwordToggleIcon = document.getElementById("passwordToggleIcon");
+      const errorBox =
+        document.getElementById("loginError");
 
-      /* ---------------------------------------------------------------
-         Password visibility
-         --------------------------------------------------------------- */
+      const errorText =
+        document.getElementById("loginErrorText");
 
-      passwordToggle.addEventListener("click", () => {
-        const isPassword = passwordInput.type === "password";
+      const loginButton =
+        document.getElementById("loginBtn");
 
-        passwordInput.type = isPassword ? "text" : "password";
+      const loginButtonText =
+        document.getElementById("loginBtnText");
 
-        passwordToggle.setAttribute(
-          "aria-label",
-          isPassword ? "Hide password" : "Show password"
-        );
+      const loginButtonIcon =
+        document.getElementById("loginBtnIcon");
 
-        passwordToggle.setAttribute(
-          "aria-pressed",
-          String(isPassword)
-        );
+      const passwordToggle =
+        document.getElementById("passwordToggle");
 
-        passwordToggleIcon.className = isPassword
-          ? "bi bi-eye-slash"
-          : "bi bi-eye";
+      const passwordToggleIcon =
+        document.getElementById("passwordToggleIcon");
 
-        passwordInput.focus();
-      });
 
-      /* ---------------------------------------------------------------
-         Error handling
-         --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         Error
+         ----------------------------------------------------------------------- */
 
       function clearError() {
+
         errorBox.classList.add("d-none");
+
         errorText.textContent = "";
 
-        userIdInput.classList.remove("is-invalid");
-        passwordInput.classList.remove("is-invalid");
+        userIdInput.classList.remove("invalid");
+        passwordInput.classList.remove("invalid");
       }
 
+
       function showError(message, field = null) {
+
         errorText.textContent = message;
+
         errorBox.classList.remove("d-none");
 
         if (field === "userId") {
-          userIdInput.classList.add("is-invalid");
-          userIdInput.focus();
-        }
 
-        if (field === "password") {
-          passwordInput.classList.add("is-invalid");
+          userIdInput.classList.add("invalid");
+
+          userIdInput.focus();
+
+        } else if (field === "password") {
+
+          passwordInput.classList.add("invalid");
+
           passwordInput.focus();
         }
       }
 
-      /* ---------------------------------------------------------------
-         Reset validation state while typing
-         --------------------------------------------------------------- */
+
+      /* -----------------------------------------------------------------------
+         Password visibility
+         ----------------------------------------------------------------------- */
+
+      passwordToggle.addEventListener("click", () => {
+
+        const showPassword =
+          passwordInput.type === "password";
+
+        passwordInput.type =
+          showPassword ? "text" : "password";
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          showPassword
+            ? "Hide password"
+            : "Show password"
+        );
+
+        passwordToggle.setAttribute(
+          "aria-pressed",
+          String(showPassword)
+        );
+
+        passwordToggleIcon.className =
+          showPassword
+            ? "bi bi-eye-slash"
+            : "bi bi-eye";
+
+        passwordInput.focus();
+      });
+
+
+      /* -----------------------------------------------------------------------
+         Clear validation while typing
+         ----------------------------------------------------------------------- */
 
       userIdInput.addEventListener("input", () => {
-        userIdInput.classList.remove("is-invalid");
+
+        userIdInput.classList.remove("invalid");
 
         if (!errorBox.classList.contains("d-none")) {
           clearError();
         }
       });
+
 
       passwordInput.addEventListener("input", () => {
-        passwordInput.classList.remove("is-invalid");
+
+        passwordInput.classList.remove("invalid");
 
         if (!errorBox.classList.contains("d-none")) {
           clearError();
         }
       });
 
-      /* ---------------------------------------------------------------
-         Login submission
-         --------------------------------------------------------------- */
+
+      /* -----------------------------------------------------------------------
+         Login
+         ----------------------------------------------------------------------- */
 
       form.addEventListener("submit", async (event) => {
+
         event.preventDefault();
 
         clearError();
 
-        const userId = userIdInput.value.trim();
-        const password = passwordInput.value;
+        const userId =
+          userIdInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
 
         /* Client-side validation */
 
         if (!userId) {
-          showError("Please enter your user ID.", "userId");
-          return;
-        }
 
-        if (userId.length < 3) {
           showError(
-            "Your user ID must contain at least 3 characters.",
+            "Please enter your user ID.",
             "userId"
           );
+
           return;
         }
+
+
+        if (userId.length < 3) {
+
+          showError(
+            "User ID must contain at least 3 characters.",
+            "userId"
+          );
+
+          return;
+        }
+
 
         if (!password) {
-          showError("Please enter your password.", "password");
+
+          showError(
+            "Please enter your password.",
+            "password"
+          );
+
           return;
         }
 
-        /* Loading state */
+
+        /* Loading */
 
         loginButton.disabled = true;
 
         loginButtonIcon.innerHTML =
           '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>';
 
-        loginButtonText.textContent = "Signing in...";
+        loginButtonText.textContent =
+          "Signing in...";
+
 
         try {
-          const result = await login(userId, password);
+
+          /*
+           * IMPORTANT:
+           * This calls the existing auth.js login()
+           * and therefore preserves the current backend.
+           */
+
+          const result =
+            await login(userId, password);
+
 
           if (result.ok) {
 
             loginButtonIcon.innerHTML =
               '<i class="bi bi-check-circle-fill" aria-hidden="true"></i>';
 
-            loginButtonText.textContent = "Signed in";
+            loginButtonText.textContent =
+              "Signed in";
+
 
             if (typeof showToast === "function") {
-              showToast("Welcome back!", "success");
+
+              showToast(
+                "Welcome back!",
+                "success"
+              );
+
             }
 
-            /*
-             * Give the success state a moment to render before navigation.
-             */
+
             setTimeout(() => {
-              window.location.href = "dashboard.html";
-            }, 350);
+
+              window.location.href =
+                "dashboard.html";
+
+            }, 300);
 
             return;
           }
 
+
           showError(
             result.message ||
-            "Unable to sign in. Please check your user ID and password."
+            "Invalid user ID or password."
           );
 
         } catch (error) {
 
-          console.error("Login error:", error);
+          console.error(
+            "Login error:",
+            error
+          );
 
           showError(
-            "Something went wrong while signing in. Please try again."
+            "Unable to sign in right now. Please check that the backend is running and try again."
           );
 
         } finally {
 
           /*
-           * Do not reset the button after a successful login because
-           * navigation is intentionally in progress.
+           * If authentication succeeded, navigation is already
+           * in progress. Otherwise restore the button.
            */
+
           if (!localStorage.getItem("token")) {
+
             loginButton.disabled = false;
 
             loginButtonIcon.innerHTML =
               '<i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>';
 
-            loginButtonText.textContent = "Sign in";
+            loginButtonText.textContent =
+              "Sign in";
           }
         }
+
       });
 
     })();
