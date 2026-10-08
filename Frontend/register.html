@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Account | AapdaSetu AI</title>
+  <meta name="description" content="Create your AapdaSetu AI account and start building real disaster readiness.">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/brand.css">
+
+  <style>
+    :root {
+      --auth-navy-1: #060f1f;
+      --auth-navy-2: #0b1a30;
+      --auth-navy-3: #12233d;
+      --auth-blue: #2f6fed;
+      --auth-cyan: #22d3ee;
+    }
+
+    html, body { height: 100%; }
+    body { background: var(--auth-navy-1) !important; margin: 0; }
+
+    /* ---------- Page shell ---------- */
+    .auth-shell {
+      min-height: 100vh;
+      display: flex;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(47,111,237,.28), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(34,211,238,.18), transparent 45%),
+        linear-gradient(135deg, var(--auth-navy-1) 0%, var(--auth-navy-2) 50%, var(--auth-navy-3) 100%);
+      color: #fff;
+    }
+
+    /* ---------- Left brand panel ---------- */
+    .auth-brand {
+      flex: 1 1 46%;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 992px) { .auth-brand { display: flex; } }
+
+    .auth-brand::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at 40% 40%, #000 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at 40% 40%, #000 20%, transparent 75%);
+      pointer-events: none;
+    }
+    .auth-brand > * { position: relative; z-index: 1; }
+
+    .auth-logo {
+      display: inline-flex; align-items: center; gap: .65rem;
+      color: #fff; text-decoration: none; font-weight: 700; font-size: 1.25rem;
+    }
+    .auth-logo-badge {
+      width: 40px; height: 40px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--auth-blue), var(--auth-cyan));
+      box-shadow: 0 8px 24px rgba(47,111,237,.45);
+    }
+
+    .auth-headline { font-size: clamp(2rem, 3.2vw, 2.9rem); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; }
+    .auth-headline span {
+      background: linear-gradient(135deg, var(--auth-blue), var(--auth-cyan));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .auth-sub { color: #a9bad6; max-width: 460px; }
+
+    .auth-feature { display: flex; gap: .9rem; align-items: flex-start; margin-bottom: 1.15rem; }
+    .auth-feature-icon {
+      flex: 0 0 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      color: var(--auth-cyan); font-size: 1.1rem;
+    }
+    .auth-feature h6 { margin: 0 0 .1rem; font-size: .95rem; color: #fff; }
+    .auth-feature p { margin: 0; font-size: .85rem; color: #a9bad6; }
+
+    .auth-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .auth-stats strong { display: block; font-size: 1.4rem; }
+    .auth-stats span { font-size: .78rem; color: #a9bad6; }
+
+    /* ---------- Right form panel ---------- */
+    .auth-form-side {
+      flex: 1 1 54%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+    .auth-card {
+      width: 100%; max-width: 560px;
+      background: #ffffff; color: #0b1a30;
+      border-radius: 22px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      animation: auth-rise .5s ease both;
+    }
+    @media (min-width: 576px) { .auth-card { padding: 2.75rem 2.75rem; } }
+    @keyframes auth-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    .auth-card h1 { font-size: 1.65rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .25rem; }
+    .auth-card .lead-text { color: #5b6b83; font-size: .95rem; margin-bottom: 1.5rem; }
+
+    .auth-card .form-label { font-weight: 600; font-size: .85rem; margin-bottom: .35rem; color: #0b1a30; }
+    .auth-card .form-label .opt { font-weight: 500; color: #8896ab; }
+
+    .input-wrap { position: relative; }
+    .input-wrap > .bi:first-child {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: #8896ab; pointer-events: none; font-size: 1.05rem;
+    }
+    .input-wrap .form-control,
+    .input-wrap .form-select {
+      height: 48px; border-radius: 12px;
+      border: 1.5px solid #dbe3ef; background: #f8fafd;
+      padding-left: 42px; font-size: .95rem;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .input-wrap .form-control:focus,
+    .input-wrap .form-select:focus {
+      background: #fff; border-color: var(--auth-blue);
+      box-shadow: 0 0 0 4px rgba(47,111,237,.15);
+    }
+    .input-wrap .form-control.is-invalid { border-color: #ef4444; background-image: none; }
+    .input-wrap .form-control.is-valid   { border-color: #22c55e; background-image: none; }
+
+    .pw-toggle {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      border: 0; background: transparent; color: #5b6b83;
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+    }
+    .pw-toggle:hover { background: #eaf0fb; color: var(--auth-blue); }
+    .pw-toggle:focus-visible { outline: 3px solid var(--auth-cyan); outline-offset: 1px; }
+    .has-toggle .form-control { padding-right: 48px; }
+
+    .field-error { color: #dc2626; font-size: .78rem; margin-top: .3rem; display: none; }
+    .field-error.show { display: block; }
+    .field-hint { color: #8896ab; font-size: .76rem; margin-top: .3rem; }
+
+    /* Password strength */
+    .strength-bar { display: flex; gap: 5px; margin-top: .55rem; }
+    .strength-bar span { flex: 1; height: 5px; border-radius: 99px; background: #e3e9f3; transition: background .25s ease; }
+    .strength-label { font-size: .76rem; margin-top: .3rem; color: #5b6b83; }
+
+    .pw-rules { list-style: none; padding: 0; margin: .5rem 0 0; display: flex; flex-wrap: wrap; gap: .25rem .9rem; font-size: .75rem; color: #8896ab; }
+    .pw-rules li.ok { color: #16a34a; }
+    .pw-rules li .bi { margin-right: .25rem; }
+
+    .role-options { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .role-option input { position: absolute; opacity: 0; pointer-events: none; }
+    .role-option label {
+      display: flex; align-items: center; gap: .65rem;
+      border: 1.5px solid #dbe3ef; border-radius: 12px; padding: .75rem .9rem;
+      background: #f8fafd; cursor: pointer; font-size: .88rem; font-weight: 600;
+      transition: all .15s ease; height: 100%;
+    }
+    .role-option label small { display: block; font-weight: 500; color: #8896ab; font-size: .73rem; }
+    .role-option label .bi { font-size: 1.25rem; color: #8896ab; }
+    .role-option input:checked + label { border-color: var(--auth-blue); background: rgba(47,111,237,.07); }
+    .role-option input:checked + label .bi { color: var(--auth-blue); }
+    .role-option input:focus-visible + label { outline: 3px solid var(--auth-cyan); outline-offset: 2px; }
+
+    .btn-register {
+      height: 50px; border: 0; border-radius: 12px; color: #fff; font-weight: 700; font-size: 1rem;
+      background: linear-gradient(135deg, var(--auth-blue), var(--auth-cyan));
+      box-shadow: 0 10px 26px rgba(47,111,237,.35);
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    }
+    .btn-register:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 32px rgba(47,111,237,.45); color: #fff; }
+    .btn-register:disabled { opacity: .7; }
+    .btn-register:focus-visible { outline: 3px solid var(--auth-cyan); outline-offset: 2px; }
+
+    .auth-divider { text-align: center; font-size: .82rem; color: #8896ab; margin-top: 1.25rem; }
+    .auth-disclaimer {
+      display: flex; gap: .55rem; align-items: flex-start;
+      background: #f1f6ff; border: 1px solid #dbe7ff; border-radius: 12px;
+      padding: .7rem .85rem; font-size: .76rem; color: #3b4d6b; margin-top: 1.25rem;
+    }
+    .auth-disclaimer .bi { color: var(--auth-blue); margin-top: 1px; }
+
+    .mobile-logo { display: block; text-align: center; margin-bottom: 1.25rem; }
+    @media (min-width: 992px) { .mobile-logo { display: none; } }
+
+    .form-check-input:checked { background-color: var(--auth-blue); border-color: var(--auth-blue); }
+    .form-check-input:focus { box-shadow: 0 0 0 4px rgba(47,111,237,.15); }
+
+    #registerError { border-radius: 12px; font-size: .85rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .auth-card { animation: none; }
+      * { transition: none !important; }
+    }
+  </style>
+
+  <script src="assets/config.js"></script>
+  <script src="js/api.js"></script>
+</head>
+<body>
+
+<div class="auth-shell">
+
+  <!-- ============ LEFT: Brand panel (desktop) ============ -->
+  <aside class="auth-brand" aria-label="About AapdaSetu AI">
+    <a href="index.html" class="auth-logo">
+      <span class="auth-logo-badge"><i class="bi bi-shield-check"></i></span>
+      AapdaSetu AI
+    </a>
+
+    <div>
+      <h2 class="auth-headline mb-3">Be ready <span>before</span><br>disaster strikes.</h2>
+      <p class="auth-sub mb-4">
+        AI-powered disaster preparedness: learn the right actions, rehearse them in realistic
+        simulations, and track a readiness score that reflects what you actually do.
+      </p>
+
+      <div class="auth-feature">
+        <div class="auth-feature-icon"><i class="bi bi-journal-bookmark"></i></div>
+        <div><h6>Structured courses</h6><p>Earthquake, flood, wildfire, tornado and cyclone safety.</p></div>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon"><i class="bi bi-controller"></i></div>
+        <div><h6>Decision-based simulations</h6><p>Scored on your real choices — never a flat 100%.</p></div>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon"><i class="bi bi-stars"></i></div>
+        <div><h6>Grounded AI assistant</h6><p>Answers drawn from a disaster-safety knowledge base, with sources.</p></div>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon"><i class="bi bi-speedometer2"></i></div>
+        <div><h6>Transparent readiness score</h6><p>See exactly how your preparedness is calculated.</p></div>
+      </div>
+    </div>
+
+    <div class="auth-stats">
+      <div><strong>5</strong><span>Disaster scenarios</span></div>
+      <div><strong>6</strong><span>Learning modules</span></div>
+      <div><strong>Free</strong><span>No credit card</span></div>
+    </div>
+  </aside>
+
+  <!-- ============ RIGHT: Form ============ -->
+  <main class="auth-form-side">
+    <div class="auth-card">
+
+      <a href="index.html" class="auth-logo mobile-logo" style="color:#0b1a30;">
+        <span class="auth-logo-badge" style="color:#fff;"><i class="bi bi-shield-check"></i></span>
+        AapdaSetu AI
+      </a>
+
+      <h1>Create your account</h1>
+      <p class="lead-text">Start building real disaster readiness in under a minute.</p>
+
+      <form id="registerForm" novalidate autocomplete="on">
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label" for="name">Full name</label>
+            <div class="input-wrap">
+              <i class="bi bi-person"></i>
+              <input type="text" class="form-control" id="name" placeholder="Asha Patil" autocomplete="name" required maxlength="80">
+            </div>
+            <div class="field-error" id="nameError">Please enter your name.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label" for="userId">User ID</label>
+            <div class="input-wrap">
+              <i class="bi bi-at"></i>
+              <input type="text" class="form-control" id="userId" placeholder="asha_patil" autocomplete="username" required minlength="3" maxlength="40">
+            </div>
+            <div class="field-error" id="userIdError">3+ characters: letters, numbers, - or _ only.</div>
+            <div class="field-hint">Used to log in. Stored in lowercase.</div>
+          </div>
+
+          <div class="col-md-8">
+            <label class="form-label" for="email">Email <span class="opt">(optional)</span></label>
+            <div class="input-wrap">
+              <i class="bi bi-envelope"></i>
+              <input type="email" class="form-control" id="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="field-error" id="emailError">Please enter a valid email address.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="age">Age <span class="opt">(optional)</span></label>
+            <div class="input-wrap">
+              <i class="bi bi-calendar3"></i>
+              <input type="number" class="form-control" id="age" min="0" max="120" placeholder="25" inputmode="numeric">
+            </div>
+            <div class="field-error" id="ageError">Enter an age between 0 and 120.</div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label" id="roleLabel">I am registering as</label>
+            <div class="role-options" role="radiogroup" aria-labelledby="roleLabel">
+              <div class="role-option">
+                <input type="radio" name="role" id="roleStudent" value="student" checked>
+                <label for="roleStudent"><i class="bi bi-mortarboard"></i><span>Student / Learner<small>General preparedness</small></span></label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="roleElderly" value="elderly">
+                <label for="roleElderly"><i class="bi bi-heart-pulse"></i><span>Senior learner<small>Mobility &amp; care focus</small></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrap has-toggle">
+              <i class="bi bi-lock"></i>
+              <input type="password" class="form-control" id="password" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8" maxlength="128" aria-describedby="pwStrengthLabel">
+              <button type="button" class="pw-toggle" data-target="password" aria-label="Show password" aria-pressed="false">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div class="strength-bar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <div class="strength-label" id="pwStrengthLabel" aria-live="polite">Enter a password</div>
+            <ul class="pw-rules" id="pwRules">
+              <li data-rule="len"><i class="bi bi-circle"></i>8+ characters</li>
+              <li data-rule="case"><i class="bi bi-circle"></i>Upper &amp; lower case</li>
+              <li data-rule="num"><i class="bi bi-circle"></i>A number</li>
+              <li data-rule="sym"><i class="bi bi-circle"></i>A symbol</li>
+            </ul>
+            <div class="field-error" id="passwordError">Password must be at least 8 characters.</div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label" for="confirmPassword">Confirm password</label>
+            <div class="input-wrap has-toggle">
+              <i class="bi bi-shield-lock"></i>
+              <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password" required>
+              <button type="button" class="pw-toggle" data-target="confirmPassword" aria-label="Show confirm password" aria-pressed="false">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="confirmError">Passwords do not match.</div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="terms" required>
+              <label class="form-check-label small" for="terms">
+                I understand AapdaSetu AI is an educational platform and does not replace official emergency services.
+              </label>
+            </div>
+            <div class="field-error" id="termsError">Please acknowledge this to continue.</div>
+          </div>
+        </div>
+
+        <div id="registerError" class="alert alert-danger py-2 mt-3 mb-0 d-none" role="alert" aria-live="assertive"></div>
+
+        <button type="submit" class="btn btn-register w-100 mt-4" id="registerBtn">
+          <span id="registerBtnText"><i class="bi bi-person-plus me-2"></i>Create account</span>
+        </button>
+      </form>
+
+      <p class="auth-divider mb-0">
+        Already have an account? <a href="login.html" class="fw-semibold text-decoration-none">Log in</a>
+      </p>
+
+      <div class="auth-disclaimer">
+        <i class="bi bi-shield-lock"></i>
+        <span>Your password is hashed with bcrypt before storage and is never saved or shown in plain text.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/toast.js"></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const form = $("registerForm");
+
+  /* ---------- Show / hide password ---------- */
+  document.querySelectorAll(".pw-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const input = $(btn.dataset.target);
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.setAttribute("aria-pressed", String(show));
+      btn.setAttribute("aria-label", (show ? "Hide " : "Show ") + (btn.dataset.target === "password" ? "password" : "confirm password"));
+      btn.firstElementChild.className = "bi " + (show ? "bi-eye-slash" : "bi-eye");
+      input.focus();
+    });
+  });
+
+  /* ---------- Password strength ---------- */
+  const bars = document.querySelectorAll(".strength-bar span");
+  const strengthLabel = $("pwStrengthLabel");
+  const levels = [
+    { label: "Too weak",  color: "#ef4444" },
+    { label: "Weak",      color: "#f97316" },
+    { label: "Good",      color: "#eab308" },
+    { label: "Strong",    color: "#22c55e" },
+  ];
+
+  function evaluatePassword(pw) {
+    const rules = {
+      len:  pw.length >= 8,
+      case: /[a-z]/.test(pw) && /[A-Z]/.test(pw),
+      num:  /\d/.test(pw),
+      sym:  /[^A-Za-z0-9]/.test(pw),
+    };
+    document.querySelectorAll("#pwRules li").forEach((li) => {
+      const ok = rules[li.dataset.rule];
+      li.classList.toggle("ok", ok);
+      li.firstElementChild.className = "bi " + (ok ? "bi-check-circle-fill" : "bi-circle");
+    });
+    let score = Object.values(rules).filter(Boolean).length; // 0-4
+    if (pw.length >= 12 && score >= 3) score = 4;
+    return { score, rules };
+  }
+
+  function paintStrength(pw) {
+    if (!pw) {
+      bars.forEach((b) => (b.style.background = ""));
+      strengthLabel.textContent = "Enter a password";
+      evaluatePassword("");
+      return;
+    }
+    const { score } = evaluatePassword(pw);
+    const idx = Math.max(0, Math.min(score, 4) - 1);
+    const level = levels[idx < 0 ? 0 : idx];
+    bars.forEach((b, i) => (b.style.background = i <= idx ? level.color : ""));
+    strengthLabel.textContent = "Strength: " + level.label;
+  }
+
+  /* ---------- Validation helpers ---------- */
+  function setError(inputId, errId, bad) {
+    const input = $(inputId);
+    const err = $(errId);
+    input.classList.toggle("is-invalid", bad);
+    input.classList.toggle("is-valid", !bad && input.value.trim() !== "");
+    err.classList.toggle("show", bad);
+    return !bad;
+  }
+
+  const validators = {
+    name:    () => setError("name", "nameError", $("name").value.trim().length < 1),
+    userId:  () => setError("userId", "userIdError", !/^[A-Za-z0-9_\-]{3,40}$/.test($("userId").value.trim())),
+    email:   () => {
+      const v = $("email").value.trim();
+      return setError("email", "emailError", v !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+    },
+    age:     () => {
+      const v = $("age").value;
+      return setError("age", "ageError", v !== "" && (isNaN(v) || +v < 0 || +v > 120));
+    },
+    password: () => setError("password", "passwordError", $("password").value.length < 8),
+    confirm:  () => setError("confirmPassword", "confirmError",
+                $("confirmPassword").value === "" || $("confirmPassword").value !== $("password").value),
+    terms:   () => {
+      const bad = !$("terms").checked;
+      $("termsError").classList.toggle("show", bad);
+      return !bad;
+    },
+  };
+
+  $("name").addEventListener("blur", validators.name);
+  $("userId").addEventListener("blur", validators.userId);
+  $("email").addEventListener("blur", validators.email);
+  $("age").addEventListener("blur", validators.age);
+  $("password").addEventListener("input", (e) => {
+    paintStrength(e.target.value);
+    if ($("confirmPassword").value) validators.confirm();
+  });
+  $("password").addEventListener("blur", validators.password);
+  $("confirmPassword").addEventListener("input", validators.confirm);
+  $("terms").addEventListener("change", validators.terms);
+
+  /* ---------- Submit ---------- */
+  const errBox = $("registerError");
+  const btn = $("registerBtn");
+  const btnText = $("registerBtnText");
+  const idleBtnHtml = btnText.innerHTML;
+
+  function setLoading(loading, text) {
+    btn.disabled = loading;
+    btnText.innerHTML = loading
+      ? '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + text
+      : idleBtnHtml;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errBox.classList.add("d-none");
+
+    const results = Object.values(validators).map((fn) => fn());
+    if (results.includes(false)) {
+      const firstBad = form.querySelector(".is-invalid") || $("terms");
+      firstBad.focus();
+      return;
+    }
+
+    const payload = {
+      name: $("name").value.trim(),
+      user_id: $("userId").value.trim(),
+      email: $("email").value.trim() || null,
+      age: $("age").value ? parseInt($("age").value, 10) : null,
+      role: form.querySelector('input[name="role"]:checked').value,
+      password: $("password").value,
+    };
+
+    setLoading(true, "Creating account...");
+    try {
+      const result = await register(payload);
+      if (!result.ok) {
+        setLoading(false);
+        errBox.textContent = result.message || "Registration failed. Please check your details and try again.";
+        errBox.classList.remove("d-none");
+        errBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      if (typeof showToast === "function") showToast("Account created — signing you in...", "success");
+      setLoading(true, "Signing you in...");
+
+      const loginResult = await login(payload.user_id, payload.password);
+      window.location.href = loginResult.ok ? "dashboard.html" : "login.html";
+    } catch (err) {
+      setLoading(false);
+      errBox.textContent = "Network error — please check your connection and try again.";
+      errBox.classList.remove("d-none");
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #2a0a0a, #1a0a0a, #2a0a2a);
+    font-family: 'Segoe UI', 'Orbitron', monospace;
+    min-height: 100vh;
+    color: #fff;
+}
+
+/* Fire Background Animation */
+.fire-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.fire-particle {
+    position: absolute;
+    bottom: -50px;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 100, 0, 0.6);
+    border-radius: 50%;
+    animation: rise linear infinite;
+}
+
+@keyframes rise {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Holo Interface */
+.game-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+.holo-interface {
+    background: rgba(40, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 69, 0, 0.4);
+    box-shadow: 0 0 50px rgba(255, 69, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline Effect */
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(255, 69, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* HUD Header */
+.hud-header {
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.2), rgba(150, 0, 0, 0.15));
+    padding: 20px 30px;
+    border-bottom: 2px solid #ff4500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hud-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff4500;
+    text-shadow: 0 0 10px #ff4500;
+    letter-spacing: 2px;
+}
+
+.progress-container {
+    text-align: right;
+}
+
+.progress-bar-bg {
+    width: 200px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ff4500;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4500, #ff8c00);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+/* Mission Screens */
+.mission-screen {
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+.mission-screen.hidden {
+    display: none;
+}
+
+.mission-screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mission-screen h3 {
+    color: #ff4500;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px #ff4500;
+}
+
+/* Fire Triangle */
+.fire-triangle {
+    width: 300px;
+    height: 260px;
+    margin: 30px auto;
+    position: relative;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,95 5,95" fill="none" stroke="orange" stroke-width="2"/></svg>') no-repeat center;
+}
+
+.triangle-node {
+    position: absolute;
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.node-heat {
+    top: -20px;
+    left: 110px;
+}
+
+.node-fuel {
+    bottom: -10px;
+    left: -20px;
+}
+
+.node-oxygen {
+    bottom: -10px;
+    right: -20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #ff4500;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+/* Forest Stage */
+.forest-stage {
+    background: linear-gradient(135deg, #1a3a2a, #0a2a1a);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    min-height: 250px;
+}
+
+.tree {
+    display: inline-block;
+    font-size: 2rem;
+    margin: 5px;
+    transition: all 0.5s;
+}
+
+.tree.burning {
+    animation: flicker 0.2s infinite;
+    text-shadow: 0 0 10px orange;
+}
+
+@keyframes flicker {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+.fire-spread {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at bottom, rgba(255, 69, 0, 0.4), transparent 70%);
+    opacity: 0;
+    transition: opacity 2s;
+    pointer-events: none;
+}
+
+/* Defensible Space Zones */
+.zone-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.zone-card {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.zone-card:hover {
+    transform: scale(1.05);
+}
+
+.zone-card.selected {
+    border-color: #ff4500;
+    background: rgba(255, 69, 0, 0.2);
+}
+
+/* Survival Tools */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tool-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+}
+
+.tool-card.selected {
+    border-color: #ff4500;
+    background: rgba(255, 69, 0, 0.2);
+}
+
+/* Holo Slider */
+.holo-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+    border-radius: 5px;
+    outline: none;
+    margin: 20px 0;
+}
+
+.holo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ff4500;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff4500;
+}
+
+/* Holo Popup */
+.holo-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.95), rgba(150, 0, 0, 0.95));
+    backdrop-filter: blur(20px);
+    padding: 30px 50px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 100;
+    border: 2px solid #ff4500;
+    box-shadow: 0 0 50px rgba(255, 69, 0, 0.5);
+    animation: popupIn 0.3s ease;
+}
+
+.holo-popup.hidden {
+    display: none;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Button Styles */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px currentColor;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mission-screen {
+        padding: 20px;
+    }
+
+    .hud-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .zone-container {
+        flex-direction: column;
+    }
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.progress-fill {
+    transition: width 0.5s ease;
+}
+
+.tool-card {
+    cursor: pointer;
+}

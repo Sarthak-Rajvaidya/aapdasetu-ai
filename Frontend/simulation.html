@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulations | AapdaSetu AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/brand.css">
+  <script src="assets/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/toast.js" defer></script>
+  <script src="js/nav.js" defer></script>
+</head>
+<body>
+<div id="as-navbar-root"></div>
+
+<section class="as-section">
+  <div class="container">
+    <h2 class="fw-bold mb-1">Disaster Simulations</h2>
+    <p class="as-muted mb-4">Decision-based emergency scenarios. Your score reflects your actual choices — not completion alone.</p>
+
+    <div id="simsSkeleton" class="row g-4">
+      <div class="col-md-4"><div class="as-skeleton" style="height:200px;"></div></div>
+      <div class="col-md-4"><div class="as-skeleton" style="height:200px;"></div></div>
+      <div class="col-md-4"><div class="as-skeleton" style="height:200px;"></div></div>
+    </div>
+
+    <div id="simsGrid" class="row g-4 d-none"></div>
+    <div id="simsError" class="alert alert-danger d-none"></div>
+  </div>
+</section>
+
+<div id="as-footer-root"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const SIM_ICONS = {
+    earthquake: "bi-globe-americas", flood: "bi-water", wildfire: "bi-fire",
+    tornado: "bi-tornado", cyclone: "bi-wind",
+  };
+
+  async function loadSimulations() {
+    try {
+      const sims = await apiFetch("/api/simulations");
+      document.getElementById("simsSkeleton").classList.add("d-none");
+      const grid = document.getElementById("simsGrid");
+      grid.classList.remove("d-none");
+      grid.innerHTML = sims
+        .map(
+          (s) => `
+        <div class="col-md-4">
+          <div class="as-card p-4 h-100 d-flex flex-column">
+            <div class="as-icon-tile mb-3"><i class="bi ${SIM_ICONS[s.slug] || "bi-controller"}"></i></div>
+            <div class="as-badge-soft mb-2" style="width:fit-content;">${s.codename}</div>
+            <h5 class="fw-bold">${s.disaster_type}</h5>
+            <p class="as-muted small flex-grow-1">${s.description}</p>
+            <div class="d-flex justify-content-between small as-muted mb-3">
+              <span><i class="bi bi-speedometer2 me-1"></i>${s.difficulty}</span>
+              <span><i class="bi bi-clock me-1"></i>~${s.estimated_duration_minutes} min</span>
+              ${s.best_score !== null && s.best_score !== undefined ? `<span><i class="bi bi-trophy me-1"></i>Best: ${s.best_score}%</span>` : ""}
+            </div>
+            <a href="simulation-play.html?slug=${s.slug}" class="btn btn-as-primary mt-auto">
+              ${s.best_score ? "Replay Mission" : "Start Mission"} <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>`
+        )
+        .join("");
+    } catch (err) {
+      document.getElementById("simsSkeleton").classList.add("d-none");
+      const errorBox = document.getElementById("simsError");
+      errorBox.textContent = `Couldn't load simulations: ${err.message}`;
+      errorBox.classList.remove("d-none");
+    }
+  }
+  document.addEventListener("DOMContentLoaded", loadSimulations);
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AapdaSetu AI | Learn. Simulate. Prepare. Respond.</title>
+  <meta name="description" content="AapdaSetu AI is an AI-powered disaster preparedness, training, simulation and risk-awareness platform.">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/brand.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+
+  <script src="assets/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/toast.js" defer></script>
+  <script src="js/nav.js" defer></script>
+</head>
+<body>
+
+<div id="as-navbar-root"></div>
+
+<!-- ================= HERO ================= -->
+<section class="as-hero py-5">
+  <div class="container position-relative py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-7 as-fade-in">
+        <div class="as-eyebrow mb-3">AI-Powered Disaster Preparedness &amp; Training</div>
+        <h1 class="display-4 fw-bold mb-3">AAPDASETU AI</h1>
+        <p class="as-tagline mb-4">"Learn. Simulate. Prepare. Respond."</p>
+        <p class="mb-4" style="max-width:560px; color: var(--as-text-on-dark-muted);">
+          A platform that combines structured disaster education, realistic emergency
+          simulations, machine-learning risk prediction, and a domain-specific AI
+          assistant grounded in real safety guidance — not a quiz app with a chatbot bolted on.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="modules.html" class="btn btn-as-primary btn-lg">
+            <i class="bi bi-play-fill me-1"></i>Start Training
+          </a>
+          <a href="simulation.html" class="btn btn-as-outline btn-lg">
+            <i class="bi bi-controller me-1"></i>Explore Simulations
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-5 mt-5 mt-lg-0">
+        <div class="as-card-glass p-4">
+          <div class="d-flex justify-content-between mb-3">
+            <span class="fw-semibold">Live Platform Snapshot</span>
+            <i class="bi bi-activity"></i>
+          </div>
+          <div class="row text-center g-3">
+            <div class="col-6">
+              <div class="as-counter fs-3" data-counter="5">0</div>
+              <div class="small text-white-50">Disaster Scenarios</div>
+            </div>
+            <div class="col-6">
+              <div class="as-counter fs-3" data-counter="4">0</div>
+              <div class="small text-white-50">Core Modules</div>
+            </div>
+            <div class="col-6">
+              <div class="as-counter fs-3" data-counter="100">0</div>
+              <div class="small text-white-50">RAG-Grounded Answers %</div>
+            </div>
+            <div class="col-6">
+              <div class="as-counter fs-3" data-counter="24">0</div>
+              <div class="small text-white-50">Readiness Tracking, 24/7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY ================= -->
+<section class="as-section">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-2">Why AapdaSetu?</h2>
+    <p class="as-muted text-center mb-5">Six modules, one connected learning loop.</p>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-journal-bookmark"></i></div>
+          <h5>Learn</h5>
+          <p class="as-muted mb-0">Structured disaster courses with objectives, safety checklists and knowledge checks.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-controller"></i></div>
+          <h5>Simulate</h5>
+          <p class="as-muted mb-0">Decision-driven emergency scenarios that score real choices, not clicks.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-graph-up-arrow"></i></div>
+          <h5>Predict</h5>
+          <p class="as-muted mb-0">An ML-based educational risk assessment from rainfall, temperature and humidity.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-stars"></i></div>
+          <h5>Ask AI</h5>
+          <p class="as-muted mb-0">A retrieval-grounded assistant that answers from a real disaster-safety knowledge base.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-speedometer2"></i></div>
+          <h5>Track</h5>
+          <p class="as-muted mb-0">A transparent Disaster Readiness Score computed from your actual activity.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card p-4 h-100">
+          <div class="as-icon-tile mb-3"><i class="bi bi-award"></i></div>
+          <h5>Achieve</h5>
+          <p class="as-muted mb-0">Achievements and certifications that unlock only when you actually earn them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="as-section" style="background: var(--as-surface);">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-5">How It Works</h2>
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="as-badge-soft mb-2">STEP 1</div>
+        <h6>Register &amp; assess</h6>
+        <p class="as-muted small">Create your account and take a baseline quiz.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="as-badge-soft mb-2">STEP 2</div>
+        <h6>Learn &amp; simulate</h6>
+        <p class="as-muted small">Work through courses and decision-based scenarios.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="as-badge-soft mb-2">STEP 3</div>
+        <h6>Get grounded feedback</h6>
+        <p class="as-muted small">Receive AI feedback tied to your actual decisions.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="as-badge-soft mb-2">STEP 4</div>
+        <h6>Track readiness</h6>
+        <p class="as-muted small">Watch your Disaster Readiness Score grow over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SIMULATIONS ================= -->
+<section class="as-section">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-2">Disaster Simulations</h2>
+    <p class="as-muted text-center mb-5">Five realistic, decision-based emergency scenarios.</p>
+    <div class="row g-4">
+      <div class="col-md-4 col-lg-2-4">
+        <div class="as-card p-3 text-center h-100">
+          <i class="bi bi-globe-americas fs-2 mb-2" style="color:var(--as-blue-500)"></i>
+          <h6 class="mb-1">Seismic Shield</h6>
+          <div class="small as-muted">Earthquake</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-2-4">
+        <div class="as-card p-3 text-center h-100">
+          <i class="bi bi-water fs-2 mb-2" style="color:var(--as-blue-500)"></i>
+          <h6 class="mb-1">Rising Waters</h6>
+          <div class="small as-muted">Flood</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-2-4">
+        <div class="as-card p-3 text-center h-100">
+          <i class="bi bi-fire fs-2 mb-2" style="color:var(--as-amber-500)"></i>
+          <h6 class="mb-1">Fireline</h6>
+          <div class="small as-muted">Wildfire</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-2-4">
+        <div class="as-card p-3 text-center h-100">
+          <i class="bi bi-tornado fs-2 mb-2" style="color:var(--as-blue-500)"></i>
+          <h6 class="mb-1">Vortex</h6>
+          <div class="small as-muted">Tornado</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-2-4">
+        <div class="as-card p-3 text-center h-100">
+          <i class="bi bi-wind fs-2 mb-2" style="color:var(--as-blue-500)"></i>
+          <h6 class="mb-1">Cyclone Watch</h6>
+          <div class="small as-muted">Cyclone</div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="simulation.html" class="btn btn-as-dark-outline">View all simulations <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TECHNOLOGY ================= -->
+<section class="as-section" style="background: var(--as-navy-950); color:#fff;">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-2">Technology</h2>
+    <p class="text-center mb-5" style="color:var(--as-text-on-dark-muted)">What's actually running under the hood.</p>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-window me-2"></i>Frontend</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">HTML / CSS / JavaScript / Bootstrap 5</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-hdd-network me-2"></i>Backend</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">FastAPI / Python, modular routers &amp; services</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-database me-2"></i>Database</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">SQLAlchemy — SQLite locally, PostgreSQL-ready via <code>DATABASE_URL</code></p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-stars me-2"></i>AI / RAG</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">TF-IDF retrieval over a real safety knowledge base + Gemini for grounded answers</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-cpu me-2"></i>ML</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">Scikit-learn RandomForest, trained on India disaster-weather data</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="as-card-glass p-4 h-100">
+          <h6><i class="bi bi-shield-lock me-2"></i>Authentication</h6>
+          <p class="small mb-0" style="color:var(--as-text-on-dark-muted)">JWT sessions + bcrypt password hashing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="as-section text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Ready to build real disaster readiness?</h2>
+    <p class="as-muted mb-4">Free to use. No credit card. Just your commitment to learning.</p>
+    <a href="register.html" class="btn btn-as-primary btn-lg">Create your account</a>
+  </div>
+</section>
+
+<div id="as-footer-root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Simple counter animation, respects prefers-reduced-motion via CSS override above.
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[data-counter]").forEach((el) => {
+      const target = parseInt(el.getAttribute("data-counter"), 10);
+      let current = 0;
+      const step = Math.max(1, Math.round(target / 40));
+      const tick = () => {
+        current = Math.min(target, current + step);
+        el.textContent = current;
+        if (current < target) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  });
+</script>
+</body>
+</html>

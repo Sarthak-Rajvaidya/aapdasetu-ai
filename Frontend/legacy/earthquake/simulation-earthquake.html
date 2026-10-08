@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Drill | Operation Deep Tremor</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/simulation-earthquake.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-black px-4 py-3">
+        <span class="navbar-brand fw-bold fs-4">
+            <i class="bi bi-activity"></i> 🌋 DMTS | Earthquake Simulation
+        </span>
+        <a href="../index.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Exit Simulation
+        </a>
+    </nav>
+
+    <div class="game-container">
+        <div class="holo-interface">
+            <div class="scanline"></div>
+
+            <!-- HUD HEADER -->
+            <header class="hud-header">
+                <div class="hud-title">
+                    <i class="bi bi-geo-alt-fill"></i> OPERATION: DEEP TREMOR
+                </div>
+                <div class="depth-gauge-container">
+                    <div class="depth-bar-bg">
+                        <div class="depth-bar-fill" id="depthProgress" style="width: 0%"></div>
+                    </div>
+                    <small class="text-light">Mission Progress: <span id="missionProgressText">0</span>/5</small>
+                </div>
+            </header>
+
+            <main id="missionDeck">
+                <!-- MISSION 1 -->
+                <section id="mission1" class="mission-screen active">
+                    <h3><i class="bi bi-bezier2"></i> MISSION 1: THE STRESS TEST</h3>
+                    <p class="text-light">Objective: Understand elastic rebound theory - how energy builds up and releases as seismic waves.</p>
+
+                    <div class="experiment-stage">
+                        <div class="earth-cross-section">
+                            <div class="crust-layer" id="crustLayer">
+                                <div class="tectonic-stick" id="tectonicStick"></div>
+                                <div class="stress-glow" id="stressGlow"></div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="progress-custom">
+                                <div class="progress-fill" id="stressBar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-info mb-1">Stress Level: <span id="stressPercent">0</span>%</p>
+                        </div>
+                    </div>
+
+                    <label class="text-cyan mt-3">Apply Tectonic Force →</label>
+                    <input type="range" id="forceSlider" min="0" max="100" value="0" class="holo-slider">
+
+                    <div class="holo-popup hidden" id="m1Popup">
+                        <h5><i class="bi bi-lightning-charge"></i> EARTHQUAKE TRIGGERED!</h5>
+                        <p>Stored energy released as seismic waves radiating outward!</p>
+                        <p class="small">✓ Elastic rebound theory demonstrated</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(2)">
+                            Proceed to Mission 2 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 2 -->
+                <section id="mission2" class="mission-screen hidden">
+                    <h3><i class="bi bi-arrows-move"></i> MISSION 2: TECTONIC RUPTURE</h3>
+                    <p class="text-light">Objective: Identify the focus (hypocenter) where rupture begins underground.</p>
+
+                    <div class="plates-stage">
+                        <div class="plate plate-left" id="plateLeft">Eurasian Plate</div>
+                        <div class="plate plate-right" id="plateRight">Indian Plate</div>
+                        <div class="focus-point hidden" id="focusPoint">
+                            <i class="bi bi-bullseye"></i> FOCUS
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="text-info">Stress built up: <span id="tectonicStress">0</span>%</p>
+                        <div class="progress-custom" style="width: 80%; margin: 0 auto;">
+                            <div class="progress-fill" id="tectonicStressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-warning btn-glow" id="injectEnergyBtn">
+                            <i class="bi bi-lightning"></i> Inject Energy
+                        </button>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m2Popup">
+                        <h5><i class="bi bi-activity"></i> RUPTURE DETECTED!</h5>
+                        <p>Rupture occurred at the FOCUS point underground!</p>
+                        <p class="small">✓ Epicenter is directly above the focus on the surface</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(3)">
+                            Proceed to Mission 3 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 3 -->
+                <section id="mission3" class="mission-screen hidden">
+                    <h3><i class="bi bi-globe-americas"></i> MISSION 3: GLOBAL ZONES</h3>
+                    <p class="text-light">Objective: Identify high-risk seismic zones around the world.</p>
+
+                    <div class="globe-stage">
+                        <div class="holographic-globe" id="hologlobe">
+                            🌍
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 text-center">
+                        <div class="col-md-6">
+                            <div class="card bg-dark text-white p-3">
+                                <h5 class="text-danger">🔥 Ring of Fire</h5>
+                                <p class="small">Pacific Ocean - 90% of earthquakes occur here</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark text-white p-3">
+                                <h5 class="text-warning">🏔️ Alpide Belt</h5>
+                                <p class="small">Himalayas to Mediterranean - India's high-risk zone</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary btn-glow" onclick="showIndiaZone()">
+                            <i class="bi bi-flag-fill"></i> Analyze India Zone
+                        </button>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m3Popup">
+                        <h5><i class="bi bi-geo-alt-fill"></i> INDIA'S SEISMIC ZONES</h5>
+                        <p><span class="text-danger">Zone V</span> (Very High): Northeast, Kutch, North Bihar</p>
+                        <p><span class="text-warning">Zone IV</span> (High): Delhi-NCR, Sikkim, Jammu & Kashmir</p>
+                        <p><span class="text-info">Zone III</span> (Moderate): Mumbai, Chennai, Kolkata</p>
+                        <p><span class="text-success">Zone II</span> (Low): Deccan Plateau</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(4)">
+                            Proceed to Mission 4 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 4 -->
+                <section id="mission4" class="mission-screen hidden">
+                    <h3><i class="bi bi-exclamation-triangle-fill"></i> MISSION 4: IMPACT SIMULATION</h3>
+                    <p class="text-light">Objective: Observe different earthquake impacts on infrastructure.</p>
+
+                    <div class="city-stage" id="cityStage">
+                        🏙️ 🌆 🌃
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-danger btn-glow" onclick="runSimulation('shake')">
+                                <i class="bi bi-arrow-left-right"></i> Ground Shaking
+                            </button>
+                            <button class="btn btn-info btn-glow" onclick="runSimulation('liquefaction')">
+                                <i class="bi bi-droplet"></i> Liquefaction
+                            </button>
+                            <button class="btn btn-primary btn-glow" onclick="runSimulation('tsunami')">
+                                <i class="bi bi-water"></i> Tsunami
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="impactMessage" class="text-center mt-3 text-info"></div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-success btn-glow" onclick="nextMission(5)">
+                            Complete All Missions →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 5 -->
+                <section id="mission5" class="mission-screen hidden">
+                    <h3><i class="bi bi-rulers"></i> MISSION 5: MAGNITUDE vs INTENSITY</h3>
+                    <p class="text-light">Objective: Understand the difference between magnitude and intensity.</p>
+
+                    <div class="card bg-dark p-4">
+                        <label class="text-cyan mb-2">Adjust Richter Magnitude:</label>
+                        <input type="range" min="1" max="9" step="0.1" value="3" id="richterSlider" class="holo-slider">
+                        
+                        <div class="row mt-3 text-center">
+                            <div class="col-md-6">
+                                <div class="p-3 border border-primary rounded">
+                                    <h5 class="text-primary"><i class="bi bi-speedometer2"></i> Magnitude</h5>
+                                    <p class="fs-2 fw-bold text-primary" id="magnitudeValue">3.0</p>
+                                    <small>Energy released at source</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 border border-warning rounded">
+                                    <h5 class="text-warning"><i class="bi bi-eye"></i> Intensity</h5>
+                                    <p class="fs-4 fw-bold text-warning" id="mercalliText">Intensity III - Felt indoors</p>
+                                    <small>Observed effects on people & structures</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-success btn-glow" onclick="showFinalReward()">
+                            <i class="bi bi-trophy"></i> Complete Operation
+                        </button>
+                    </div>
+                </section>
+
+                <!-- REWARD SCREEN -->
+                <section id="rewardScreen" class="mission-screen hidden text-center">
+                    <div class="p-5">
+                        <i class="bi bi-trophy-fill" style="font-size: 5rem; color: gold;"></i>
+                        <h2 class="mt-3">🎉 MISSION COMPLETE!</h2>
+                        <p class="lead">You are now a Certified Seismic Explorer!</p>
+                        <div class="card bg-dark p-3 mt-3">
+                            <h5>🏅 Achievements Unlocked</h5>
+                            <p>✓ Elastic Rebound Theory Mastered</p>
+                            <p>✓ Tectonic Plate Mechanics Understood</p>
+                            <p>✓ Global Seismic Zones Identified</p>
+                            <p>✓ Earthquake Impacts Analyzed</p>
+                            <p>✓ Magnitude vs Intensity Differentiated</p>
+                        </div>
+                        <a href="../index.html" class="btn btn-primary btn-lg mt-4">
+                            <i class="bi bi-house"></i> Return to Dashboard
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../js/simulation-earthquake.js"></script>
+</body>
+
+</html>

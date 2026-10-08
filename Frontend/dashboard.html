@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | AapdaSetu AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/brand.css">
+  <script src="assets/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/toast.js" defer></script>
+  <script src="js/nav.js" defer></script>
+</head>
+<body>
+<div id="as-navbar-root"></div>
+
+<section class="as-section pb-3">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Welcome back, <span data-user-name>there</span> 👋</h2>
+        <p class="as-muted mb-0">Here's where your disaster readiness stands today.</p>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div id="dashboardSkeleton" class="row g-4">
+      <div class="col-md-4"><div class="as-skeleton" style="height:180px;"></div></div>
+      <div class="col-md-8"><div class="as-skeleton" style="height:180px;"></div></div>
+    </div>
+
+    <div id="dashboardContent" class="d-none">
+      <div class="row g-4 mb-4">
+        <!-- Readiness ring -->
+        <div class="col-md-4">
+          <div class="as-card p-4 h-100 text-center">
+            <h6 class="as-muted mb-3">Disaster Readiness Score</h6>
+            <div class="as-readiness-ring mx-auto" id="readinessRing">
+              <div>
+                <div class="fs-3 fw-bold" id="readinessOverall">0%</div>
+                <div class="small as-muted">Overall</div>
+              </div>
+            </div>
+            <p class="small as-muted mt-3 mb-0">
+              Equal-weighted average of knowledge, decision-making, emergency response and disaster awareness.
+            </p>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="col-md-8">
+          <div class="as-card p-4 h-100">
+            <h6 class="as-muted mb-3">Readiness Breakdown</h6>
+            <div id="readinessBreakdown" class="d-flex flex-column gap-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <!-- Recommended training -->
+        <div class="col-lg-6">
+          <div class="as-card p-4 h-100" id="recommendedCard" style="display:none;">
+            <div class="d-flex align-items-start gap-3">
+              <div class="as-icon-tile"><i class="bi bi-lightbulb"></i></div>
+              <div>
+                <h6 class="fw-bold mb-1">Recommended Training</h6>
+                <p class="as-muted small mb-2" id="recommendationReason"></p>
+                <p class="fw-semibold mb-3" id="recommendedTraining"></p>
+                <a href="simulation.html" class="btn btn-as-dark-outline btn-sm">Continue Learning <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="as-card p-4 h-100" id="noRecommendationCard" style="display:none;">
+            <h6 class="fw-bold mb-2"><i class="bi bi-check-circle text-success me-2"></i>You're on track</h6>
+            <p class="as-muted small mb-3">No urgent gaps detected in your recent safety performance. Keep exploring new scenarios.</p>
+            <a href="simulation.html" class="btn btn-as-dark-outline btn-sm">Explore Simulations <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="col-lg-6">
+          <div class="as-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold mb-0"><i class="bi bi-award me-2"></i>Achievements</h6>
+              <span class="as-badge-soft" id="achievementCount">0 / 0</span>
+            </div>
+            <p class="as-muted small mb-2">Unlocked automatically as you complete real activity.</p>
+            <div class="small" id="streakText"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Course progress -->
+        <div class="col-lg-6">
+          <div class="as-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="bi bi-journal-bookmark me-2"></i>Course Progress</h6>
+            <div id="courseProgressList" class="d-flex flex-column gap-3"></div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="col-lg-6">
+          <div class="as-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Recent Activity</h6>
+            <div id="recentActivityList" class="d-flex flex-column gap-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardError" class="alert alert-danger d-none mt-3"></div>
+  </div>
+</section>
+
+<div id="as-footer-root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earthquake Safety - Module | DMTS Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/earthquake.css">
+</head>
+
+<body>
+
+    <div class="quake-bg">
+        <div class="crack" style="top: 10%; left: 20%; height: 200px;"></div>
+        <div class="crack" style="top: 50%; left: 70%; height: 300px;"></div>
+        <div class="crack" style="top: 80%; left: 10%; height: 150px;"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg custom-nav sticky-top px-4 py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white" href="../index.html">
+                <i class="bi bi-shield-check me-2" style="color: #ef4444;"></i>DMTS Platform
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="../modules.html" class="btn btn-outline-light btn-sm me-2">
+                    <i class="bi bi-arrow-left"></i> Back to Modules
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="module-header text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-activity fs-1"></i>
+                        <h1 class="fw-bold mb-0 display-4">🫨 Earthquake Safety & Survival</h1>
+                    </div>
+                    <p class="lead opacity-75">Learn the critical actions for when the ground starts to move.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="bg-white bg-opacity-10 p-3 rounded-4 backdrop-blur">
+                        <div class="d-flex justify-content-between mb-2 small">
+                            <span>Course Progress</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-danger" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="section-card" id="section1">
+                    <div class="section-icon"><i class="bi bi-info-circle"></i></div>
+                    <h3 class="fw-bold">1. Understanding Earthquakes</h3>
+                    <p>Earthquakes are caused by the sudden release of energy in the Earth's crust that creates seismic waves.</p>
+                    <div class="info-box">
+                        <h6 class="fw-bold">Plate Tectonics</h6>
+                        <p class="small mb-0">The Earth's surface is broken into large pieces called tectonic plates. When these plates slide past, collide, or pull apart, they create stress that eventually releases as an earthquake.</p>
+                    </div>
+                </div>
+
+                <div class="section-card" id="section2">
+                    <div class="section-icon"><i class="bi bi-lightning-charge"></i></div>
+                    <h3 class="fw-bold">2. The First 60 Seconds</h3>
+                    <p>The most dangerous time during an earthquake is the initial shaking. Your immediate actions determine your safety.</p>
+                    <div class="p-4 bg-danger bg-opacity-10 border-start border-danger border-4 rounded-4 mb-3">
+                        <h5 class="fw-bold text-danger">Drop, Cover, and Hold On!</h5>
+                        <p class="mb-0">Do not try to run outside or stand in a doorway. Most injuries occur as people try to move during the shaking.</p>
+                    </div>
+                </div>
+
+                <div class="section-card" id="section3">
+                    <div class="section-icon"><i class="bi bi-house-check"></i></div>
+                    <h3 class="fw-bold">3. Finding Safe Spots</h3>
+                    <p>Identify safe places in each room before the shaking starts.</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-4 h-100">
+                                <h6 class="fw-bold text-success"><i class="bi bi-check-circle"></i> Safe Spots</h6>
+                                <ul class="small ps-3 mb-0">
+                                    <li>Under heavy desks or tables</li>
+                                    <li>Against interior walls</li>
+                                    <li>Corners of a room</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-4 h-100">
+                                <h6 class="fw-bold text-danger"><i class="bi bi-x-circle"></i> Danger Zones</h6>
+                                <ul class="small ps-3 mb-0">
+                                    <li>Near windows or glass</li>
+                                    <li>Tall furniture (bookshelves)</li>
+                                    <li>Hanging objects (mirrors)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card" id="section4">
+                    <div class="section-icon"><i class="bi bi-rulers"></i></div>
+                    <h3 class="fw-bold">4. Magnitude vs. Intensity</h3>
+                    <p>Earthquakes are measured in two different ways:</p>
+                    <div class="row g-4 mt-1">
+                        <div class="col-md-6">
+                            <div class="card h-100 bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="fw-bold text-primary">Magnitude (Richter Scale)</h6>
+                                    <p class="small mb-0">Measures the energy released at the source. It is a single value for each earthquake.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="fw-bold text-warning">Intensity (Mercalli Scale)</h6>
+                                    <p class="small mb-0">Measures the strength of shaking at a specific location. It varies depending on distance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card" id="section5">
+                    <div class="section-icon"><i class="bi bi-shield-shaded"></i></div>
+                    <h3 class="fw-bold">5. Hazard Mitigation</h3>
+                    <p>Prepare your home to reduce risk before an earthquake strikes.</p>
+                    <ul class="list-group list-group-flush mb-0">
+                        <li class="list-group-item bg-transparent px-0 py-3">
+                            <i class="bi bi-check2-circle text-danger me-2"></i> Anchor tall furniture to wall studs.
+                        </li>
+                        <li class="list-group-item bg-transparent px-0 py-3">
+                            <i class="bi bi-check2-circle text-danger me-2"></i> Install latches on cabinet doors.
+                        </li>
+                        <li class="list-group-item bg-transparent px-0 py-3">
+                            <i class="bi bi-check2-circle text-danger me-2"></i> Store heavy items on lower shelves.
+                        </li>
+                        <li class="list-group-item bg-transparent px-0 py-3">
+                            <i class="bi bi-check2-circle text-danger me-2"></i> Know how to shut off gas and water.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section-card" id="section6">
+                    <div class="section-icon"><i class="bi bi-hourglass-split"></i></div>
+                    <h3 class="fw-bold">6. Aftershocks & Safety</h3>
+                    <p>Earthquakes are often followed by smaller tremors called aftershocks.</p>
+                    <div class="alert alert-warning border-0 p-4 rounded-4">
+                        <h6 class="fw-bold">Stay Alert!</h6>
+                        <p class="small mb-0">Aftershocks can happen minutes, days, or even months after the main event. They can cause further damage to already weakened structures.</p>
+                    </div>
+                </div>
+
+                <div class="section-card" id="section7">
+                    <div class="section-icon"><i class="bi bi-patch-question"></i></div>
+                    <h3 class="fw-bold">7. Knowledge Check</h3>
+                    <div id="quizContainer" class="p-4 bg-light rounded-4 border border-dashed border-danger">
+                        <div class="mb-4">
+                            <p class="fw-bold">1. Where is the safest place to be during shaking?</p>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="eq1" value="door"> In a doorway
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="eq1" value="under"> Under a sturdy table or desk
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="eq1" value="outside"> Running outside
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fw-bold">2. How long do most major earthquakes last?</p>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="eq2" value="10"> Less than 10 seconds
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="eq2" value="60"> 30 to 60 seconds
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="eq2" value="300"> More than 5 minutes
+                            </div>
+                        </div>
+
+                        <button class="btn btn-danger w-100 py-3 fw-bold rounded-4" onclick="checkEqQuiz()">Check Answers</button>
+                        <div id="quizResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sidebar-card">
+                    <div class="p-4"
+                        style="background: linear-gradient(135deg, var(--eq-primary), var(--eq-secondary)); color: white;">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-list-ul me-2"></i>Module Content</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#section1" class="nav-section">📊 1. Understanding Quakes</a>
+                        <a href="#section2" class="nav-section">⏱️ 2. The First 60 Seconds</a>
+                        <a href="#section3" class="nav-section">🏠 3. Finding Safe Spots</a>
+                        <a href="#section4" class="nav-section">📏 4. Magnitude vs Intensity</a>
+                        <a href="#section5" class="nav-section">🛠️ 5. Hazard Mitigation</a>
+                        <a href="#section6" class="nav-section">🔄 6. Aftershocks</a>
+                        <a href="#section7" class="nav-section">📝 7. Knowledge Check</a>
+                    </div>
+                    <div class="p-4 bg-light border-top">
+                        <button class="btn btn-outline-danger w-100 py-2 mb-2" onclick="markCompleted()">
+                            Mark as Completed
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/earthquake.js"></script>
+</body>
+
+</html>

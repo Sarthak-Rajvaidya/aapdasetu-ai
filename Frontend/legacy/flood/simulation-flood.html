@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Simulation | Operation Rising Tide</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/simulation.css">
+</head>
+
+<body>
+
+    <div class="water-bg" id="waterBg">
+        <div class="wave"></div>
+    </div>
+
+    <nav class="navbar navbar-dark bg-black px-4 py-3">
+        <a class="navbar-brand fw-bold text-white" href="../index.html">
+            <i class="bi bi-water"></i> 🌊 DMTS | Flood Simulation
+        </a>
+        <a href="../simulation.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Exit Simulation
+        </a>
+    </nav>
+
+    <div class="game-container">
+        <div class="holo-interface">
+            <div class="scanline"></div>
+
+            <!-- HUD HEADER -->
+            <header class="hud-header">
+                <div class="hud-title">
+                    <i class="bi bi-tsunami"></i> OPERATION: RISING TIDE
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="missionProgress" style="width: 0%"></div>
+                    </div>
+                    <small class="text-light">Mission Progress: <span id="progressText">0</span>/6</small>
+                </div>
+            </header>
+
+            <main id="missionDeck">
+                <!-- MISSION 1: FLOOD TYPES -->
+                <section id="mission1" class="mission-screen active">
+                    <h3><i class="bi bi-question-circle"></i> MISSION 1: UNDERSTANDING FLOODS</h3>
+                    <p class="text-light">Objective: Identify different types of floods.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card bg-dark text-white p-3 text-center flood-card" data-flood="flash"
+                                onclick="selectFloodType('flash')">
+                                <i class="bi bi-lightning-charge fs-1 text-warning"></i>
+                                <h5 class="mt-2">Flash Flood</h5>
+                                <p class="small">Rapid flooding within 6 hours. Most dangerous!</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-dark text-white p-3 text-center flood-card" data-flood="river"
+                                onclick="selectFloodType('river')">
+                                <i class="bi bi-water fs-1 text-primary"></i>
+                                <h5 class="mt-2">River Flood</h5>
+                                <p class="small">Slow rising from prolonged rain or snowmelt.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-dark text-white p-3 text-center flood-card" data-flood="coastal"
+                                onclick="selectFloodType('coastal')">
+                                <i class="bi bi-tsunami fs-1 text-info"></i>
+                                <h5 class="mt-2">Coastal Flood</h5>
+                                <p class="small">Storm surges from hurricanes/cyclones.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4" id="floodTypeResult"></div>
+
+                    <div class="holo-popup hidden" id="m1Popup">
+                        <h5><i class="bi bi-check-circle"></i> FLOOD TYPES IDENTIFIED!</h5>
+                        <p>Each flood type requires different preparation strategies!</p>
+                        <p class="small">✓ Flash floods are most deadly - never drive through flood water!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(2)">
+                            Proceed to Mission 2 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 2: WATER LEVEL SIMULATION -->
+                <section id="mission2" class="mission-screen hidden">
+                    <h3><i class="bi bi-arrow-up"></i> MISSION 2: WATER LEVEL MONITORING</h3>
+                    <p class="text-light">Objective: Understand dangerous water levels.</p>
+
+                    <div class="water-level-container">
+                        <div class="water-level-bg" id="waterLevelBg">
+                            <div class="water-level-fill" id="waterLevelFill"></div>
+                            <div class="water-level-marker" style="left: 20%;"></div>
+                            <div class="water-level-marker" style="left: 40%;"></div>
+                            <div class="water-level-marker" style="left: 60%;"></div>
+                            <div class="water-level-marker" style="left: 80%;"></div>
+                        </div>
+                        <div class="mt-2 d-flex justify-content-between">
+                            <small class="text-success">Safe</small>
+                            <small class="text-warning">Caution</small>
+                            <small class="text-danger">Danger</small>
+                            <small class="text-danger">Severe</small>
+                        </div>
+                    </div>
+
+                    <div class="flood-map" id="floodMap">
+                        <div class="house">🏠</div>
+                        <div class="house">🏘️</div>
+                        <div class="house">🏠</div>
+                        <div class="house">🏘️</div>
+                        <div class="house">🏠</div>
+                        <div class="water-level" id="waterOverlay"></div>
+                    </div>
+
+                    <label class="text-cyan mt-3">Adjust Rainfall Intensity →</label>
+                    <input type="range" id="rainSlider" min="0" max="100" value="0" class="holo-slider">
+
+                    <div class="rain-gauge mt-3">
+                        <p class="mb-1">Rainfall: <span id="rainAmount">0</span> mm/hour</p>
+                        <div class="rain-bar">
+                            <div class="rain-fill" id="rainFill" style="height: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-3" id="waterWarning">
+                        ⚠️ Current water level: SAFE
+                    </div>
+
+                    <div class="holo-popup hidden" id="m2Popup">
+                        <h5><i class="bi bi-exclamation-triangle"></i> WATER LEVEL CRITICAL!</h5>
+                        <p>Just 6 inches of moving water can knock you down. 12 inches floats most cars!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(3)">
+                            Proceed to Mission 3 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 3: PREPARE YOUR HOME -->
+                <section id="mission3" class="mission-screen hidden">
+                    <h3><i class="bi bi-house-check"></i> MISSION 3: HOME PREPARATION</h3>
+                    <p class="text-light">Objective: Complete flood preparation tasks.</p>
+
+                    <div id="prepTasks">
+                        <div class="safety-step" data-step="1" onclick="completeTask(this)">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Move valuables to higher floor</strong>
+                                <p class="small mb-0">Documents, electronics, sentimental items</p>
+                            </div>
+                            <i class="bi bi-arrow-up-circle ms-auto fs-4"></i>
+                        </div>
+                        <div class="safety-step" data-step="2" onclick="completeTask(this)">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Install sandbags at doorways</strong>
+                                <p class="small mb-0">Prevent water from entering your home</p>
+                            </div>
+                            <i class="bi bi-bag ms-auto fs-4"></i>
+                        </div>
+                        <div class="safety-step" data-step="3" onclick="completeTask(this)">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Elevate utilities (furnace, water heater)</strong>
+                                <p class="small mb-0">Protect from flood damage</p>
+                            </div>
+                            <i class="bi bi-tools ms-auto fs-4"></i>
+                        </div>
+                        <div class="safety-step" data-step="4" onclick="completeTask(this)">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Clear gutters and drains</strong>
+                                <p class="small mb-0">Prevent water backup</p>
+                            </div>
+                            <i class="bi bi-droplet ms-auto fs-4"></i>
+                        </div>
+                        <div class="safety-step" data-step="5" onclick="completeTask(this)">
+                            <div class="step-number">5</div>
+                            <div>
+                                <strong>Turn off electricity if flooding</strong>
+                                <p class="small mb-0">Prevent electrocution</p>
+                            </div>
+                            <i class="bi bi-lightning ms-auto fs-4"></i>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p id="prepProgress">Tasks completed: 0/5</p>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m3Popup">
+                        <h5><i class="bi bi-shield-check"></i> HOME PREPARED!</h5>
+                        <p>Your home is now ready for flood season!</p>
+                        <p class="small">✓ Proper preparation reduces flood damage by up to 80%</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(4)">
+                            Proceed to Mission 4 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 4: EVACUATION ROUTES -->
+                <section id="mission4" class="mission-screen hidden">
+                    <h3><i class="bi bi-signpost-split"></i> MISSION 4: EVACUATION ROUTES</h3>
+                    <p class="text-light">Objective: Choose the safest evacuation route.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="route-card" data-route="low" onclick="selectRoute('low')">
+                                <i class="bi bi-arrow-down-circle fs-1"></i>
+                                <h5>Low Road</h5>
+                                <p class="small">Through valley, near river</p>
+                                <span class="badge bg-danger">Flooded!</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="route-card" data-route="high" onclick="selectRoute('high')">
+                                <i class="bi bi-arrow-up-circle fs-1"></i>
+                                <h5>High Road</h5>
+                                <p class="small">Through hills, elevated</p>
+                                <span class="badge bg-success">Safe</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="route-card" data-route="bridge" onclick="selectRoute('bridge')">
+                                <i class="bi bi-bridge fs-1"></i>
+                                <h5>Bridge Crossing</h5>
+                                <p class="small">Over main river</p>
+                                <span class="badge bg-warning">Risky</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="routeFeedback" class="text-center mt-3"></div>
+
+                    <div class="holo-popup hidden" id="m4Popup">
+                        <h5><i class="bi bi-check-circle"></i> ROUTE SELECTED!</h5>
+                        <p>Always choose higher ground and avoid crossing flooded bridges!</p>
+                        <p class="small">✓ Turn Around, Don't Drown - never drive through flood water</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(5)">
+                            Proceed to Mission 5 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 5: EMERGENCY KIT -->
+                <section id="mission5" class="mission-screen hidden">
+                    <h3><i class="bi bi-backpack4"></i> MISSION 5: FLOOD EMERGENCY KIT</h3>
+                    <p class="text-light">Objective: Build a complete flood emergency kit.</p>
+
+                    <div class="row g-2" id="kitBuilder">
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 kit-item" data-item="water" onclick="toggleKitItem(this)">
+                                <i class="bi bi-droplet fs-3"></i>
+                                <span>Water (1 gallon/person/day)</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="food" onclick="toggleKitItem(this)">
+                                <i class="bi bi-basket fs-3"></i>
+                                <span>Non-perishable food (3+ days)</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="radio" onclick="toggleKitItem(this)">
+                                <i class="bi bi-radio fs-3"></i>
+                                <span>Battery-powered radio</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="flashlight" onclick="toggleKitItem(this)">
+                                <i class="bi bi-lightbulb fs-3"></i>
+                                <span>Flashlight + extra batteries</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 kit-item" data-item="firstaid" onclick="toggleKitItem(this)">
+                                <i class="bi bi-bandaid fs-3"></i>
+                                <span>First aid kit</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="whistle" onclick="toggleKitItem(this)">
+                                <i class="bi bi-megaphone fs-3"></i>
+                                <span>Whistle (signal for help)</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="bottles" onclick="toggleKitItem(this)">
+                                <i class="bi bi-cup-straw fs-3"></i>
+                                <span>Water purification tablets</span>
+                            </div>
+                            <div class="card bg-dark p-3 kit-item" data-item="docs" onclick="toggleKitItem(this)">
+                                <i class="bi bi-file-text fs-3"></i>
+                                <span>Important documents (waterproof bag)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p id="kitProgress">Items selected: 0/8</p>
+                        <button class="btn btn-primary btn-glow" onclick="checkKitComplete()">
+                            <i class="bi bi-check-lg"></i> Complete Kit
+                        </button>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m5Popup">
+                        <h5><i class="bi bi-backpack"></i> EMERGENCY KIT READY!</h5>
+                        <p>Your flood emergency kit is complete and ready!</p>
+                        <p class="small">✓ Keep kit accessible - you may have minutes to evacuate</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(6)">
+                            Proceed to Mission 6 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 6: POST-FLOOD SAFETY -->
+                <section id="mission6" class="mission-screen hidden">
+                    <h3><i class="bi bi-shield-check"></i> MISSION 6: POST-FLOOD SAFETY</h3>
+                    <p class="text-light">Objective: Learn safe recovery practices.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3" onclick="selectPostAction('wait')">
+                                <i class="bi bi-hourglass-split fs-2"></i>
+                                <h5>Wait for official "All Clear"</h5>
+                                <p class="small">Don't return until authorities say safe</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3" onclick="selectPostAction('check')">
+                                <i class="bi bi-house-heart fs-2"></i>
+                                <h5>Check for structural damage</h5>
+                                <p class="small">Inspect foundation, walls, utilities</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3" onclick="selectPostAction('water')">
+                                <i class="bi bi-droplet fs-2"></i>
+                                <h5>Boil water before drinking</h5>
+                                <p class="small">Floodwater contaminates supplies</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3" onclick="selectPostAction('mold')">
+                                <i class="bi bi-bug fs-2"></i>
+                                <h5>Dry out home within 48 hours</h5>
+                                <p class="small">Prevent toxic mold growth</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="postFeedback" class="text-center mt-3"></div>
+
+                    <div class="holo-popup hidden" id="m6Popup">
+                        <h5><i class="bi bi-trophy"></i> MISSION COMPLETE!</h5>
+                        <p>You've mastered flood safety and preparedness!</p>
+                        <button class="btn btn-success mt-2" onclick="showFinalReward()">
+                            Complete Operation →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- REWARD SCREEN -->
+                <section id="rewardScreen" class="mission-screen hidden text-center">
+                    <div class="p-5">
+                        <i class="bi bi-trophy-fill" style="font-size: 5rem; color: gold;"></i>
+                        <h2 class="mt-3">🎉 OPERATION RISING TIDE COMPLETE!</h2>
+                        <p class="lead">You are now a Certified Flood Safety Expert!</p>
+                        <div class="card bg-dark p-3 mt-3">
+                            <h5>🏅 Achievements Unlocked</h5>
+                            <p>✓ Flood Types Identified</p>
+                            <p>✓ Water Level Monitoring Mastered</p>
+                            <p>✓ Home Preparation Completed</p>
+                            <p>✓ Evacuation Route Planning</p>
+                            <p>✓ Emergency Kit Assembled</p>
+                            <p>✓ Post-Flood Safety Known</p>
+                        </div>
+                        <a href="index.html" class="btn btn-primary btn-lg mt-4">
+                            <i class="bi bi-house"></i> Return to Dashboard
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="../js/auth.js"></script>
+    <script src="../js/simulation-flood.js"></script>
+</body>
+
+</html>

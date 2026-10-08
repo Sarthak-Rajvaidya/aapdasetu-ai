@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation: Deep Tremor - Seismic Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a237e;
+            --secondary: #00b0ff;
+            --accent: #ff4081;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --dark: #0a0e2e;
+            --light: #e3f2fd;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --glow: 0 0 15px rgba(0, 176, 255, 0.5);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 50%, #283593 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><path d="M0,50 Q25,40 50,50 T100,50" stroke="rgba(255,255,255,0.03)" fill="none" stroke-width="2"/></svg>');
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0 30px;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            text-shadow: var(--glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--light);
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            color: var(--dark);
+            text-align: center;
+            border: 2px solid var(--secondary);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            border: 4px solid var(--accent);
+        }
+
+        .user-rank {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .xp-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--warning));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .missions-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            color: var(--dark);
+            border: 2px solid var(--accent);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .mission-bar {
+            height: 25px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mission-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 12px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .mission-count {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            color: var(--dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: var(--secondary);
+        }
+
+        .game-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .game-desc {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .play-btn {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 176, 255, 0.4);
+        }
+
+        .locked {
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .locked::after {
+            content: "🔒";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #333;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge.locked {
+            background: linear-gradient(135deg, #ccc, #999);
+            color: #777;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+
+        .seismic-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="%2300b0ff"/></svg>');
+            background-size: 50% 100px;
+            animation: wave 25s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .easy { background-color: #e8f5e9; color: var(--success); }
+        .medium { background-color: #fff3e0; color: var(--warning); }
+        .hard { background-color: #ffebee; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="seismic-animation">
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <h1>OPERATION: DEEP TREMOR</h1>
+            </div>
+            <p class="tagline">Master earthquake science through interactive gamified missions. Complete all missions to become a Certified Seismic Explorer!</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="user-card">
+                <div class="user-avatar">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="user-rank" id="rank">Trainee</div>
+                <p>Seismic Explorer</p>
+                
+                <div class="xp-display">
+                    <i class="fas fa-bolt" style="color: var(--warning);"></i>
+                    <span id="xp">0</span> XP Points
+                </div>
+                
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xpFill"></div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <div class="progress-info">
+                        <span>Mission Progress</span>
+                        <span id="missionCount">0/5</span>
+                    </div>
+                    <div class="mission-bar">
+                        <div class="mission-fill" id="missionFill"></div>
+                        <div class="mission-count" id="missionCountText">0/5</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <h3 class="section-title" style="font-size: 1.2rem; justify-content: center;">
+                        <i class="fas fa-award"></i> Your Badges
+                    </h3>
+                    <div class="badge-container">
+                        <div class="badge" id="badge1"><i class="fas fa-seedling"></i></div>
+                        <div class="badge locked" id="badge2"><i class="fas fa-mountain"></i></div>
+                        <div class="badge locked" id="badge3"><i class="fas fa-bolt"></i></div>
+                        <div class="badge locked" id="badge4"><i class="fas fa-gem"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="missions-card">
+                <h2 class="section-title">
+                    <i class="fas fa-crosshairs"></i> Current Mission
+                </h2>
+                
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Mission 1: Seismic Foundations</span>
+                        <span id="missionStatus">Not Started</span>
+                    </div>
+                    <div class="mission-bar">
+                        <div class="mission-fill" id="currentMissionFill" style="width: 0%"></div>
+                        <div class="mission-count" id="currentMissionText">0%</div>
+                    </div>
+                </div>
+                
+                <p style="color: #555; line-height: 1.6; margin-bottom: 25px;">
+                    Learn the basics of tectonic plates, fault lines, and seismic waves. Complete interactive lessons and quizzes to unlock the next mission.
+                </p>
+                
+                <button class="play-btn" id="startMission">
+                    <i class="fas fa-play-circle"></i> Start Mission 1
+                </button>
+                
+                <h2 class="section-title" style="margin-top: 35px;">
+                    <i class="fas fa-gamepad"></i> Gamified Learning Games
+                </h2>
+                <p style="color: #555; margin-bottom: 20px;">Play these interactive games to earn XP and master earthquake science!</p>
+            </div>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card">
+                <div class="difficulty easy">Easy</div>
+                <div class="game-icon">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <h3 class="game-title">Tectonic Puzzle</h3>
+                <p class="game-desc">Assemble the world's tectonic plates in this interactive puzzle. Learn plate boundaries and movement types.</p>
+                <button class="play-btn play-game" data-game="puzzle">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </div>
+
+            <div class="game-card">
+                <div class="difficulty medium">Medium</div>
+                <div class="game-icon">
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <h3 class="game-title">Seismic Wave Runner</h3>
+                <p class="game-desc">Navigate seismic waves through Earth's layers. Avoid obstacles and collect energy points.</p>
+                <button class="play-btn play-game" data-game="wave">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </div>
+
+            <div class="game-card locked">
+                <div class="difficulty hard">Hard</div>
+                <div class="game-icon">
+                    <i class="fas fa-hard-hat"></i>
+                </div>
+                <h3 class="game-title">Earthquake Engineer</h3>
+                <p class="game-desc">Design earthquake-resistant buildings and test them against simulated tremors.</p>
+                <button class="play-btn play-game" data-game="engineer">
+                    <i class="fas fa-lock"></i> Locked
+                </button>
+            </div>
+
+            <div class="game-card">
+                <div class="difficulty easy">Easy</div>
+                <div class="game-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="game-title">Richter Rapid Fire</h3>
+                <p class="game-desc">Answer earthquake trivia questions against the clock. Earn bonus points for streaks!</p>
+                <button class="play-btn play-game" data-game="quiz">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </div>
+
+            <div class="game-card">
+                <div class="difficulty medium">Medium</div>
+                <div class="game-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h3 class="game-title">Epicenter Locator</h3>
+                <p class="game-desc">Use seismograph data from three stations to pinpoint earthquake epicenters on a map.</p>
+                <button class="play-btn play-game" data-game="epicenter">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </div>
+
+            <div class="game-card locked">
+                <div class="difficulty hard">Hard</div>
+                <div class="game-icon">
+                    <i class="fas fa-house-damage"></i>
+                </div>
+                <h3 class="game-title">Disaster Response Sim</h3>
+                <p class="game-desc">Coordinate emergency response after a major quake. Manage resources and save lives.</p>
+                <button class="play-btn play-game" data-game="response">
+                    <i class="fas fa-lock"></i> Locked
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Operation: Deep Tremor - Become a Certified Seismic Explorer!</p>
+            <p>Complete all missions and games to unlock advanced content and badges.</p>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i> <span id="notificationText">XP Earned!</span>
+    </div>
+
+    <script>
+        // User progress data
+        let userXP = 0;
+        let completedMissions = 0;
+        let totalMissions = 5;
+        let currentMissionProgress = 0;
+        
+        // DOM Elements
+        const xpElement = document.getElementById('xp');
+        const xpFillElement = document.getElementById('xpFill');
+        const missionCountElement = document.getElementById('missionCount');
+        const missionCountTextElement = document.getElementById('missionCountText');
+        const missionFillElement = document.getElementById('missionFill');
+        const currentMissionFillElement = document.getElementById('currentMissionFill');
+        const currentMissionTextElement = document.getElementById('currentMissionText');
+        const missionStatusElement = document.getElementById('missionStatus');
+        const rankElement = document.getElementById('rank');
+        const startMissionBtn = document.getElementById('startMission');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        // Initialize progress bars
+        updateProgressBars();
+        
+        // Start mission button
+        startMissionBtn.addEventListener('click', function() {
+            if (currentMissionProgress === 0) {
+                missionStatusElement.textContent = "In Progress";
+                startMissionBtn.innerHTML = '<i class="fas fa-forward"></i> Continue Mission';
+                startMissionBtn.style.background = 'linear-gradient(to right, var(--warning), var(--accent))';
+            }
+            
+            // Simulate mission progress
+            if (currentMissionProgress < 100) {
+                currentMissionProgress += 20;
+                
+                if (currentMissionProgress > 100) currentMissionProgress = 100;
+                
+                currentMissionFillElement.style.width = currentMissionProgress + '%';
+                currentMissionTextElement.textContent = currentMissionProgress + '%';
+                
+                // Award XP for progress
+                addXP(25);
+                
+                // Check if mission completed
+                if (currentMissionProgress === 100) {
+                    missionStatusElement.textContent = "Completed!";
+                    startMissionBtn.innerHTML = '<i class="fas fa-check"></i> Mission Complete';
+                    startMissionBtn.style.background = 'linear-gradient(to right, var(--success), #2e7d32)';
+                    startMissionBtn.disabled = true;
+                    
+                    // Complete the mission
+                    completeMission();
+                    
+                    // Show notification
+                    showNotification("Mission 1 Complete! +100 XP");
+                } else {
+                    showNotification("Good progress! +25 XP");
+                }
+            }
+        });
+        
+        // Game buttons
+        document.querySelectorAll('.play-game').forEach(button => {
+            button.addEventListener('click', function() {
+                const game = this.getAttribute('data-game');
+                
+                // Check if game is locked
+                if (this.closest('.game-card').classList.contains('locked')) {
+                    showNotification("Complete more missions to unlock this game!");
+                    return;
+                }
+                
+                // Simulate playing a game and earning XP
+                let xpEarned = 0;
+                let gameName = "";
+                
+                switch(game) {
+                    case 'puzzle':
+                        xpEarned = 50;
+                        gameName = "Tectonic Puzzle";
+                        break;
+                    case 'wave':
+                        xpEarned = 75;
+                        gameName = "Seismic Wave Runner";
+                        break;
+                    case 'quiz':
+                        xpEarned = 40;
+                        gameName = "Richter Rapid Fire";
+                        break;
+                    case 'epicenter':
+                        xpEarned = 80;
+                        gameName = "Epicenter Locator";
+                        break;
+                    default:
+                        xpEarned = 30;
+                }
+                
+                addXP(xpEarned);
+                showNotification(`Great job! You earned ${xpEarned} XP from ${gameName}`);
+                
+                // Add a little animation to the button
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+        
+        // Function to add XP
+        function addXP(amount) {
+            userXP += amount;
+            xpElement.textContent = userXP;
+            
+            // Update XP bar (max 1000 XP for full bar)
+            const xpPercent = Math.min((userXP / 1000) * 100, 100);
+            xpFillElement.style.width = xpPercent + '%';
+            
+            // Update rank based on XP
+            updateRank();
+            
+            // Unlock badges based on XP
+            updateBadges();
+        }
+        
+        // Function to complete a mission
+        function completeMission() {
+            completedMissions++;
+            missionCountElement.textContent = `${completedMissions}/${totalMissions}`;
+            missionCountTextElement.textContent = `${completedMissions}/${totalMissions}`;
+            
+            // Update mission progress bar
+            const missionPercent = (completedMissions / totalMissions) * 100;
+            missionFillElement.style.width = missionPercent + '%';
+            
+            // Award XP for mission completion
+            addXP(100);
+            
+            // Unlock games when missions are completed
+            if (completedMissions >= 2) {
+                document.querySelectorAll('.game-card')[2].classList.remove('locked');
+                document.querySelectorAll('.game-card')[2].querySelector('.play-btn').innerHTML = '<i class="fas fa-play"></i> Play Now';
+                document.querySelectorAll('.game-card')[2].querySelector('.play-btn').setAttribute('data-game', 'engineer');
+            }
+            
+            if (completedMissions >= 4) {
+                document.querySelectorAll('.game-card')[5].classList.remove('locked');
+                document.querySelectorAll('.game-card')[5].querySelector('.play-btn').innerHTML = '<i class="fas fa-play"></i> Play Now';
+                document.querySelectorAll('.game-card')[5].querySelector('.play-btn').setAttribute('data-game', 'response');
+            }
+        }
+        
+        // Function to update user rank
+        function updateRank() {
+            if (userXP >= 500) {
+                rankElement.textContent = "Seismic Expert";
+                rankElement.style.color = "var(--accent)";
+            } else if (userXP >= 200) {
+                rankElement.textContent = "Geology Scholar";
+                rankElement.style.color = "var(--secondary)";
+            } else if (userXP >= 50) {
+                rankElement.textContent = "Trainee";
+                rankElement.style.color = "var(--primary)";
+            }
+        }
+        
+        // Function to update badges
+        function updateBadges() {
+            if (userXP >= 50) {
+                document.getElementById('badge1').classList.remove('locked');
+            }
+            if (userXP >= 200) {
+                document.getElementById('badge2').classList.remove('locked');
+            }
+            if (userXP >= 500) {
+                document.getElementById('badge3').classList.remove('locked');
+            }
+            if (completedMissions === totalMissions) {
+                document.getElementById('badge4').classList.remove('locked');
+            }
+        }
+        
+        // Function to update progress bars
+        function updateProgressBars() {
+            // XP bar
+            const xpPercent = Math.min((userXP / 1000) * 100, 100);
+            xpFillElement.style.width = xpPercent + '%';
+            
+            // Mission progress bar
+            const missionPercent = (completedMissions / totalMissions) * 100;
+            missionFillElement.style.width = missionPercent + '%';
+            
+            // Current mission bar
+            currentMissionFillElement.style.width = currentMissionProgress + '%';
+            currentMissionTextElement.textContent = currentMissionProgress + '%';
+        }
+        
+        // Function to show notification
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Add some initial XP to show progress
+        setTimeout(() => {
+            addXP(10);
+            showNotification("Welcome to Operation: Deep Tremor! +10 XP");
+        }, 1000);
+        
+        // Add earthquake simulation animation to the background
+        function simulateEarthquake() {
+            const body = document.body;
+            body.style.transform = 'translateX(5px)';
+            
+            setTimeout(() => {
+                body.style.transform = 'translateX(-5px)';
+            }, 100);
+            
+            setTimeout(() => {
+                body.style.transform = 'translateX(0)';
+            }, 200);
+        }
+        
+        // Simulate a small earthquake every 30 seconds
+        setInterval(simulateEarthquake, 30000);
+    </script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>

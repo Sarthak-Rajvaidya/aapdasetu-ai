@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Earthquake Safety - Module 2 | DMTS Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/course.css">
+    <style>
+        .survivor-badge {
+            background: linear-gradient(135deg, #ff6b35, #ffa500);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .phase-card {
+            border-left: 4px solid #0d6efd;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning-card {
+            border: 2px solid #dc3545;
+            background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .warning-card::before {
+            content: "⚠️";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 1.5rem;
+            background: white;
+            padding: 0 10px;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: #0d6efd;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .timeline-item.day1::before { content: "D1"; }
+        .timeline-item.day2::before { content: "D2"; }
+        .timeline-item.day3::before { content: "D3"; }
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+        .checklist-item i {
+            color: #198754;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        .hierarchy-step {
+            counter-increment: step;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            background: white;
+            border: 2px solid #e9ecef;
+            position: relative;
+        }
+        .hierarchy-step::before {
+            content: "Phase " counter(step);
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .scenario-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+            transition: transform 0.2s;
+        }
+        .scenario-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .danger-zone {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px dashed #ffc107;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black px-4 py-3 sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="../index.html">
+            <i class="bi bi-shield-check me-2"></i>DMTS Platform
+        </a>
+        <div class="d-flex align-items-center">
+            <a href="../modules.html" class="btn btn-outline-light btn-sm me-2">
+                <i class="bi bi-arrow-left"></i> Back to Modules
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle"></i> Student
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-award"></i> My Certificates</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="module-header" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb bg-dark bg-opacity-50 p-3 rounded">
+                <li class="breadcrumb-item"><a href="../index.html" class="text-light text-decoration-none">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="../modules.html" class="text-light text-decoration-none">Modules</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">Module 2: Earthquake Safety & Survival Guidelines</li>
+            </ol>
+        </nav>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center mb-3">
+                    <h1 class="fw-bold text-white mb-0 display-5">Module 2: Earthquake Safety & Survival Guidelines</h1>
+                    <span class="survivor-badge ms-3">The "Proactive Survivor" Framework</span>
+                </div>
+                <p class="lead text-light mb-0">
+                    <i class="bi bi-clock me-1"></i> Estimated: 45 min • 
+                    <i class="bi bi-shield-check ms-3 me-1"></i> Practical Survival Skills •
+                    <i class="bi bi-check-circle ms-3 me-1"></i> 5 Sections
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-light" onclick="markAsCompleted()">
+                        <i class="bi bi-check-circle"></i> Mark Complete
+                    </button>
+                    <button class="btn btn-primary" onclick="startQuiz()">
+                        <i class="bi bi-pencil-square"></i> Take Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-light small">Module Progress</span>
+                <span id="progress-text" class="text-light fw-bold small">0% Complete</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-warning progress-bar-striped" style="width:0%"></div>
+            </div>
+            <script src="../js/auth.js"></script>
+        </div>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            
+            <div class="section-card section-1" id="section1">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-house-check-fill"></i></div>
+                    <div>
+                        <h3 class="fw-bold mb-1">Section 1: Preparation (Before the Shaking)</h3>
+                        <p class="mb-0 opacity-75">Effective survival begins months before the fault line slips</p>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="alert alert-primary d-flex align-items-center">
+                        <i class="bi bi-lightbulb-fill fs-4 me-3"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">The Proactive Survivor Mindset</h5>
+                            <p class="mb-0">Don't wait for the ground to shake. Prepare today for tomorrow's safety.</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="fw-bold text-primary mb-3">The "3 AM Walkthrough" Drill</h4>
+                        <div class="card border-primary border-2">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                        <i class="bi bi-moon-stars-fill fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="card-title fw-bold">Simulate Complete Darkness</h5>
+                                        <p class="card-text">Navigate your home in total darkness. Any furniture you trip over or anything that falls on your bed in this drill is a <strong class="text-danger">potential hazard</strong> during a real quake.</p>
+                                        <div class="checklist-item">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            <div><strong>Test paths:</strong> From bed to door, from couch to shelter</div>
+                                        </div>
+                                        <div class="checklist-item">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            <div><strong>Identify hazards:</strong> Unsecured shelves, hanging objects, glass furniture</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 border-success">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success fw-bold"><i class="bi bi-backpack4 me-2"></i>Go-Bag Essentials</h5>
+                                    <p class="small">Beyond basic food and water, your emergency kit must include:</p>
+                                    <ul class="mb-0">
+                                        <li class="mb-2"><strong>Whistle:</strong> To alert rescuers without wasting breath</li>
+                                        <li class="mb-2"><strong>Manual tools:</strong> Wrench/pliers for gas shut-off</li>
+                                        <li><strong>Sturdy work gloves:</strong> Protect hands from debris</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 border-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning fw-bold"><i class="bi bi-tools me-2"></i>Home Hardening</h5>
+                                    <p class="small">Secure your space before disaster strikes:</p>
+                                    <ul class="mb-0">
+                                        <li class="mb-2"><strong>L-brackets:</strong> Anchor tall furniture to wall studs</li>
+                                        <li class="mb-2"><strong>Museum Wax/Adhesive Putty:</strong> Secure smaller valuables on shelves</li>
+                                        <li><strong>Safety film:</strong> Apply to windows to prevent glass shattering</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Critical Check: The Bedroom</h5>
+                        <p class="mb-0">Your bedroom is where you're most vulnerable at night. Ensure nothing heavy is above your bed, and keep sturdy shoes and a flashlight within arm's reach.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card section-2" id="section2">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-stopwatch-fill"></i></div>
+                    <div>
+                        <h3 class="fw-bold mb-1">Section 2: Immediate Actions (During the Shaking)</h3>
+                        <p class="mb-0 opacity-75">Reaction time is everything - you have 3-10 seconds</p>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="alert alert-danger d-flex align-items-center mb-4">
+                        <i class="bi bi-alarm-fill fs-3 me-3"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">3-10 Second Window</h5>
+                            <p class="mb-0">You have roughly <strong>3–10 seconds</strong> before the most violent waves arrive after the initial tremor.</p>
+                        </div>
+                    </div>
+
+                    <h4 class="fw-bold text-primary mb-3">The "Drop, Cover, and Hold On" Protocol</h4>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-arrow-down-circle-fill fs-2"></i>
+                                </div>
+                                <h5 class="fw-bold">Drop</h5>
+                                <p class="small">Lower your center of gravity to prevent being knocked down</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-shield-check fs-2"></i>
+                                </div>
+                                <h5 class="fw-bold">Cover</h5>
+                                <p class="small">Protect head and neck with sturdy table or desk</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded h-100">
+                                <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-hand-index-thumb-fill fs-2"></i>
+                                </div>
+                                <h5 class="fw-bold">Hold On</h5>
+                                <p class="small">Grip table leg - furniture moves during quakes</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Location-Specific Scenarios</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="scenario-card">
+                                <h6 class="fw-bold text-primary">🏢 High-Rise Office</h6>
+                                <p class="small mb-0">Stay away from windows. The building is designed to sway; <strong class="text-danger">do not rush for stairs or elevators</strong>.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="scenario-card">
+                                <h6 class="fw-bold text-success">🛒 Supermarket/Retail</h6>
+                                <p class="small mb-0">Use shopping cart as head shield. Move away from glass storefronts and heavy shelving.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="scenario-card">
+                                <h6 class="fw-bold text-warning">🎬 Cinema/Stadium</h6>
+                                <p class="small mb-0">Stay in your seat. Lean forward, protect head. Do not exit until shaking stops to avoid stampede.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="scenario-card">
+                                <h6 class="fw-bold text-danger">🚗 Vehicle</h6>
+                                <p class="small mb-0">Pull over, set parking brake. Stay inside. Avoid overpasses, bridges, power lines, and signs.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-card mt-4">
+                        <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-octagon-fill me-2"></i>The "Triangle of Life" Warning</h5>
+                        <p class="mb-0"><strong>Avoid the "Triangle of Life" myth</strong> (hiding next to, rather than under, furniture). Leading global agencies (Red Cross, FEMA) advise that <strong>under a table is much safer</strong> from falling ceiling debris. This myth has been repeatedly debunked by earthquake safety experts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card section-3" id="section3">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-eye-fill"></i></div>
+                    <div>
+                        <h3 class="fw-bold mb-1">Section 3: Points of Critical Awareness</h3>
+                        <p class="mb-0 opacity-75">Understanding the "invisible" dangers</p>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <h4 class="fw-bold text-primary mb-3">Beyond the Shaking: Hidden Hazards</h4>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-danger text-white rounded-circle p-3 me-3 flex-shrink-0">
+                                <i class="bi bi-window-dash fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold text-danger">The "Glass Rain" Effect</h5>
+                                <p>In urban centers, skyscraper windows often shatter and fall <strong>blocks away</strong> from the building.</p>
+                                <div class="alert alert-warning mb-0">
+                                    <i class="bi bi-lightbulb-fill me-2"></i>
+                                    <strong>Action:</strong> If outside during shaking, <strong>do not look up</strong>. Duck into a building's reinforced lobby or seek shelter in a doorway.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-warning text-white rounded-circle p-3 me-3 flex-shrink-0">
+                                <i class="bi bi-droplet-half fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold text-warning">Soil Liquefaction</h5>
+                                <p>Shaking can turn solid, sandy soil into a liquid-like state, causing buildings to sink or tilt.</p>
+                                <div class="alert alert-warning mb-0">
+                                    <i class="bi bi-lightbulb-fill me-2"></i>
+                                    <strong>Action:</strong> If you see "sand boils" (mud bubbling from the ground), the area is structurally unstable. Move to rocky or higher ground immediately.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-info">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-info"><i class="bi bi-arrow-repeat me-2"></i>The Aftershock Cycle</h5>
+                            <p class="card-text">The first quake is rarely the last. Aftershocks can happen:</p>
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div class="p-2 border rounded">
+                                        <h6 class="fw-bold">Minutes Later</h6>
+                                        <small>Immediate danger period</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-2 border rounded">
+                                        <h6 class="fw-bold">Days Later</h6>
+                                        <small>Weakened structures collapse</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-2 border rounded">
+                                        <h6 class="fw-bold">Months Later</h6>
+                                        <small>Continuing seismic activity</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 mb-0"><strong>Warning:</strong> Aftershocks often collapse buildings that were only "weakened" by the first quake.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card section-4" id="section4">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-diagram-3-fill"></i></div>
+                    <div>
+                        <h3 class="fw-bold mb-1">Section 4: The Hierarchy of Rescue</h3>
+                        <p class="mb-0 opacity-75">Self First, Others Next - The "Oxygen Mask" Principle</p>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="alert alert-info d-flex align-items-center mb-4">
+                        <i class="bi bi-airplane-fill fs-3 me-3"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">The "Oxygen Mask" Principle</h5>
+                            <p class="mb-0">You cannot help others if you become a victim yourself. Secure your safety first.</p>
+                        </div>
+                    </div>
+
+                    <div class="hierarchy-step">
+                        <h4 class="fw-bold text-primary">Phase 1: Save Yourself (First 60 Seconds)</h4>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Neutralize Space:</strong> If cooking, turn off stove only if it's one step away</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Armor Up:</strong> Put on sturdy shoes immediately after shaking stops</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Self-Check:</strong> Adrenaline masks pain. Check limbs for blood, check pulse before moving objects</div>
+                        </div>
+                    </div>
+
+                    <div class="hierarchy-step">
+                        <h4 class="fw-bold text-success">Phase 2: Secure Your "Safe Base" (Minutes 2–10)</h4>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>The 360-Check:</strong> Scan ceiling for cracks, floor for glass, air for smells</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>The Gas Protocol:</strong> If you smell "rotten eggs," open window and leave immediately</div>
+                        </div>
+                        <div class="alert alert-danger small">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Critical Warning:</strong> Never flip a light switch or use a cell phone near a gas leak—a single spark can trigger an explosion.
+                        </div>
+                    </div>
+
+                    <div class="hierarchy-step">
+                        <h4 class="fw-bold text-warning">Phase 3: Saving Others (The Triage Method)</h4>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Voice Search:</strong> Call out: "I am here, can anyone hear me?" Listen for tapping or shouts</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>The "Easy Wins":</strong> Help conscious, lightly trapped people first to build rescue team</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Medical Priority:</strong> Focus on "Stop the Bleed." Use pressure or tourniquet on heavy limb bleeding</div>
+                        </div>
+                        
+                        <div class="warning-card mt-3">
+                            <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-octagon-fill me-2"></i>The "Crush Syndrome" Warning</h5>
+                            <p class="mb-0"><strong>Critical:</strong> If a victim has been pinned under a heavy beam for more than 15-20 minutes, <strong class="text-danger">do not move the beam without professional medics</strong>. Releasing the pressure can send built-up toxins into their heart, causing immediate death.</p>
+                        </div>
+                    </div>
+
+                    <div class="hierarchy-step">
+                        <h4 class="fw-bold text-info">Phase 4: Collective Response</h4>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Text, Don't Talk:</strong> Phone lines must remain open for emergency calls. Send one "I'm Safe" text and get off network</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="bi bi-check2-square"></i>
+                            <div><strong>Mark the House:</strong> Once a room is searched and empty, mark door with "X" using tape or chalk</div>
+                        </div>
+                        <p class="small text-muted mt-2"><i class="bi bi-info-circle me-1"></i>This tells professional rescuers not to waste time re-searching that space.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card section-5" id="section5">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-calendar-week-fill"></i></div>
+                    <div>
+                        <h3 class="fw-bold mb-1">Section 5: The 72-Hour Timeline</h3>
+                        <p class="mb-0 opacity-75">Help is local - Be prepared to be your own first responder</p>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="alert alert-warning d-flex align-items-center mb-4">
+                        <i class="bi bi-clock-history fs-3 me-3"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">The 72-Hour Reality</h5>
+                            <p class="mb-0">Professional help may take up to <strong>3 days</strong> to reach you in a major disaster. Your preparedness determines your survival.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item day1">
+                        <h4 class="fw-bold text-danger">Day 1: Immediate Survival (0-24 Hours)</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-danger bg-opacity-10 border-danger mb-2">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-fire me-2"></i>Fire Suppression</h6>
+                                        <p class="small mb-0">Extinguish small fires immediately. Know location of fire extinguishers.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-danger bg-opacity-10 border-danger mb-2">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-heart-pulse me-2"></i>Immediate First Aid</h6>
+                                        <p class="small mb-0">Treat life-threatening injuries. Stop bleeding, clear airways.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card bg-danger bg-opacity-10 border-danger">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-shield-check me-2"></i>Securing Perimeter</h6>
+                                        <p class="small mb-0">Check for structural damage. Secure safe exit routes. Shut off utilities if necessary.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item day2">
+                        <h4 class="fw-bold text-warning">Day 2: Sustaining Life (24-48 Hours)</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card bg-warning bg-opacity-10 border-warning h-100">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-droplet me-2"></i>Water Rationing</h6>
+                                        <p class="small mb-0">Implement strict water rationing. Minimum 1 liter per person per day.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-warning bg-opacity-10 border-warning h-100">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-bucket me-2"></i>Sanitation & Hygiene</h6>
+                                        <p class="small mb-0">Establish sanitation area. Prevent disease spread with proper waste disposal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-warning bg-opacity-10 border-warning h-100">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-people me-2"></i>Community Check</h6>
+                                        <p class="small mb-0">Check on vulnerable neighbors. Pool resources with nearby survivors.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item day3">
+                        <h4 class="fw-bold text-success">Day 3: Planning Forward (48-72 Hours)</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-success bg-opacity-10 border-success h-100">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-radio me-2"></i>Information Gathering</h6>
+                                        <p class="small mb-0">Listen for official government broadcasts regarding relief efforts.</p>
+                                        <div class="mt-2">
+                                            <span class="badge bg-info me-1">AM Radio</span>
+                                            <span class="badge bg-info me-1">Battery Radio</span>
+                                            <span class="badge bg-info">Emergency Alerts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-success bg-opacity-10 border-success h-100">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold"><i class="bi bi-truck me-2"></i>Resource Location</h6>
+                                        <p class="small mb-0">Identify food/water distribution points. Plan safe routes to these locations.</p>
+                                        <div class="mt-2">
+                                            <span class="badge bg-success me-1">Water Stations</span>
+                                            <span class="badge bg-success me-1">Medical Tents</span>
+                                            <span class="badge bg-success">Food Distribution</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-lightbulb-fill me-2"></i>
+                        <strong>Remember:</strong> After the initial 72 hours, the transition to recovery begins. Your preparedness during these critical days determines your long-term survival and ability to help others.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sidebar-card card shadow-sm border-0 sticky-top" style="top: 100px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title fw-bold p-3 border-bottom mb-0 bg-light">
+                        <i class="bi bi-list-ul me-2"></i>Module 2 Contents
+                    </h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#section1" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                    <i class="bi bi-house-check-fill"></i>
+                                </div>
+                                <div>
+                                    <strong>Section 1: Preparation</strong>
+                                    <small class="d-block text-muted">Before the shaking</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#section2" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-danger text-white rounded-circle p-2 me-3">
+                                    <i class="bi bi-stopwatch-fill"></i>
+                                </div>
+                                <div>
+                                    <strong>Section 2: Immediate Actions</strong>
+                                    <small class="d-block text-muted">During shaking</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#section3" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                    <i class="bi bi-eye-fill"></i>
+                                </div>
+                                <div>
+                                    <strong>Section 3: Critical Awareness</strong>
+                                    <small class="d-block text-muted">Hidden dangers</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#section4" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info text-white rounded-circle p-2 me-3">
+                                    <i class="bi bi-diagram-3-fill"></i>
+                                </

@@ -1,0 +1,276 @@
+/* =========================================================================
+   AapdaSetu AI — Design System
+   "Learn. Simulate. Prepare. Respond."
+
+   This file defines the shared visual language for the platform:
+   trustworthy, technical, calm-under-pressure — not a gaming site.
+   Loaded on every page, after Bootstrap and before page-specific CSS so
+   page CSS can still make local overrides where truly needed.
+   ========================================================================= */
+
+:root {
+  /* Brand palette: deep "night-response" navy + safety-amber accent */
+  --as-navy-950: #060f1f;
+  --as-navy-900: #0b1a30;
+  --as-navy-800: #12233d;
+  --as-navy-700: #1a2f4d;
+  --as-blue-500: #2f6fed;
+  --as-blue-400: #4f8cff;
+  --as-cyan-400: #22d3ee;
+  --as-amber-400: #fbbf24;
+  --as-amber-500: #f59e0b;
+  --as-red-500: #ef4444;
+  --as-green-500: #22c55e;
+
+  --as-text-primary: #0b1a30;
+  --as-text-muted: #5b6b83;
+  --as-text-on-dark: #eaf1fb;
+  --as-text-on-dark-muted: #a9bad6;
+
+  --as-surface: #ffffff;
+  --as-surface-alt: #f4f7fc;
+  --as-border: rgba(11, 26, 48, 0.10);
+
+  --as-radius-sm: 10px;
+  --as-radius-md: 16px;
+  --as-radius-lg: 24px;
+
+  --as-shadow-sm: 0 2px 10px rgba(11, 26, 48, 0.06);
+  --as-shadow-md: 0 12px 32px rgba(11, 26, 48, 0.12);
+  --as-shadow-lg: 0 24px 64px rgba(11, 26, 48, 0.18);
+
+  --as-gradient-hero: linear-gradient(135deg, #060f1f 0%, #0b1a30 45%, #12233d 100%);
+  --as-gradient-accent: linear-gradient(135deg, var(--as-blue-500), var(--as-cyan-400));
+  --as-gradient-warn: linear-gradient(135deg, var(--as-amber-500), var(--as-red-500));
+
+  --as-font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --as-font-display: "Sora", "Inter", system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--as-font-body);
+  color: var(--as-text-primary);
+  background: var(--as-surface-alt);
+}
+
+h1, h2, h3, h4, .as-display {
+  font-family: var(--as-font-display);
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------- Navbar ---------------------------- */
+.as-navbar {
+  background: rgba(6, 15, 31, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.65rem 0;
+}
+.as-navbar .navbar-brand {
+  font-family: var(--as-font-display);
+  font-weight: 700;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.15rem;
+}
+.as-navbar .navbar-brand .as-logo-badge {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--as-gradient-accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--as-shadow-sm);
+}
+.as-navbar .nav-link {
+  color: var(--as-text-on-dark-muted) !important;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem !important;
+  transition: color .2s ease, background .2s ease;
+}
+.as-navbar .nav-link:hover,
+.as-navbar .nav-link.active {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.06);
+}
+.as-navbar .btn-as-primary { margin-left: 0.5rem; }
+
+/* ---------------------------- Buttons ---------------------------- */
+.btn-as-primary {
+  background: var(--as-gradient-accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--as-radius-sm);
+  padding: 0.6rem 1.4rem;
+  box-shadow: var(--as-shadow-sm);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn-as-primary:hover { transform: translateY(-1px); box-shadow: var(--as-shadow-md); color: #fff; }
+.btn-as-outline {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--as-radius-sm);
+  padding: 0.55rem 1.3rem;
+  transition: background .15s ease, border-color .15s ease;
+}
+.btn-as-outline:hover { background: rgba(255,255,255,0.08); border-color: #fff; color: #fff; }
+.btn-as-dark-outline {
+  border: 1.5px solid var(--as-border);
+  color: var(--as-text-primary);
+  border-radius: var(--as-radius-sm);
+  font-weight: 600;
+  background: #fff;
+}
+.btn-as-dark-outline:hover { background: var(--as-surface-alt); }
+
+/* Visible focus states for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--as-cyan-400);
+  outline-offset: 2px;
+}
+
+/* ---------------------------- Cards ---------------------------- */
+.as-card {
+  background: var(--as-surface);
+  border: 1px solid var(--as-border);
+  border-radius: var(--as-radius-md);
+  box-shadow: var(--as-shadow-sm);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.as-card:hover { transform: translateY(-3px); box-shadow: var(--as-shadow-md); }
+.as-card-glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  border-radius: var(--as-radius-md);
+  color: #fff;
+}
+.as-icon-tile {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--as-gradient-accent);
+  color: #fff; font-size: 1.4rem;
+  box-shadow: var(--as-shadow-sm);
+}
+
+/* ---------------------------- Hero ---------------------------- */
+.as-hero {
+  background: var(--as-gradient-hero);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.as-hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(47,111,237,0.25), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(34,211,238,0.18), transparent 45%);
+  pointer-events: none;
+}
+.as-hero .as-eyebrow {
+  color: var(--as-cyan-400);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+.as-tagline { color: var(--as-text-on-dark-muted); font-size: 1.15rem; }
+
+/* ---------------------------- Progress / meters ---------------------------- */
+.as-progress {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--as-border);
+  overflow: hidden;
+}
+.as-progress > span {
+  display: block; height: 100%;
+  background: var(--as-gradient-accent);
+  border-radius: 999px;
+  width: 0%;
+  transition: width 1s cubic-bezier(.22,1,.36,1);
+}
+.as-progress.danger > span { background: var(--as-gradient-warn); }
+
+.as-readiness-ring {
+  --pct: 0;
+  width: 132px; height: 132px; border-radius: 50%;
+  background: conic-gradient(var(--as-blue-500) calc(var(--pct) * 1%), var(--as-border) 0);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 1s ease;
+}
+.as-readiness-ring > div {
+  width: 104px; height: 104px; border-radius: 50%;
+  background: var(--as-surface);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* ---------------------------- Skeleton loaders ---------------------------- */
+.as-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--as-border);
+  border-radius: var(--as-radius-sm);
+}
+.as-skeleton::after {
+  content: "";
+  position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  animation: as-shimmer 1.4s infinite;
+}
+@keyframes as-shimmer { 100% { transform: translateX(100%); } }
+
+/* ---------------------------- Fades / transitions ---------------------------- */
+.as-fade-in { animation: as-fade-in .5s ease both; }
+@keyframes as-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.as-badge-soft {
+  background: rgba(47, 111, 237, 0.1);
+  color: var(--as-blue-500);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* ---------------------------- Footer ---------------------------- */
+.as-footer {
+  background: var(--as-navy-950);
+  color: var(--as-text-on-dark-muted);
+  padding: 3rem 0 1.5rem;
+}
+.as-footer a { color: var(--as-text-on-dark-muted); text-decoration: none; }
+.as-footer a:hover { color: #fff; }
+.as-footer .as-footer-brand { color: #fff; font-family: var(--as-font-display); font-weight: 700; }
+
+/* ---------------------------- Toasts polish ---------------------------- */
+#asToastContainer { font-family: var(--as-font-body); }
+
+/* ---------------------------- Utility ---------------------------- */
+.as-muted { color: var(--as-text-muted); }
+.as-section { padding: 4.5rem 0; }
+.as-counter { font-family: var(--as-font-display); font-weight: 700; }
+
+@media (min-width: 992px) {
+  .col-lg-2-4 { flex: 0 0 20%; max-width: 20%; }
+}
+
+/* Screen-reader only */
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }

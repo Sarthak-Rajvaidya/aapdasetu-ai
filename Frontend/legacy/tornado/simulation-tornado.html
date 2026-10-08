@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tornado Simulation | Operation Vortex</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/simulation-tornado.css">
+</head>
+
+<body>
+
+    <div class="tornado-bg" id="tornadoBg">
+        <div class="tornado-swirl"></div>
+    </div>
+
+    <nav class="navbar navbar-dark bg-black px-4 py-3">
+        <a class="navbar-brand fw-bold text-white" href="../index.html">
+            <i class="bi bi-tornado"></i> 🌪️ DMTS | Tornado Simulation
+        </a>
+        <a href="../simulation.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Exit Simulation
+        </a>
+    </nav>
+
+    <div class="game-container">
+        <div class="holo-interface">
+            <div class="scanline"></div>
+
+            <!-- HUD HEADER -->
+            <header class="hud-header">
+                <div class="hud-title">
+                    <i class="bi bi-cloud-lightning-rain"></i> OPERATION: VORTEX
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="missionProgress" style="width: 0%"></div>
+                    </div>
+                    <small class="text-light">Mission Progress: <span id="progressText">0</span>/6</small>
+                </div>
+            </header>
+
+            <main id="missionDeck">
+                <!-- MISSION 1: FUJITA SCALE -->
+                <section id="mission1" class="mission-screen active">
+                    <h3><i class="bi bi-bar-chart-steps"></i> MISSION 1: THE FUJITA SCALE</h3>
+                    <p class="text-light">Objective: Match tornado intensities with their damage levels.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="fujita-card ef0" data-ef="EF0" onclick="selectFujita('EF0')">
+                                <h4 class="text-success">EF0</h4>
+                                <p class="small">65-85 mph</p>
+                                <i class="bi bi-wind fs-2 text-success"></i>
+                                <p class="small mt-2">Light damage: Broken branches</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fujita-card ef1" data-ef="EF1" onclick="selectFujita('EF1')">
+                                <h4 class="text-success">EF1</h4>
+                                <p class="small">86-110 mph</p>
+                                <i class="bi bi-wind fs-2 text-success"></i>
+                                <p class="small mt-2">Moderate: Roofs stripped</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fujita-card ef2" data-ef="EF2" onclick="selectFujita('EF2')">
+                                <h4 class="text-warning">EF2</h4>
+                                <p class="small">111-135 mph</p>
+                                <i class="bi bi-wind fs-2 text-warning"></i>
+                                <p class="small mt-2">Significant: Roofs torn off</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fujita-card ef3" data-ef="EF3" onclick="selectFujita('EF3')">
+                                <h4 class="text-warning">EF3</h4>
+                                <p class="small">136-165 mph</p>
+                                <i class="bi bi-wind fs-2 text-warning"></i>
+                                <p class="small mt-2">Severe: Entire stories destroyed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fujita-card ef4" data-ef="EF4" onclick="selectFujita('EF4')">
+                                <h4 class="text-danger">EF4</h4>
+                                <p class="small">166-200 mph</p>
+                                <i class="bi bi-wind fs-2 text-danger"></i>
+                                <p class="small mt-2">Devastating: Houses leveled</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fujita-card ef5" data-ef="EF5" onclick="selectFujita('EF5')">
+                                <h4 class="text-dark">EF5</h4>
+                                <p class="small">>200 mph</p>
+                                <i class="bi bi-wind fs-2 text-dark"></i>
+                                <p class="small mt-2">Incredible: Houses swept away</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="fujitaResult" class="text-center mt-3"></div>
+
+                    <div class="holo-popup hidden" id="m1Popup">
+                        <h5><i class="bi bi-check-circle"></i> FUJITA SCALE MASTERED!</h5>
+                        <p class="small">✓ EF0-EF1: Light to Moderate | EF2-EF3: Significant to Severe | EF4-EF5:
+                            Devastating to Incredible</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(2)">
+                            Proceed to Mission 2 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 2: WARNING SIGNS -->
+                <section id="mission2" class="mission-screen hidden">
+                    <h3><i class="bi bi-exclamation-triangle"></i> MISSION 2: TORNADO WARNING SIGNS</h3>
+                    <p class="text-light">Objective: Identify critical tornado warning signs.</p>
+
+                    <div id="warningSigns">
+                        <div class="warning-sign" data-warning="sky" onclick="completeWarning(this)">
+                            <i class="bi bi-cloud-hail fs-3"></i>
+                            <div>
+                                <strong>Dark, greenish sky</strong>
+                                <p class="small mb-0">Often indicates hail and severe conditions</p>
+                            </div>
+                            <i class="bi bi-check-circle ms-auto fs-4 hidden-check" style="display: none;"></i>
+                        </div>
+                        <div class="warning-sign" data-warning="roar" onclick="completeWarning(this)">
+                            <i class="bi bi-megaphone fs-3"></i>
+                            <div>
+                                <strong>Loud roar like a freight train</strong>
+                                <p class="small mb-0">The sound of high-speed winds and debris</p>
+                            </div>
+                            <i class="bi bi-check-circle ms-auto fs-4 hidden-check" style="display: none;"></i>
+                        </div>
+                        <div class="warning-sign" data-warning="funnel" onclick="completeWarning(this)">
+                            <i class="bi bi-cloud-rain fs-3"></i>
+                            <div>
+                                <strong>Wall cloud or rotating funnel</strong>
+                                <p class="small mb-0">Visible rotation at cloud base</p>
+                            </div>
+                            <i class="bi bi-check-circle ms-auto fs-4 hidden-check" style="display: none;"></i>
+                        </div>
+                        <div class="warning-sign" data-warning="calm" onclick="completeWarning(this)">
+                            <i class="bi bi-brightness-alt-high fs-3"></i>
+                            <div>
+                                <strong>Eerie calm after storm</strong>
+                                <p class="small mb-0">The eye of the storm - take cover!</p>
+                            </div>
+                            <i class="bi bi-check-circle ms-auto fs-4 hidden-check" style="display: none;"></i>
+                        </div>
+                        <div class="warning-sign" data-warning="hail" onclick="completeWarning(this)">
+                            <i class="bi bi-cloud-snow fs-3"></i>
+                            <div>
+                                <strong>Large hail with no rain</strong>
+                                <p class="small mb-0">Hail core often precedes tornado formation</p>
+                            </div>
+                            <i class="bi bi-check-circle ms-auto fs-4 hidden-check" style="display: none;"></i>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p id="warningProgress">Signs identified: 0/5</p>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m2Popup">
+                        <h5><i class="bi bi-eye"></i> WARNING SIGNS IDENTIFIED!</h5>
+                        <p>Always watch for these signs during severe weather!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(3)">
+                            Proceed to Mission 3 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 3: SAFE SHELTERS -->
+                <section id="mission3" class="mission-screen hidden">
+                    <h3><i class="bi bi-building"></i> MISSION 3: SAFE SHELTER LOCATIONS</h3>
+                    <p class="text-light">Objective: Choose the safest shelter during a tornado.</p>
+
+                    <div class="shelter-grid">
+                        <div class="shelter-card safe" data-shelter="basement"
+                            onclick="selectShelter(this, 'basement', true)">
+                            <i class="bi bi-house-down fs-2"></i>
+                            <h6>Basement</h6>
+                            <small>Under sturdy table</small>
+                            <span class="badge bg-success mt-2">SAFE</span>
+                        </div>
+                        <div class="shelter-card safe" data-shelter="interior"
+                            onclick="selectShelter(this, 'interior', true)">
+                            <i class="bi bi-door-closed fs-2"></i>
+                            <h6>Interior Room</h6>
+                            <small>No windows, lowest floor</small>
+                            <span class="badge bg-success mt-2">SAFE</span>
+                        </div>
+                        <div class="shelter-card safe" data-shelter="bathroom"
+                            onclick="selectShelter(this, 'bathroom', true)">
+                            <i class="bi bi-cup-straw fs-2"></i>
+                            <h6>Bathroom</h6>
+                            <small>Pipes add strength</small>
+                            <span class="badge bg-success mt-2">SAFE</span>
+                        </div>
+                        <div class="shelter-card unsafe" data-shelter="window"
+                            onclick="selectShelter(this, 'window', false)">
+                            <i class="bi bi-window fs-2"></i>
+                            <h6>Near Windows</h6>
+                            <small>Deadly flying glass</small>
+                            <span class="badge bg-danger mt-2">DANGER</span>
+                        </div>
+                        <div class="shelter-card unsafe" data-shelter="car" onclick="selectShelter(this, 'car', false)">
+                            <i class="bi bi-car-front fs-2"></i>
+                            <h6>Vehicle</h6>
+                            <small>Never shelter in car</small>
+                            <span class="badge bg-danger mt-2">DANGER</span>
+                        </div>
+                        <div class="shelter-card unsafe" data-shelter="overpass"
+                            onclick="selectShelter(this, 'overpass', false)">
+                            <i class="bi bi-bridge fs-2"></i>
+                            <h6>Under Overpass</h6>
+                            <small>Wind tunnel effect</small>
+                            <span class="badge bg-danger mt-2">DANGER</span>
+                        </div>
+                    </div>
+
+                    <div id="shelterFeedback" class="text-center mt-3"></div>
+
+                    <div class="holo-popup hidden" id="m3Popup">
+                        <h5><i class="bi bi-shield-check"></i> SHELTER SELECTION MASTERED!</h5>
+                        <p>Always choose interior rooms on the lowest floor without windows!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(4)">
+                            Proceed to Mission 4 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 4: DROP, COVER, HOLD -->
+                <section id="mission4" class="mission-screen hidden">
+                    <h3><i class="bi bi-hand-index-thumb"></i> MISSION 4: DROP, COVER, HOLD ON</h3>
+                    <p class="text-light">Objective: Complete the tornado safety drill.</p>
+
+                    <div class="tornado-visual" id="tornadoVisual">
+                        <div class="tornado-funnel" id="tornadoFunnel">
+                            <i class="bi bi-tornado fs-1" style="color: #7c3aed;"></i>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <div class="progress-custom">
+                            <div class="progress-fill" id="drillProgress"
+                                style="width: 0%; background: linear-gradient(90deg, #7c3aed, #a855f7);"></div>
+                        </div>
+                        <p class="mt-2 text-info" id="drillStatus">Drill not started</p>
+                    </div>
+
+                    <div id="drillSteps">
+                        <div class="drill-step" data-step="1" onclick="completeDrillStep(this)">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>DROP to the ground</strong>
+                                <p class="small mb-0">Lower your center of gravity immediately</p>
+                            </div>
+                        </div>
+                        <div class="drill-step" data-step="2" onclick="completeDrillStep(this)">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>COVER your head and neck</strong>
+                                <p class="small mb-0">Use arms, blanket, or helmet for protection</p>
+                            </div>
+                        </div>
+                        <div class="drill-step" data-step="3" onclick="completeDrillStep(this)">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>HOLD ON to shelter</strong>
+                                <p class="small mb-0">Grip table leg or your head position</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m4Popup">
+                        <h5><i class="bi bi-check-circle"></i> DRILL COMPLETE!</h5>
+                        <p>You've mastered the Drop, Cover, Hold On protocol!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(5)">
+                            Proceed to Mission 5 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 5: AFTER THE TORNADO -->
+                <section id="mission5" class="mission-screen hidden">
+                    <h3><i class="bi bi-shield-check"></i> MISSION 5: AFTER THE TORNADO</h3>
+                    <p class="text-light">Objective: Complete post-tornado safety checklist.</p>
+
+                    <div id="afterChecklist">
+                        <div class="after-check" data-after="wait" onclick="completeAfter(this)">
+                            <i class="bi bi-hourglass-split fs-3"></i>
+                            <div>
+                                <strong>Wait for official "All Clear"</strong>
+                                <p class="small mb-0">Multiple tornadoes can occur in same area</p>
+                            </div>
+                        </div>
+                        <div class="after-check" data-after="power" onclick="completeAfter(this)">
+                            <i class="bi bi-lightning-charge fs-3"></i>
+                            <div>
+                                <strong>Watch for downed power lines</strong>
+                                <p class="small mb-0">Assume all lines are live - electrocution risk</p>
+                            </div>
+                        </div>
+                        <div class="after-check" data-after="gas" onclick="completeAfter(this)">
+                            <i class="bi bi-fuel-pump fs-3"></i>
+                            <div>
+                                <strong>Check for gas leaks</strong>
+                                <p class="small mb-0">Leave immediately if you smell gas</p>
+                            </div>
+                        </div>
+                        <div class="after-check" data-after="debris" onclick="completeAfter(this)">
+                            <i class="bi bi-wrench fs-3"></i>
+                            <div>
+                                <strong>Watch for sharp debris</strong>
+                                <p class="small mb-0">Wear sturdy shoes and gloves</p>
+                            </div>
+                        </div>
+                        <div class="after-check" data-after="help" onclick="completeAfter(this)">
+                            <i class="bi bi-heart-pulse fs-3"></i>
+                            <div>
+                                <strong>Help injured, but don't move seriously hurt</strong>
+                                <p class="small mb-0">Wait for professional medical help</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p id="afterProgress">Safety steps: 0/5</p>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m5Popup">
+                        <h5><i class="bi bi-shield-check"></i> POST-TORNADO SAFETY COMPLETE!</h5>
+                        <p>You're ready to stay safe after a tornado strikes!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(6)">
+                            Proceed to Mission 6 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 6: TORNADO MYTHS -->
+                <section id="mission6" class="mission-screen hidden">
+                    <h3><i class="bi bi-quote"></i> MISSION 6: BUSTING TORNADO MYTHS</h3>
+                    <p class="text-light">Objective: Separate tornado facts from fiction.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 myth-card" data-myth="myth1"
+                                onclick="selectMythAnswer(this, 'myth')">
+                                <i class="bi bi-cloud fs-2"></i>
+                                <h6>Opening windows equalizes pressure</h6>
+                                <p class="small">Waste of time - focus on finding shelter!</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 myth-card" data-myth="myth1"
+                                onclick="selectMythAnswer(this, 'fact')">
+                                <i class="bi bi-check-circle fs-2 text-success"></i>
+                                <h6>Seek interior room on lowest floor</h6>
+                                <p class="small">✓ FACT - This is where you should go!</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 myth-card" data-myth="myth2"
+                                onclick="selectMythAnswer(this, 'myth')">
+                                <i class="bi bi-car-front fs-2"></i>
+                                <h6>Underpasses provide safe shelter</h6>
+                                <p class="small">FALSE - Wind tunnel effect makes it deadly!</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark p-3 myth-card" data-myth="myth2"
+                                onclick="selectMythAnswer(this, 'fact')">
+                                <i class="bi bi-building fs-2 text-success"></i>
+                                <h6>Basement or storm cellar is safest</h6>
+                                <p class="small">✓ FACT - Underground is best protection</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mythFeedback" class="text-center mt-3"></div>
+
+                    <div class="holo-popup hidden" id="m6Popup">
+                        <h5><i class="bi bi-trophy"></i> MISSION COMPLETE!</h5>
+                        <p>You've mastered tornado safety and busted common myths!</p>
+                        <button class="btn btn-success mt-2" onclick="showFinalReward()">
+                            Complete Operation →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- REWARD SCREEN -->
+                <section id="rewardScreen" class="mission-screen hidden text-center">
+                    <div class="p-5">
+                        <i class="bi bi-trophy-fill" style="font-size: 5rem; color: gold;"></i>
+                        <h2 class="mt-3">🎉 OPERATION VORTEX COMPLETE!</h2>
+                        <p class="lead">You are now a Certified Tornado Safety Expert!</p>
+                        <div class="card bg-dark p-3 mt-3">
+                            <h5>🏅 Achievements Unlocked</h5>
+                            <p>✓ Fujita Scale Mastered (EF0-EF5)</p>
+                            <p>✓ Tornado Warning Signs Identified</p>
+                            <p>✓ Safe Shelter Locations Known</p>
+                            <p>✓ Drop, Cover, Hold On Protocol</p>
+                            <p>✓ Post-Tornado Safety Steps</p>
+                            <p>✓ Tornado Myths Busted</p>
+                        </div>
+                        <a href="../index.html" class="btn btn-primary btn-lg mt-4">
+                            <i class="bi bi-house"></i> Return to Dashboard
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="../js/auth.js"></script>
+    <script src="../js/simulation-tornado.js"></script>
+</body>
+
+</html>

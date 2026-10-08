@@ -1,0 +1,527 @@
+/* Custom background for Navbar */
+.custom-nav-bg {
+    background: linear-gradient(90deg, #020617, #0b1020);
+}
+
+/* Hero Section */
+.module-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 60px 0 40px;
+    border-bottom: 3px solid #6366f1;
+    color: white;
+}
+
+.fw-bold1 {
+    color: aliceblue;
+}
+
+.progress-container {
+    width: 150px;
+    height: 8px;
+}
+
+/* Module Cards Base */
+.module-card {
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+    height: 100%;
+    border-top: 4px solid;
+    position: relative;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Icons and Colors */
+.module-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* Opacity helpers for icons */
+.bg-danger-soft {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.bg-warning-soft {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.bg-success-soft {
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+.bg-info-soft {
+    background-color: rgba(6, 182, 212, 0.1);
+}
+
+.bg-primary-soft {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.bg-secondary-soft {
+    background-color: rgba(100, 116, 139, 0.1);
+}
+
+/* Border Colors for Disaster Categories */
+.module-card.earthquake {
+    border-color: #ef4444;
+}
+
+.module-card.tornado {
+    border-color: #06b6d4;
+}
+
+.module-card.wildfire {
+    border-color: #f97316;
+}
+
+.module-card.flood {
+    border-color: #3b82f6;
+}
+
+.module-card.cyclone {
+    border-color: #8b5cf6;
+}
+
+.module-card.tsunami {
+    border-color: #0ea5e9;
+}
+
+.module-card.landslide {
+    border-color: #78716c;
+}
+
+.module-card.heatwave {
+    border-color: #eab308;
+}
+
+.module-card.upcoming {
+    border-color: #6b7280;
+}
+
+/* Text Colors for Disaster Categories */
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.text-warning {
+    color: #f59e0b !important;
+}
+
+.text-success {
+    color: #22c55e !important;
+}
+
+.text-info {
+    color: #06b6d4 !important;
+}
+
+.text-primary {
+    color: #3b82f6 !important;
+}
+
+/* Components */
+.progress-sm {
+    height: 6px;
+    border-radius: 10px;
+    background-color: #e2e8f0;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* Badge Styles */
+.module-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-warning {
+    background-color: #f59e0b;
+    color: #1e293b;
+}
+
+.badge-info {
+    background-color: #06b6d4;
+    color: white;
+}
+
+.badge-success {
+    background-color: #22c55e;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.badge-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.badge-secondary {
+    background-color: #64748b;
+    color: white;
+}
+
+/* Module List */
+.module-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+.module-list li {
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+}
+
+.module-list i {
+    width: 20px;
+    font-size: 0.9rem;
+}
+
+/* Checklist circles */
+.module-list .bi-check-circle {
+    color: #22c55e;
+}
+
+.module-list .bi-circle {
+    color: #94a3b8;
+}
+
+/* Upcoming Card */
+.upcoming-card {
+    opacity: 0.7;
+    filter: grayscale(20%);
+}
+
+/* Tabs Styling */
+.nav-tabs {
+    border-bottom: 1px solid #e2e8f0;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.nav-tabs .nav-link {
+    color: #64748b;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #6366f1;
+    background-color: #f1f5f9;
+}
+
+.nav-tabs .nav-link.active {
+    color: #6366f1;
+    border-bottom: 3px solid #6366f1;
+    background: transparent;
+    font-weight: 600;
+}
+
+/* Category Section Animation */
+.module-category {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button Styles */
+.btn-module {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.btn-module:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+.btn-outline-danger {
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-success {
+    background-color: #22c55e;
+    border: none;
+}
+
+.btn-outline-success {
+    border: 2px solid #22c55e;
+    color: #22c55e;
+}
+
+.btn-outline-success:hover {
+    background-color: #22c55e;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    border: none;
+}
+
+.btn-outline-primary {
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.btn-outline-primary:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-info {
+    background-color: #06b6d4;
+    border: none;
+    color: white;
+}
+
+.btn-outline-info {
+    border: 2px solid #06b6d4;
+    color: #06b6d4;
+}
+
+.btn-outline-info:hover {
+    background-color: #06b6d4;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #f59e0b;
+    border: none;
+    color: #1e293b;
+}
+
+.btn-outline-warning {
+    border: 2px solid #f59e0b;
+    color: #f59e0b;
+}
+
+.btn-outline-warning:hover {
+    background-color: #f59e0b;
+    color: #1e293b;
+}
+
+/* Footer */
+.footer {
+    background: #0f172a;
+    margin-top: 60px;
+}
+
+.footer a {
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: #6366f1 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .module-hero {
+        padding: 40px 0 30px;
+        text-align: center;
+    }
+
+    .module-hero .fw-bold1 {
+        font-size: 1.8rem;
+    }
+
+    .nav-tabs {
+        justify-content: center;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .module-card {
+        margin-bottom: 20px;
+    }
+
+    .module-badge {
+        position: static;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .module-card .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4f46e5;
+}
+
+/* Loading Animation for Modules */
+.module-card.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.module-card.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    to {
+        left: 100%;
+    }
+}
+
+/* Tooltip Styles */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: #1e293b;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+}
+
+/* Card Hover Effects */
+.module-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.module-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.module-card:hover::after {
+    left: 100%;
+}
+
+/* Progress Container */
+.progress-container {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+}
+
+/* Icon Animations */
+.module-icon i {
+    transition: transform 0.3s ease;
+}
+
+.module-card:hover .module-icon i {
+    transform: scale(1.1);
+}
+
+/* Badge Animations */
+.module-badge {
+    transition: transform 0.3s ease;
+}
+
+.module-card:hover .module-badge {
+    transform: scale(1.05);
+}

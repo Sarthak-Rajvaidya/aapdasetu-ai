@@ -1,0 +1,472 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0a2a3a, #0a1a2a, #0a0a2a);
+    font-family: 'Segoe UI', 'Orbitron', monospace;
+    min-height: 100vh;
+    color: #fff;
+}
+
+/* Water Background Animation */
+.water-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.water-particle {
+    position: absolute;
+    top: -50px;
+    width: 3px;
+    height: 3px;
+    background: rgba(0, 150, 255, 0.4);
+    border-radius: 50%;
+    animation: rain linear infinite;
+}
+
+@keyframes rain {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(200vh);
+        opacity: 0;
+    }
+}
+
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 100px;
+    background: repeating-linear-gradient(transparent, transparent 20px, rgba(0, 100, 200, 0.15) 20px, rgba(0, 100, 200, 0.15) 40px);
+    animation: waveMove 10s linear infinite;
+}
+
+@keyframes waveMove {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Holo Interface */
+.game-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+.holo-interface {
+    background: rgba(10, 30, 50, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(0, 150, 255, 0.4);
+    box-shadow: 0 0 50px rgba(0, 150, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline Effect */
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 150, 255, 0.05) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* HUD Header */
+.hud-header {
+    background: linear-gradient(135deg, rgba(0, 150, 255, 0.2), rgba(0, 80, 150, 0.15));
+    padding: 20px 30px;
+    border-bottom: 2px solid #0096ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hud-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0096ff;
+    text-shadow: 0 0 10px #0096ff;
+    letter-spacing: 2px;
+}
+
+.progress-container {
+    text-align: right;
+}
+
+.progress-bar-bg {
+    width: 200px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #0096ff;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0096ff, #00c6ff);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+/* Mission Screens */
+.mission-screen {
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+.mission-screen.hidden {
+    display: none;
+}
+
+.mission-screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mission-screen h3 {
+    color: #0096ff;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px #0096ff;
+}
+
+/* Water Level Meter */
+.water-level-container {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.water-level-bg {
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(90deg, #22c55e, #84cc16, #f59e0b, #f97316, #ef4444);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.water-level-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #0096ff, #00c6ff);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #0096ff;
+}
+
+.water-level-marker {
+    position: absolute;
+    width: 4px;
+    height: 40px;
+    background: white;
+    top: -5px;
+    transform: translateX(-50%);
+}
+
+/* Flood Zone Map */
+.flood-map {
+    background: linear-gradient(135deg, #1a3a2a, #0a2a1a);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    min-height: 300px;
+}
+
+.house {
+    display: inline-block;
+    font-size: 2rem;
+    margin: 0 15px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s;
+}
+
+.house.flooded {
+    animation: houseFloat 0.5s ease infinite;
+}
+
+@keyframes houseFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.water-level {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(0, 150, 255, 0.4), rgba(0, 100, 200, 0.8));
+    transition: height 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Rainfall Gauge */
+.rain-gauge {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.rain-bar {
+    width: 100%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.rain-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #0096ff, #0055aa);
+    transition: height 0.3s ease;
+}
+
+/* Safety Steps */
+.safety-step {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.safety-step:hover {
+    transform: translateX(5px);
+    background: rgba(0, 150, 255, 0.2);
+}
+
+.safety-step.completed {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    background: #0096ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Evacuation Routes */
+.route-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.route-card:hover {
+    transform: scale(1.05);
+}
+
+.route-card.selected {
+    border-color: #0096ff;
+    background: rgba(0, 150, 255, 0.2);
+}
+
+.route-card.correct {
+    border-color: #22c55e;
+    animation: correctPulse 0.5s ease;
+}
+
+@keyframes correctPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Holo Slider */
+.holo-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+    border-radius: 5px;
+    outline: none;
+    margin: 20px 0;
+}
+
+.holo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #0096ff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px #0096ff;
+}
+
+/* Holo Popup */
+.holo-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(0, 150, 255, 0.95), rgba(0, 80, 150, 0.95));
+    backdrop-filter: blur(20px);
+    padding: 30px 50px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 100;
+    border: 2px solid #0096ff;
+    box-shadow: 0 0 50px rgba(0, 150, 255, 0.5);
+    animation: popupIn 0.3s ease;
+}
+
+.holo-popup.hidden {
+    display: none;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Button Styles */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px currentColor;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mission-screen {
+        padding: 20px;
+    }
+
+    .hud-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .safety-step {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.kit-item {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.kit-item:hover {
+    transform: scale(1.02);
+}
+
+.flood-card {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.flood-card:hover {
+    transform: translateY(-5px);
+}

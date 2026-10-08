@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildfire Safety - Module | DMTS Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/wildfire.css">
+</head>
+
+<body>
+
+    <div class="fire-bg">
+        <div class="flame"></div>
+        <div class="flame"></div>
+        <div class="flame"></div>
+        <div class="smoke"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg custom-nav sticky-top px-4 py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white" href="../index.html">
+                <i class="bi bi-shield-check me-2" style="color: #f97316;"></i>DMTS Platform
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="../modules.html" class="btn btn-outline-light btn-sm me-2">
+                    <i class="bi bi-arrow-left"></i> Back to Modules
+                </a>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> Student
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-award"></i> Certificates</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i>
+                                Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Module Header -->
+    <section class="module-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                        <i class="bi bi-fire fs-1 text-white"></i>
+                        <h1 class="fw-bold text-white mb-0 display-5">🔥 Wildfire Safety & Survival</h1>
+                        <span class="badge bg-warning text-dark fs-6">⭐ Intermediate Level</span>
+                    </div>
+                    <p class="lead text-white-50 mb-0">
+                        <i class="bi bi-clock me-1"></i> Estimated: 40 min •
+                        <i class="bi bi-shield-check ms-3 me-1"></i> Evacuation & Survival •
+                        <i class="bi bi-tree ms-3 me-1"></i> 7 Comprehensive Sections
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-light" onclick="markCompleted()">
+                            <i class="bi bi-check-circle me-2"></i>Mark Complete
+                        </button>
+                        <button class="btn btn-outline-light" onclick="startWildfireQuiz()">
+                            <i class="bi bi-pencil-square"></i> Take Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex justify-content-between text-white small mb-2">
+                    <span>Module Progress</span>
+                    <span id="progressText">0% Complete</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8">
+
+                <!-- Section 1: Understanding Wildfires -->
+                <div class="section-card" id="section1">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-question-circle"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 1: Understanding Wildfires</h3>
+                            <p class="mb-0 opacity-75">What causes wildfires and how they spread</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="alert alert-primary d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill fs-3 me-3"></i>
+                            <div>
+                                <h5 class="fw-bold mb-1">What is a Wildfire?</h5>
+                                <p class="mb-0">A wildfire is an unplanned, uncontrolled fire that burns in natural
+                                    areas like forests, grasslands, or brushlands.</p>
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold text-primary mt-4 mb-3">🔥 The Fire Triangle</h4>
+                        <div class="row text-center mb-4">
+                            <div class="col-md-4">
+                                <div class="card border-0 bg-light p-3">
+                                    <i class="bi bi-thermometer-high fs-1 text-danger"></i>
+                                    <h6 class="fw-bold mt-2">Heat</h6>
+                                    <small>Ignition source (lightning, human activity)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-0 bg-light p-3">
+                                    <i class="bi bi-tree fs-1 text-success"></i>
+                                    <h6 class="fw-bold mt-2">Fuel</h6>
+                                    <small>Vegetation, trees, dry grass</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-0 bg-light p-3">
+                                    <i class="bi bi-wind fs-1 text-info"></i>
+                                    <h6 class="fw-bold mt-2">Oxygen</h6>
+                                    <small>Air - especially in windy conditions</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold text-primary mt-4 mb-3">🔥 Fire Danger Levels</h4>
+
+                        <div class="danger-level level-low">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="fs-5">Low</strong>
+                                    <span class="badge bg-success ms-2">Green</span>
+                                    <p class="small mb-0 mt-1">Fuels do not ignite easily. Controlled burns are safe.
+                                    </p>
+                                </div>
+                                <i class="bi bi-emoji-smile fs-2 text-success"></i>
+                            </div>
+                        </div>
+
+                        <div class="danger-level level-moderate">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="fs-5">Moderate</strong>
+                                    <span class="badge bg-success ms-2">Blue</span>
+                                    <p class="small mb-0 mt-1">Some fire risk. Be careful with outdoor burning.</p>
+                                </div>
+                                <i class="bi bi-emoji-neutral fs-2 text-success"></i>
+                            </div>
+                        </div>
+
+                        <div class="danger-level level-high">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="fs-5">High</strong>
+                                    <span class="badge bg-warning ms-2">Yellow</span>
+                                    <p class="small mb-0 mt-1">Fuels dry. Fire can spread quickly. Restrictions likely.
+                                    </p>
+                                </div>
+                                <i class="bi bi-emoji-frown fs-2 text-warning"></i>
+                            </div>
+                        </div>
+
+                        <div class="danger-level level-very-high">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="fs-5">Very High</strong>
+                                    <span class="badge bg-danger ms-2">Orange</span>
+                                    <p class="small mb-0 mt-1">Extreme caution. Fire spreads rapidly. Burn bans active.
+                                    </p>
+                                </div>
+                                <i class="bi bi-emoji-dizzy fs-2 text-danger"></i>
+                            </div>
+                        </div>
+
+                        <div class="danger-level level-extreme">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="fs-5">Extreme</strong>
+                                    <span class="badge bg-dark ms-2">Red</span>
+                                    <p class="small mb-0 mt-1">DANGER! Fire explodes, spotting occurs. Prepare to
+                                        evacuate.</p>
+                                </div>
+                                <i class="bi bi-emoji-angry fs-2 text-dark"></i>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger mt-3">
+                            <i class="bi bi-bar-chart-steps me-2"></i>
+                            <strong>Key Insight:</strong> 90% of wildfires are caused by humans. Always follow fire
+                            safety guidelines!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Section: Fire Weather -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-cloud-sun"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Advanced Topic: Fire Weather</h3>
+                            <p class="mb-0 opacity-75">Understanding Red Flag Warnings</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <p>Authorities issue a <strong>Red Flag Warning</strong> when conditions are "just right" for a
+                            wildfire to start and spread rapidly:</p>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 bg-light rounded text-center h-100">
+                                    <i class="bi bi-thermometer-high text-danger fs-3"></i>
+                                    <div class="small fw-bold">High Heat</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 bg-light rounded text-center h-100">
+                                    <i class="bi bi-droplet-half text-primary fs-3"></i>
+                                    <div class="small fw-bold">Low Humidity</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 bg-light rounded text-center h-100">
+                                    <i class="bi bi-wind text-info fs-3"></i>
+                                    <div class="small fw-bold">High Winds</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 bg-light rounded text-center h-100">
+                                    <i class="bi bi-lightning-charge text-warning fs-3"></i>
+                                    <div class="small fw-bold">Dry Lightning</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Wildfire Behavior -->
+                <div class="section-card" id="section2">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-diagram-3"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 2: Wildfire Behavior</h3>
+                            <p class="mb-0 opacity-75">How wildfires spread and move</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="behavior-card">
+                            <i class="bi bi-arrow-up-short fs-1 text-danger"></i>
+                            <div>
+                                <strong>Uphill Spread</strong>
+                                <p class="small mb-0">Fires spread faster uphill (preheating fuels above). Can double
+                                    speed for every 10° slope!</p>
+                            </div>
+                        </div>
+                        <div class="behavior-card">
+                            <i class="bi bi-wind fs-1 text-info"></i>
+                            <div>
+                                <strong>Wind-Driven</strong>
+                                <p class="small mb-0">Wind is the most important factor - fires can spot 1+ miles ahead
+                                    of main fire.</p>
+                            </div>
+                        </div>
+                        <div class="behavior-card">
+                            <i class="bi bi-fire fs-1 text-warning"></i>
+                            <div>
+                                <strong>Fire Whirls/Firenadoes</strong>
+                                <p class="small mb-0">Rotating columns of fire that can lift debris and spread embers
+                                    miles away.</p>
+                            </div>
+                        </div>
+                        <div class="behavior-card">
+                            <i class="bi bi-cloud-sun fs-1 text-primary"></i>
+                            <div>
+                                <strong>Pyrocumulonimbus Clouds</strong>
+                                <p class="small mb-0">Massive fire-generated thunderstorms that create lightning and
+                                    more fires.</p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Watch Out:</strong> Fires can move up to 14 mph - faster than you can run uphill!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Preparation - Before Fire Season -->
+                <div class="section-card" id="section3">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-house-check"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 3: Preparation - Defensible Space</h3>
+                            <p class="mb-0 opacity-75">Protect your home before fire season</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="prep-checklist">
+                            <div class="prep-card">
+                                <i class="bi bi-tree fs-2 text-danger mb-2 d-block"></i>
+                                <h6>Zone 0: Immediate (0-5 ft)</h6>
+                                <ul class="small mb-0">
+                                    <li>Remove all dead plants/weeds</li>
+                                    <li>Remove branches overhanging roof</li>
+                                    <li>Clean leaves from gutters</li>
+                                    <li>Move firewood away</li>
+                                </ul>
+                            </div>
+                            <div class="prep-card">
+                                <i class="bi bi-flower1 fs-2 text-warning mb-2 d-block"></i>
+                                <h6>Zone 1: Lean (5-30 ft)</h6>
+                                <ul class="small mb-0">
+                                    <li>Space trees 30+ feet apart</li>
+                                    <li>Remove ladder fuels (low branches)</li>
+                                    <li>Keep grass mowed under 4 inches</li>
+                                    <li>Use fire-resistant plants</li>
+                                </ul>
+                            </div>
+                            <div class="prep-card">
+                                <i class="bi bi-mountain fs-2 text-success mb-2 d-block"></i>
+                                <h6>Zone 2: Reduced (30-100 ft)</h6>
+                                <ul class="small mb-0">
+                                    <li>Remove dead/dying trees</li>
+                                    <li>Thin dense vegetation</li>
+                                    <li>Maintain driveway clearance</li>
+                                    <li>Create fuel breaks</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mt-3">🏠 Home Hardening Tips</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
+                                    <i class="bi bi-roof fs-4 text-danger"></i>
+                                    <span class="small">Class A fire-rated roofing</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
+                                    <i class="bi bi-grid-3x3 fs-4 text-danger"></i>
+                                    <span class="small">1/8" mesh screens on vents</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
+                                    <i class="bi bi-window fs-4 text-danger"></i>
+                                    <span class="small">Tempered glass windows</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2 p-2 bg-light rounded">
+                                    <i class="bi bi-droplet fs-4 text-danger"></i>
+                                    <span class="small">Non-combustible siding</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Evacuation Planning -->
+                <div class="section-card" id="section4">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-signpost-split"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 4: Evacuation Planning</h3>
+                            <p class="mb-0 opacity-75">Know when to go and where to go</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="evac-zone zone-red">
+                            <i class="bi bi-exclamation-triangle-fill fs-2 text-danger"></i>
+                            <div>
+                                <strong>EVACUATION ORDER - LEAVE IMMEDIATELY!</strong>
+                                <p class="small mb-0">Danger to your area is imminent or occurring. Do NOT wait!</p>
+                            </div>
+                        </div>
+                        <div class="evac-zone zone-yellow">
+                            <i class="bi bi-bell-fill fs-2 text-warning"></i>
+                            <div>
+                                <strong>EVACUATION WARNING - Get Ready!</strong>
+                                <p class="small mb-0">Potential threat. Pack your go-bag and prepare to leave.</p>
+                            </div>
+                        </div>
+                        <div class="evac-zone zone-green">
+                            <i class="bi bi-check-circle-fill fs-2 text-success"></i>
+                            <div>
+                                <strong>ALL CLEAR - Safe to Return</strong>
+                                <p class="small mb-0">Fire is contained. Follow official instructions for re-entry.</p>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mt-4">📋 Evacuation Checklist</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group mb-3">
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Know 2+
+                                        evacuation routes</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Plan
+                                        meeting place outside fire zone</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Prepare
+                                        Go-Bag (keep by door)</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Download
+                                        emergency apps</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group mb-3">
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Sign up
+                                        for local alerts</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Know pet
+                                        evacuation plan</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Keep gas
+                                        tank at least half full</li>
+                                    <li class="list-group-item"><i class="bi bi-check-lg text-success me-2"></i>Practice
+                                        drill with family</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: During the Wildfire -->
+                <div class="section-card" id="section5">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-stopwatch"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 5: During the Wildfire</h3>
+                            <p class="mb-0 opacity-75">Critical survival actions</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="alert alert-danger d-flex align-items-center mb-4">
+                            <i class="bi bi-alarm-fill fs-2 me-3"></i>
+                            <div>
+                                <h5 class="fw-bold mb-1">LEAVE EARLY - DON'T WAIT!</h5>
+                                <p class="mb-0">If told to evacuate, leave immediately. Roads can become impassable
+                                    within minutes.</p>
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold text-primary mb-3">🚗 If You Can Evacuate Safely</h4>
+                        <div class="survival-step">
+                            <div class="step-number">1</div>
+                            <div><strong>Take your Go-Bag</strong> and emergency supplies</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">2</div>
+                            <div><strong>Wear protective clothing</strong> (long pants, long sleeves, boots, N95 mask)
+                            </div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">3</div>
+                            <div><strong>Close windows and doors</strong> but leave unlocked for firefighters</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">4</div>
+                            <div><strong>Leave lights on</strong> so house is visible in smoke</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">5</div>
+                            <div><strong>Move to designated evacuation center</strong> or safe area</div>
+                        </div>
+
+                        <h4 class="fw-bold text-primary mt-4 mb-3">🏠 If Trapped at Home (Shelter-in-Place)</h4>
+                        <div class="survival-step">
+                            <div class="step-number">1</div>
+                            <div><strong>Stay inside away from exterior walls</strong> - close all doors</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">2</div>
+                            <div><strong>Fill bathtubs and sinks</strong> with water (to drink and wet towels)</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">3</div>
+                            <div><strong>Stay low to ground</strong> where air is cooler and cleaner</div>
+                        </div>
+                        <div class="survival-step">
+                            <div class="step-number">4</div>
+                            <div><strong>Call 911</strong> and give your exact location</div>
+                        </div>
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-exclamation-octagon-fill me-2"></i>
+                            <strong>NEVER:</strong> Wait to evacuate hoping fire will change direction. Never drive
+                            through heavy smoke.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Emergency Go-Bag -->
+                <div class="section-card" id="section6">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-backpack4"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 6: Wildfire Go-Bag</h3>
+                            <p class="mb-0 opacity-75">Essential supplies for rapid evacuation</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="kit-grid">
+                            <div class="kit-category">
+                                <h6><i class="bi bi-droplet me-2"></i>Water & Food</h6>
+                                <ul class="small mb-0">
+                                    <li>1 gallon water/person (3 days)</li>
+                                    <li>Energy bars & non-perishable food</li>
+                                    <li>Water purification tablets</li>
+                                    <li>Manual can opener</li>
+                                </ul>
+                            </div>
+                            <div class="kit-category">
+                                <h6><i class="bi bi-bandaid me-2"></i>Medical & Safety</h6>
+                                <ul class="small mb-0">
+                                    <li>First aid kit + medications</li>
+                                    <li>N95 masks (smoke protection)</li>
+                                    <li>Flashlight + batteries</li>
+                                    <li>Portable charger/power bank</li>
+                                </ul>
+                            </div>
+                            <div class="kit-category">
+                                <h6><i class="bi bi-shield-plus me-2"></i>Protective Gear</h6>
+                                <ul class="small mb-0">
+                                    <li>Sturdy boots & wool/cotton clothes</li>
+                                    <li>Work gloves & goggles</li>
+                                    <li>Emergency blanket</li>
+                                    <li>Change of clothes</li>
+                                </ul>
+                            </div>
+                            <div class="kit-category">
+                                <h6><i class="bi bi-file-text me-2"></i>Documents & Essentials</h6>
+                                <ul class="small mb-0">
+                                    <li>ID/Passport (waterproof bag)</li>
+                                    <li>Insurance & medical cards</li>
+                                    <li>Cash (small bills)</li>
+                                    <li>Phone & charger</li>
+                                    <li>List of emergency contacts</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <strong>Pro Tip:</strong> Keep your Go-Bag in your car or by the front door. Add a whistle
+                            and bright cloth for signaling.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 7: After the Wildfire -->
+                <div class="section-card" id="section7">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-shield-check"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 7: After the Wildfire</h3>
+                            <p class="mb-0 opacity-75">Staying safe during recovery</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="alert alert-info">
+                            <i class="bi bi-shield-shaded me-2"></i>
+                            <strong>Wait for official "All Clear"</strong> - Do not return until authorities say it's
+                            safe
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-danger mb-3">
+                                    <div class="card-body">
+                                        <h6 class="text-danger fw-bold"><i class="bi bi-skull"></i> Hidden Dangers</h6>
+                                        <ul class="small mb-0">
+                                            <li>Hot ash pits (can remain hot for days)</li>
+                                            <li>Unstable trees (danger of falling)</li>
+                                            <li>Damaged gas/electric lines</li>
+                                            <li>Contaminated water supplies</li>
+                                            <li>Ash containing toxic chemicals</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h6 class="text-success fw-bold"><i class="bi bi-check-circle"></i> Safety Steps
+                                        </h6>
+                                        <ul class="small mb-0">
+                                            <li>Wear N95 mask and gloves</li>
+                                            <li>Wet ash before cleaning (avoid dust)</li>
+                                            <li>Check for gas leaks - leave if you smell gas</li>
+                                            <li>Document damage for insurance</li>
+                                            <li>Boil water until safe</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-bug me-2"></i>
+                            <strong>Health Warning:</strong> Ash contains hazardous materials. Children, elderly, and
+                            those with breathing issues should avoid cleanup areas.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 8: Knowledge Check Quiz -->
+                <div class="section-card" id="section8">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="bi bi-pencil-square"></i></div>
+                        <div>
+                            <h3 class="fw-bold mb-1">Section 8: Wildfire Safety Quiz</h3>
+                            <p class="mb-0 opacity-75">Test your knowledge</p>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div id="quizContainer">
+                            <div class="question mb-4">
+                                <p class="fw-bold">1. What percentage of wildfires are caused by humans?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="30"> 30%
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="60"> 60%
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="90"> 90%
+                                </div>
+                            </div>
+                            <div class="question mb-4">
+                                <p class="fw-bold">2. What is the most important factor in wildfire spread?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="rain"> Rainfall
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="wind"> Wind
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="temp"> Temperature
+                                </div>
+                            </div>
+                            <div class="question mb-4">
+                                <p class="fw-bold">3. What should you do if you receive an EVACUATION ORDER?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="wait"> Wait and see
+                                    what happens
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="leave"> Leave
+                                    immediately
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="pack"> Pack first,
+                                    then leave
+                                </div>
+                            </div>
+                            <div class="question mb-4">
+                                <p class="fw-bold">4. What is "Zone 0" in defensible space?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="100ft"> 100+ feet from
+                                    home
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="30ft"> 30 feet from
+                                    home
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="5ft"> 0-5 feet from
+                                    home
+                                </div>
+                            </div>
+                            <div class="question mb-4">
+                                <p class="fw-bold">5. What protective gear is essential during wildfire cleanup?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="sandals"> Sandals
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="n95"> N95 mask and
+                                    gloves
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="sunglasses">
+                                    Sunglasses
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="checkWildfireQuiz()">Submit Answers</button>
+                            <div id="quizResult" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sidebar-card">
+                    <div class="p-3"
+                        style="background: linear-gradient(135deg, var(--fire-primary), var(--fire-secondary));">
+                        <h5 class="fw-bold mb-0 text-white"><i class="bi bi-list-ul me-2"></i>Course Contents</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#section1" class="nav-section">🔥 1. Understanding Wildfires</a>
+                        <a href="#section2" class="nav-section">📊 2. Wildfire Behavior</a>
+                        <a href="#section3" class="nav-section">🏠 3. Defensible Space</a>
+                        <a href="#section4" class="nav-section">🚗 4. Evacuation Planning</a>
+                        <a href="#section5" class="nav-section">⏱️ 5. During the Fire</a>
+                        <a href="#section6" class="nav-section">🎒 6. Emergency Go-Bag</a>
+                        <a href="#section7" class="nav-section">🔄 7. After the Fire</a>
+                        <a href="#section8" class="nav-section">📝 8. Knowledge Check</a>
+                    </div>
+                    <div class="p-3 bg-light border-top">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-download text-primary fs-4"></i>
+                            <div>
+                                <small class="text-muted d-block">Download Resources</small>
+                                <small class="fw-bold">Wildfire Safety PDF Guide</small>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-headset text-success fs-4"></i>
+                            <div>
+                                <small class="text-muted d-block">Emergency Hotline</small>
+                                <small class="fw-bold">📞 112 - 24/7 Support</small>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-bell text-warning fs-4"></i>
+                            <div>
+                                <small class="text-muted d-block">Fire Weather Watch</small>
+                                <small class="fw-bold">Check local conditions daily</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/wildfire.js"></script>
+</body>
+
+</html>

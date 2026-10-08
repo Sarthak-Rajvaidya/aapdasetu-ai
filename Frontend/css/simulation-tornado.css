@@ -1,0 +1,511 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f0f1a);
+    font-family: 'Segoe UI', 'Orbitron', monospace;
+    min-height: 100vh;
+    color: #fff;
+}
+
+/* Tornado Background Animation */
+.tornado-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.tornado-swirl {
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.15), transparent);
+    border-radius: 50%;
+    animation: swirl 20s linear infinite;
+}
+
+@keyframes swirl {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+
+    to {
+        transform: rotate(360deg) scale(1.5);
+    }
+}
+
+.cloud-particle {
+    position: absolute;
+    background: rgba(100, 100, 150, 0.3);
+    border-radius: 50%;
+    animation: drift linear infinite;
+}
+
+@keyframes drift {
+    from {
+        transform: translateX(100vw);
+    }
+
+    to {
+        transform: translateX(-100vw);
+    }
+}
+
+/* Holo Interface */
+.game-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+.holo-interface {
+    background: rgba(20, 20, 40, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 50px rgba(124, 58, 237, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline Effect */
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(124, 58, 237, 0.05) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* HUD Header */
+.hud-header {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(79, 70, 229, 0.15));
+    padding: 20px 30px;
+    border-bottom: 2px solid #7c3aed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hud-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #7c3aed;
+    text-shadow: 0 0 10px #7c3aed;
+    letter-spacing: 2px;
+}
+
+.progress-container {
+    text-align: right;
+}
+
+.progress-bar-bg {
+    width: 200px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #7c3aed;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #a855f7);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+/* Mission Screens */
+.mission-screen {
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+.mission-screen.hidden {
+    display: none;
+}
+
+.mission-screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mission-screen h3 {
+    color: #7c3aed;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px #7c3aed;
+}
+
+/* Fujita Scale Cards */
+.fujita-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.fujita-card:hover {
+    transform: translateY(-5px);
+}
+
+.fujita-card.selected {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.fujita-card.ef0 {
+    border-left: 4px solid #22c55e;
+}
+
+.fujita-card.ef1 {
+    border-left: 4px solid #84cc16;
+}
+
+.fujita-card.ef2 {
+    border-left: 4px solid #f59e0b;
+}
+
+.fujita-card.ef3 {
+    border-left: 4px solid #f97316;
+}
+
+.fujita-card.ef4 {
+    border-left: 4px solid #ef4444;
+}
+
+.fujita-card.ef5 {
+    border-left: 4px solid #7c2d12;
+}
+
+/* Tornado Visual */
+.tornado-visual {
+    position: relative;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.tornado-funnel {
+    width: 0;
+    height: 0;
+    transition: all 0.5s ease;
+    position: relative;
+}
+
+.tornado-funnel.active {
+    animation: tornadoSpin 0.5s linear infinite;
+}
+
+@keyframes tornadoSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tornado-debris {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: debrisFloat 2s linear infinite;
+}
+
+@keyframes debrisFloat {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(50px, -100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Warning Signs */
+.warning-sign {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.warning-sign:hover {
+    transform: translateX(5px);
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.warning-sign.completed {
+    border-left: 3px solid #22c55e;
+}
+
+/* Shelter Selector */
+.shelter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.shelter-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.shelter-card:hover {
+    transform: scale(1.05);
+}
+
+.shelter-card.safe {
+    border-left: 4px solid #22c55e;
+}
+
+.shelter-card.unsafe {
+    border-left: 4px solid #ef4444;
+}
+
+.shelter-card.selected {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.shelter-card.correct {
+    animation: correctFlash 0.5s ease;
+    border-color: #22c55e;
+}
+
+@keyframes correctFlash {
+
+    0%,
+    100% {
+        border-color: #22c55e;
+    }
+
+    50% {
+        border-color: #fff;
+    }
+}
+
+/* Safety Drill Steps */
+.drill-step {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.drill-step:hover {
+    transform: translateX(5px);
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.drill-step.completed {
+    border-left: 4px solid #22c55e;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: #7c3aed;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* After Tornado Checklist */
+.after-check {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.after-check.completed {
+    background: rgba(34, 197, 94, 0.2);
+    border-left: 3px solid #22c55e;
+}
+
+/* Holo Slider */
+.holo-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444, #7c2d12);
+    border-radius: 5px;
+    outline: none;
+    margin: 20px 0;
+}
+
+.holo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #7c3aed;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px #7c3aed;
+}
+
+/* Holo Popup */
+.holo-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.95), rgba(79, 70, 229, 0.95));
+    backdrop-filter: blur(20px);
+    padding: 30px 50px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 100;
+    border: 2px solid #7c3aed;
+    box-shadow: 0 0 50px rgba(124, 58, 237, 0.5);
+    animation: popupIn 0.3s ease;
+}
+
+.holo-popup.hidden {
+    display: none;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Button Styles */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px currentColor;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mission-screen {
+        padding: 20px;
+    }
+
+    .hud-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .shelter-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.myth-card {
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white !important;
+}
+
+.myth-card h6, .myth-card p, .myth-card i:not(.text-success) {
+    color: white !important;
+}
+
+.myth-card:hover {
+    transform: translateY(-5px);
+    background: rgba(124, 58, 237, 0.3) !important;
+}
+
+.drill-step, .warning-sign, .after-check, .fujita-card, .shelter-card {
+    cursor: pointer;
+    color: white !important;
+}
+
+.drill-step h6, .drill-step p, .drill-step strong,
+.warning-sign h6, .warning-sign p, .warning-sign strong,
+.after-check h6, .after-check p, .after-check strong {
+    color: white !important;
+}

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildfire Simulation | Operation Firestorm</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/simulation-wildfire.css">
+</head>
+
+<body>
+
+    <div class="fire-bg" id="fireBg"></div>
+
+    <nav class="navbar navbar-dark bg-black px-4 py-3">
+        <a class="navbar-brand fw-bold text-white" href="../index.html">
+            <i class="bi bi-fire"></i> 🔥 DMTS | Wildfire Simulation
+        </a>
+        <a href="../simulation.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Exit Simulation
+        </a>
+    </nav>
+
+    <div class="game-container">
+        <div class="holo-interface">
+            <div class="scanline"></div>
+
+            <!-- HUD HEADER -->
+            <header class="hud-header">
+                <div class="hud-title">
+                    <i class="bi bi-radioactive"></i> OPERATION: FIRESTORM
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="missionProgress" style="width: 0%"></div>
+                    </div>
+                    <small class="text-light">Mission Progress: <span id="progressText">0</span>/5</small>
+                </div>
+            </header>
+
+            <main id="missionDeck">
+                <!-- MISSION 1: FIRE TRIANGLE -->
+                <section id="mission1" class="mission-screen active">
+                    <h3><i class="bi bi-triangle"></i> MISSION 1: THE FIRE TRIANGLE</h3>
+                    <p class="text-light">Objective: Assemble the elements needed to create a fire.</p>
+
+                    <div class="fire-triangle" id="fireTriangle">
+                        <div class="triangle-node node-heat">
+                            <label class="switch">
+                                <input type="checkbox" id="heatToggle" onchange="toggleNode()">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="mt-1 small">HEAT</div>
+                        </div>
+                        <div class="triangle-node node-fuel">
+                            <label class="switch">
+                                <input type="checkbox" id="fuelToggle" onchange="toggleNode()">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="mt-1 small">FUEL</div>
+                        </div>
+                        <div class="triangle-node node-oxygen">
+                            <label class="switch">
+                                <input type="checkbox" id="oxygenToggle" onchange="toggleNode()">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="mt-1 small">OXYGEN</div>
+                        </div>
+                    </div>
+
+                    <div id="fireTriangleResult" class="text-center mt-3">
+                        <div class="alert alert-secondary">⚡ Fire Triangle incomplete</div>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m1Popup">
+                        <h5><i class="bi bi-check-circle"></i> TRIANGLE COMPLETE!</h5>
+                        <p>Heat, Fuel, and Oxygen must all be present for a fire to burn.</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(2)">
+                            Proceed to Mission 2 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 2: FIRE SPREAD -->
+                <section id="mission2" class="mission-screen hidden">
+                    <h3><i class="bi bi-wind"></i> MISSION 2: FIRE SPREAD DYNAMICS</h3>
+                    <p class="text-light">Objective: Observe how wind affects fire spread intensity.</p>
+
+                    <div class="forest-stage" id="forestStage">
+                        <!-- Forest background with trees -->
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="tree">🌲</div>
+                        <div class="fire-spread" id="fireSpread"></div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="text-warning">Adjust Wind Direction & Speed →</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" id="windSlider" min="0" max="360" value="0" class="holo-slider flex-grow-1">
+                            <div id="windArrow" style="font-size: 2rem; color: #00d2ff; transition: transform 0.3s;">⬆️
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button class="btn btn-danger btn-glow px-5" id="igniteBtn">
+                            <i class="bi bi-fire"></i> IGNITE FOREST
+                        </button>
+                        <div class="mt-2">Fire Intensity: <span id="fireIntensity">0</span>%</div>
+                        <div class="progress mt-1" style="height: 10px; background: #333;">
+                            <div class="progress-bar bg-danger" id="fireIntensityBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m2Popup">
+                        <h5><i class="bi bi-exclamation-triangle"></i> FIRE SPREADING RAPIDLY!</h5>
+                        <p>Wind provides more oxygen and pushes heat toward new fuel sources!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(3)">
+                            Proceed to Mission 3 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 3: DEFENSIBLE SPACE -->
+                <section id="mission3" class="mission-screen hidden">
+                    <h3><i class="bi bi-house-door"></i> MISSION 3: DEFENSIBLE SPACE</h3>
+                    <p class="text-light">Objective: Clear fuel zones around your home in the correct order.</p>
+
+                    <div class="text-center mb-4">
+                        <div class="house" style="font-size: 5rem;">🏠</div>
+                    </div>
+
+                    <div class="zone-container">
+                        <div class="zone-card" data-zone="zone0" onclick="selectZone('zone0')">
+                            <h5>Zone 0</h5>
+                            <small>(0-5 Feet)</small>
+                            <p class="mt-2 small">Immediate area: Remove dead leaves & embers.</p>
+                        </div>
+                        <div class="zone-card" data-zone="zone1" onclick="selectZone('zone1')">
+                            <h5>Zone 1</h5>
+                            <small>(5-30 Feet)</small>
+                            <p class="mt-2 small">Lean & Clean: Space out trees & shrubs.</p>
+                        </div>
+                        <div class="zone-card" data-zone="zone2" onclick="selectZone('zone2')">
+                            <h5>Zone 2</h5>
+                            <small>(30-100 Feet)</small>
+                            <p class="mt-2 small">Reduced Fuel: Thin vegetation & mow grass.</p>
+                        </div>
+                    </div>
+
+                    <div id="defensibleStatus" class="text-center mt-3 alert alert-info">
+                        Status: Create a safe buffer zone!
+                    </div>
+
+                    <div class="holo-popup hidden" id="m3Popup">
+                        <h5><i class="bi bi-shield-check"></i> DEFENSIBLE SPACE CREATED!</h5>
+                        <p>A proper buffer zone significantly increases your home's chance of survival.</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(4)">
+                            Proceed to Mission 4 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 4: EVACUATION DECISIONS -->
+                <section id="mission4" class="mission-screen hidden">
+                    <h3><i class="bi bi-signpost-split"></i> MISSION 4: SURVIVAL DECISIONS</h3>
+                    <p class="text-light">Objective: Make the right call based on fire distance and wind.</p>
+
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-6">
+                            <label>Fire Distance: <span id="fireDistance" class="text-warning">10</span> miles</label>
+                            <input type="range" id="distanceSlider" min="1" max="20" value="10" class="holo-slider">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Wind Speed: <span id="windSpeed" class="text-warning">15</span> mph</label>
+                            <input type="range" id="windSpeedSlider" min="5" max="60" value="15" class="holo-slider">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-4">
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-danger w-100 p-3" onclick="makeDecision('evacuate')">
+                                <i class="bi bi-megaphone"></i> EVACUATE NOW
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-warning w-100 p-3" onclick="makeDecision('wait')">
+                                <i class="bi bi-hourglass-split"></i> WAIT & MONITOR
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-info w-100 p-3" onclick="makeDecision('shelter')">
+                                <i class="bi bi-house-heart"></i> SHELTER IN PLACE
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="decisionFeedback" class="text-center mt-4 p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                        Analyze the conditions and choose your action!
+                    </div>
+
+                    <div class="holo-popup hidden" id="m4Popup">
+                        <h5><i class="bi bi-check-circle"></i> CORRECT ACTION!</h5>
+                        <p>Evacuation decisions must be made early. Don't wait for the flames to arrive!</p>
+                        <button class="btn btn-success mt-2" onclick="nextMission(5)">
+                            Proceed to Mission 5 →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- MISSION 5: FIREFIGHTING TOOLS -->
+                <section id="mission5" class="mission-screen hidden">
+                    <h3><i class="bi bi-tools"></i> MISSION 5: FIREFIGHTING ARSENAL</h3>
+                    <p class="text-light">Objective: Match the tool to the firefighting scenario.</p>
+
+                    <div class="alert alert-dark border-warning" id="scenarioBox">
+                        <h5 id="scenarioText">🔥 Scenario: Small grease fire on a person's clothes</h5>
+                    </div>
+
+                    <div class="tool-grid">
+                        <div class="tool-card" data-tool="extinguisher" onclick="selectTool('extinguisher')">
+                            <i class="bi bi-fire fs-1"></i>
+                            <p>Extinguisher</p>
+                        </div>
+                        <div class="tool-card" data-tool="water" onclick="selectTool('water')">
+                            <i class="bi bi-droplet-fill fs-1"></i>
+                            <p>Water Hose</p>
+                        </div>
+                        <div class="tool-card" data-tool="blanket" onclick="selectTool('blanket')">
+                            <i class="bi bi-layers-fill fs-1"></i>
+                            <p>Fire Blanket</p>
+                        </div>
+                        <div class="tool-card" data-tool="rake" onclick="selectTool('rake')">
+                            <i class="bi bi-hammer fs-1"></i>
+                            <p>Fire Rake</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button class="btn btn-primary btn-glow px-5" onclick="checkToolChoice()">
+                            APPLY TOOL
+                        </button>
+                        <div id="toolFeedback" class="mt-3"></div>
+                    </div>
+
+                    <div class="holo-popup hidden" id="m5Popup">
+                        <h5><i class="bi bi-trophy"></i> OPERATION COMPLETE!</h5>
+                        <p>You've mastered the fundamentals of wildfire safety and prevention!</p>
+                        <button class="btn btn-success mt-2" onclick="showFinalReward()">
+                            Claim Reward →
+                        </button>
+                    </div>
+                </section>
+
+                <!-- REWARD SCREEN -->
+                <section id="rewardScreen" class="mission-screen hidden text-center">
+                    <div class="p-5">
+                        <i class="bi bi-award-fill" style="font-size: 5rem; color: #ff8c00;"></i>
+                        <h2 class="mt-3">🎉 OPERATION FIRESTORM COMPLETE!</h2>
+                        <p class="lead">You are now a Certified Wildfire Response Expert!</p>
+                        <div class="card bg-dark p-3 mt-3">
+                            <h5>🏅 Achievements Unlocked</h5>
+                            <p>✓ Fire Triangle Dynamics Mastered</p>
+                            <p>✓ Defensible Space Buffer Specialist</p>
+                            <p>✓ Emergency Response Decision Maker</p>
+                            <p>✓ Fire Suppression Tool Expert</p>
+                        </div>
+                        <a href="index.html" class="btn btn-primary btn-lg mt-4">
+                            <i class="bi bi-house"></i> Return to Dashboard
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/simulation-wildfire.js"></script>
+</body>
+
+</html>

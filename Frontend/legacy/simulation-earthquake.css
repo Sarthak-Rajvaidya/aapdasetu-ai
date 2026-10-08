@@ -1,0 +1,468 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a2a, #1a1a3e);
+    font-family: 'Segoe UI', 'Orbitron', monospace;
+    min-height: 100vh;
+}
+
+/* Holo Interface */
+.game-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+.holo-interface {
+    background: rgba(10, 20, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline Effect */
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 255, 0.03) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* HUD Header */
+.hud-header {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(0, 100, 255, 0.1));
+    padding: 20px 30px;
+    border-bottom: 2px solid cyan;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hud-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: cyan;
+    text-shadow: 0 0 10px cyan;
+    letter-spacing: 2px;
+}
+
+.depth-gauge-container {
+    text-align: right;
+}
+
+.depth-bar-bg {
+    width: 200px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid cyan;
+}
+
+.depth-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, cyan, #00ff88);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+/* Mission Screens */
+.mission-screen {
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+.mission-screen.hidden {
+    display: none;
+}
+
+.mission-screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mission-screen h3 {
+    color: cyan;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px cyan;
+}
+
+/* Experiment Stage - Mission 1 */
+.experiment-stage {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.earth-cross-section {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.crust-layer {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2d5016, #4a7c23);
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+.crust-layer:hover {
+    transform: scale(1.02);
+}
+
+.tectonic-stick {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ff6b35, #ff4500);
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s;
+    opacity: 0;
+}
+
+.tectonic-stick.visible {
+    opacity: 1;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(-50%, -50%) rotate(5deg);
+    }
+
+    75% {
+        transform: translate(-50%, -50%) rotate(-5deg);
+    }
+}
+
+.stress-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 100, 0, 0.6), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.stress-glow.active {
+    opacity: 1;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* Holo Slider */
+.holo-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, cyan, #ff4500);
+    border-radius: 5px;
+    outline: none;
+    margin: 20px 0;
+}
+
+.holo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: cyan;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px cyan;
+}
+
+/* Plates Stage - Mission 2 */
+.plates-stage {
+    background: linear-gradient(135deg, #1a1a3e, #2a2a5e);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    min-height: 300px;
+}
+
+.plate {
+    display: inline-block;
+    width: 150px;
+    padding: 30px;
+    margin: 0 20px;
+    background: linear-gradient(135deg, #ff6b35, #ff4500);
+    border-radius: 15px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.plate-left {
+    background: linear-gradient(135deg, #ff6b35, #ff4500);
+}
+
+.plate-right {
+    background: linear-gradient(135deg, #35a0ff, #0066ff);
+}
+
+.plate.moving {
+    animation: plateMove 0.5s ease;
+}
+
+@keyframes plateMove {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(30px);
+    }
+}
+
+.focus-point {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, #ff0000, #990000);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    animation: focusPulse 1s ease infinite;
+    z-index: 10;
+}
+
+.focus-point.hidden {
+    display: none;
+}
+
+@keyframes focusPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+/* Globe Stage - Mission 3 */
+.globe-stage {
+    text-align: center;
+    padding: 30px;
+}
+
+.holographic-globe {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    background: radial-gradient(circle at 30% 30%, #00ff88, #0066ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    animation: globeRotate 10s linear infinite;
+    box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+}
+
+@keyframes globeRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* City Stage - Mission 4 */
+.city-stage {
+    background: linear-gradient(180deg, #1a1a3e, #2a2a5e);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    font-size: 3rem;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.city-stage.shaking {
+    animation: cityShake 0.3s ease infinite;
+}
+
+@keyframes cityShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Holo Popup */
+.holo-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.95), rgba(0, 100, 255, 0.95));
+    backdrop-filter: blur(20px);
+    padding: 30px 50px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 100;
+    border: 2px solid cyan;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+    animation: popupIn 0.3s ease;
+}
+
+.holo-popup.hidden {
+    display: none;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Progress Bar */
+.progress-custom {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.progress-fill {
+    height: 8px;
+    background: linear-gradient(90deg, cyan, #00ff88);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* Button Styles */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px currentColor;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mission-screen {
+        padding: 20px;
+    }
+
+    .plate {
+        width: 100px;
+        padding: 15px;
+        margin: 0 10px;
+    }
+
+    .hud-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}
