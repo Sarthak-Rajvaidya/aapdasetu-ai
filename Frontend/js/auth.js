@@ -7,65 +7,100 @@
 (function () {
   "use strict";
 
-  function redirectToLogin() {
-    if (typeof window.apiLoginRedirectPath === "function") {
-      window.location.href = window.apiLoginRedirectPath();
-      return;
-    }
+  const PUBLIC_PAGES = [
+    "login.html",
+    "register.html",
+    "index.html"
+  ];
 
+  function isPublicPage() {
     const path = window.location.pathname;
-    const folders = [
-      "earthquake", "flood", "tornado",
-      "wildfire", "cyclone", "legacy"
-    ];
-
-    const nested = folders.some(function (folder) {
-      return path.includes("/" + folder + "/");
-    });
-
-    window.location.href = nested ? "../login.html" : "login.html";
+    return path === "/" ||
+      PUBLIC_PAGES.some(page => path.endsWith("/" + page));
   }
 
-  async function login(user_id, password) {
+  function getLoginPath() {
+    const path = window.location.pathname;
+
+    const folders = [
+      "earthquake",
+      "flood",
+      "tornado",
+      "wildfire",
+      "cyclone",
+      "legacy"
+    ];
+
+    const inSubfolder = folders.some(folder =>
+      path.includes("/" + folder + "/")
+    );
+
+    return inSubfolder ? "../login.html" : "login.html";
+  }
+
+  function getToken() {
+    try {
+      return localStorage.getItem("token");
+    } catch (error) {
+      console.error("Unable to read authentication storage.");
+      return null;
+    }
+  }
+
+  function getCurrentUser() {
+    try {
+      const value = localStorage.getItem("user");
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function logout() {
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Unable to clear authentication storage.");
+    }
+
+    window.location.href = getLoginPath();
+  }
+
+  async function login(userId, password) {
     try {
       const data = await window.apiFetch("/api/auth/login-json", {
         method: "POST",
         auth: false,
-        body: { user_id: user_id, password: password }
+        body: {
+          user_id: userId.trim(),
+          password: password
+        }
       });
 
-      if (!data || typeof data.access_token !== "string" ||
-          !data.access_token.trim()) {
-        throw new Error(
-          "The login response did not contain an access token. Check the backend login response."
-        );
+      if (!data || !data.access_token) {
+        return {
+          ok: false,
+          message: "Login response did not contain an access token."
+        };
       }
 
-      // Save the token before requesting the protected profile endpoint.
+      // Store the token before requesting the current user.
       localStorage.setItem("token", data.access_token);
 
-      try {
-        const me = await window.apiFetch("/api/auth/me");
+      const user = await window.apiFetch("/api/auth/me");
 
-        if (!me || typeof me !== "object") {
-          throw new Error("The profile endpoint returned invalid user data.");
-        }
-
-        localStorage.setItem("user", JSON.stringify(me));
-      } catch (profileError) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        throw profileError;
-      }
-
-      return { ok: true };
-    } catch (err) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.setItem("user", JSON.stringify(user));
 
       return {
+        ok: true,
+        user: user
+      };
+    } catch (error) {
+      // Do not silently replace API errors with a success response.
+      return {
         ok: false,
-        message: err.message || "Login failed. Please try again."
+        message: error.message || "Login failed."
       };
     }
   }
@@ -79,129 +114,53 @@
       });
 
       return { ok: true };
-    } catch (err) {
+    } catch (error) {
       return {
         ok: false,
-        message: err.message || "Registration failed."
+        message: error.message || "Registration failed."
       };
     }
   }
 
-  function logout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    redirectToLogin();
+  function checkAuth() {
+    if (!isPublicPage() && !getToken()) {
+      window.location.replace(getLoginPath());
+    }
   }
 
-  function getCurrentUser() {
+  async function refreshCurrentUser() {
+    const token = getToken();
+
+    if (!token) {
+      return null;
+    }
+
     try {
-      const value = localStorage.getItem("user");
-      return value ? JSON.parse(value) : null;
-    } catch (err) {
+      const user = await window.apiFetch("/api/auth/me");
+      localStorage.setItem("user", JSON.stringify(user));
+      return user;
+    } catch (error) {
+      console.error("Could not validate the current user:", error.message);
       return null;
     }
   }
 
-  function getToken() {
-    return localStorage.getItem("token");
-  }
-
-  function checkAuth() {
-    const publicPages = [
-      "login.html",
-      "register.html",
-      "index.html"
-    ];
-
-    const path = window.location.pathname;
-    const isPublic =
-      path === "/" ||
-      publicPages.some(function (page) {
-        return path.endsWith("/" + page) || path === page;
-      });
-
-    if (!getToken() && !isPublic) {
-      redirectToLogin();
-      return false;
-    }
-
-    return true;
-  }
-
-  function paintUserName() {
-    const user = getCurrentUser();
-
-    document.querySelectorAll("[data-user-name]").forEach(function (el) {
-      el.textContent = user
-        ? (user.name || user.user_id || "User")
-        : "Guest";
-    });
-
-    document.querySelectorAll("[data-auth-show]").forEach(function (el) {
-      el.style.display = user ? "" : "none";
-    });
-
-    document.querySelectorAll("[data-guest-show]").forEach(function (el) {
-      el.style.display = user ? "none" : "";
-    });
-  }
-
-  async function submitCourseCompletion(
-    courseSlug,
-    progress,
-    viewedSections
-  ) {
-    try {
-      const result = await window.apiFetch(
-        "/api/courses/" + encodeURIComponent(courseSlug) + "/progress",
-        {
-          method: "POST",
-          body: {
-            progress: Math.round(progress == null ? 100 : progress),
-            viewed_sections: Array.from(viewedSections || [])
-          }
-        }
-      );
-
-      if (typeof window.showToast === "function") {
-        window.showToast("Progress saved.", "success");
-      }
-
-      return { ok: true, data: result };
-    } catch (err) {
-      if (typeof window.showToast === "function") {
-        window.showToast(
-          "Could not save progress: " + err.message,
-          "error"
-        );
-      }
-
-      return { ok: false, message: err.message };
-    }
-  }
-
-  // Preserve the global function names used by existing pages.
+  // Expose functions for existing frontend pages.
   window.login = login;
   window.register = register;
   window.logout = logout;
-  window.getCurrentUser = getCurrentUser;
   window.getToken = getToken;
+  window.getCurrentUser = getCurrentUser;
   window.checkAuth = checkAuth;
-  window.paintUserName = paintUserName;
-  window.submitCourseCompletion = submitCourseCompletion;
+  window.refreshCurrentUser = refreshCurrentUser;
 
   document.addEventListener("DOMContentLoaded", function () {
-    const path = window.location.pathname;
-    const publicPages = ["login.html", "register.html"];
+    if (!isPublicPage()) {
+      checkAuth();
+    }
 
-    const isPublic = publicPages.some(function (page) {
-      return path.endsWith("/" + page) || path === page;
-    });
-
-    if (!isPublic) {
-      if (checkAuth()) {
-        paintUserName();
-      }
+    if (typeof window.paintUserName === "function") {
+      window.paintUserName();
     }
   });
 })();
