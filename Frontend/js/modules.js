@@ -1,25 +1,11 @@
 
-/* =========================================================
-   AAPDASETU AI — LEARN COURSE LIBRARY
-   File: Frontend/js/modules.js
-   ========================================================= */
-
+/* AapdaSetu AI — Learn Course Library */
 (() => {
     "use strict";
 
-    const state = {
-        courses: [],
-        progress: [],
-        category: "all",
-        search: "",
-        sort: "recommended",
-        loading: false,
-        error: null
-    };
-
     const $ = (selector) => document.querySelector(selector);
 
-    const elements = {
+    const el = {
         loading: $("#courseLoading"),
         grid: $("#courseGrid"),
         empty: $("#courseEmpty"),
@@ -38,399 +24,202 @@
         retry: $("#retryCourses")
     };
 
-    const CATEGORY_META = {
-        "earthquake": {
+    const state = {
+        courses: [],
+        category: "all",
+        search: "",
+        sort: "recommended",
+        loading: false
+    };
+
+    const META = {
+        earthquake: {
             category: "natural-disasters",
             label: "Natural disaster",
             icon: "bi-activity",
-            art: ""
+            art: "art-general"
         },
-        "flood": {
+        flood: {
             category: "natural-disasters",
             label: "Natural disaster",
             icon: "bi-water",
             art: "art-flood"
         },
-        "cyclone": {
+        cyclone: {
             category: "natural-disasters",
             label: "Natural disaster",
             icon: "bi-wind",
             art: "art-cyclone"
         },
-        "tornado": {
+        tornado: {
             category: "natural-disasters",
             label: "Natural disaster",
-            icon: "bi-tornado",
+            icon: "bi-cloud-lightning",
             art: "art-cyclone"
         },
-        "wildfire": {
+        wildfire: {
             category: "natural-disasters",
             label: "Natural disaster",
             icon: "bi-fire",
             art: "art-fire"
-        },
-        "first-aid": {
-            category: "first-aid",
-            label: "First aid",
-            icon: "bi-heart-pulse",
-            art: "art-firstaid"
-        },
-        "emergency-kit": {
-            category: "emergency-response",
-            label: "Emergency response",
-            icon: "bi-backpack2",
-            art: "art-general"
-        },
-        "communication": {
-            category: "general-safety",
-            label: "General safety",
-            icon: "bi-broadcast",
-            art: "art-general"
         }
     };
 
     function escapeHTML(value) {
-        return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+        return String(value ?? "").replace(/[&<>"']/g, (c) => ({
             "&": "&amp;",
             "<": "&lt;",
             ">": "&gt;",
             '"': "&quot;",
             "'": "&#39;"
-        })[character]);
-    }
-
-    function numberOrNull(value) {
-        if (value === null || value === undefined || value === "") return null;
-        const parsed = Number(value);
-        return Number.isFinite(parsed) ? parsed : null;
-    }
-
-    function slugify(value) {
-        return String(value ?? "")
-            .trim()
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, "");
+        })[c]);
     }
 
     function safeProgress(value) {
-        const number = numberOrNull(value);
-        if (number === null) return 0;
-        return Math.min(100, Math.max(0, number));
+        const n = Number(value ?? 0);
+        return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
     }
 
-    function formatDuration(value) {
-        const minutes = numberOrNull(value);
-        if (minutes === null || minutes <= 0) return "Self-paced";
-        if (minutes < 60) return `${minutes} min`;
-        const hours = Math.floor(minutes / 60);
-        const remaining = minutes % 60;
+    function durationText(minutes) {
+        const n = Number(minutes);
+        if (!Number.isFinite(n) || n <= 0) return "Self-paced";
+        if (n < 60) return `${n} min`;
+        const hours = Math.floor(n / 60);
+        const remaining = n % 60;
         return remaining ? `${hours} hr ${remaining} min` : `${hours} hr`;
     }
 
-    function normalizeList(payload) {
-        if (Array.isArray(payload)) return payload;
-        if (Array.isArray(payload?.items)) return payload.items;
-        if (Array.isArray(payload?.courses)) return payload.courses;
-        if (Array.isArray(payload?.data)) return payload.data;
-        if (Array.isArray(payload?.data?.items)) return payload.data.items;
-        if (Array.isArray(payload?.data?.courses)) return payload.data.courses;
-        return null;
-    }
-
-    function getApiBase() {
-        const config = window.APP_CONFIG || window.API_CONFIG || {};
-        return String(
-            config.API_BASE_URL ||
-            config.API_URL ||
-            config.apiBaseUrl ||
-            window.API_BASE_URL ||
-            ""
-        ).replace(/\/+$/, "");
-    }
-
-    function getAccessToken() {
-        const candidates = ["access_token", "token", "auth_token"];
-
-        for (const key of candidates) {
-            try {
-                const value = localStorage.getItem(key);
-                if (value && value !== "null" && value !== "undefined") {
-                    return value;
-                }
-            } catch (_) {
-                // Storage may be disabled; cookie-based auth can still work.
-            }
-        }
-
-        try {
-            const user = JSON.parse(localStorage.getItem("user") || "null");
-            return user?.access_token || user?.token || null;
-        } catch (_) {
-            return null;
-        }
-    }
-
     async function requestJSON(path) {
-        /*
-         * Prefer the application's shared API client if it exists.
-         * It may already handle authentication, API prefixes and errors.
-         */
         if (typeof window.apiFetch === "function") {
-            const result = await window.apiFetch(path);
-            if (result instanceof Response) {
-                if (!result.ok) throw new Error(`Request failed (${result.status})`);
-                return result.json();
-            }
-            return result;
+            return await window.apiFetch(path, { method: "GET" });
         }
 
-        if (typeof window.apiRequest === "function") {
-            const result = await window.apiRequest(path);
-            if (result instanceof Response) {
-                if (!result.ok) throw new Error(`Request failed (${result.status})`);
-                return result.json();
-            }
-            return result;
-        }
-
+        const config = window.APP_CONFIG || {};
+        const base = String(config.API_BASE_URL || "").replace(/\/+$/, "");
+        const token = localStorage.getItem("token");
         const headers = { Accept: "application/json" };
-        const token = getAccessToken();
 
         if (token) headers.Authorization = `Bearer ${token}`;
 
-        const response = await fetch(`${getApiBase()}${path}`, {
-            method: "GET",
+        const response = await fetch(`${base}${path}`, {
             headers,
             credentials: "include"
         });
 
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                throw new Error("Your session may have expired. Please sign in and try again.");
-            }
-            throw new Error(`Unable to load learning data (HTTP ${response.status}).`);
+        const text = await response.text();
+        let data = null;
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch {
+            data = text;
         }
 
-        return response.json();
+        if (!response.ok) {
+            const message = data?.detail || data?.message ||
+                `Request failed (HTTP ${response.status}).`;
+            throw new Error(
+                typeof message === "string" ? message : JSON.stringify(message)
+            );
+        }
+
+        return data;
+    }
+
+    function normalizeList(data) {
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.courses)) return data.courses;
+        if (Array.isArray(data?.items)) return data.items;
+        if (Array.isArray(data?.data)) return data.data;
+        return [];
     }
 
     function normalizeCourse(raw) {
-        const slug = String(raw.slug || raw.course_slug || raw.id || "").trim();
+        const slug = String(raw.slug || raw.course_slug || "").trim();
         if (!slug) return null;
 
-        const key = slugify(slug);
-        const known = CATEGORY_META[key] || {};
-        const rawCategory = slugify(
-            raw.category || raw.category_slug || raw.topic || raw.disaster_type || key
-        );
-
-        let category = known.category || rawCategory;
-        if (!["natural-disasters", "emergency-response", "first-aid", "general-safety"].includes(category)) {
-            if (["earthquake", "flood", "cyclone", "tornado", "wildfire"].includes(rawCategory)) {
-                category = "natural-disasters";
-            } else if (rawCategory.includes("first") || rawCategory.includes("medical")) {
-                category = "first-aid";
-            } else if (rawCategory.includes("emergency") || rawCategory.includes("response")) {
-                category = "emergency-response";
-            } else {
-                category = "general-safety";
-            }
-        }
-
-        const title = String(raw.title || raw.name || raw.course_name || slug);
-        const progressValue =
-            raw.progress ??
-            raw.progress_percent ??
-            raw.completion_percentage ??
-            raw.completion ??
-            0;
-
-        const lessonsCount = numberOrNull(
-            raw.lessons_count ?? raw.lesson_count ?? raw.total_lessons ?? raw.lessons?.length
-        );
-
-        const videoCount = numberOrNull(
-            raw.video_count ?? raw.videos_count ?? raw.total_videos
-        );
-
-        const duration = numberOrNull(
-            raw.duration_minutes ?? raw.estimated_minutes ?? raw.duration
-        );
-
-        const completed = raw.completed === true || raw.is_completed === true ||
-            (numberOrNull(progressValue) !== null && Number(progressValue) >= 100);
+        const key = slug.toLowerCase();
+        const meta = META[key] || {};
+        const progress = safeProgress(raw.progress);
 
         return {
             slug,
-            key,
-            title,
-            description: String(raw.description || raw.summary || "Explore this course to build practical disaster-preparedness skills."),
-            category,
-            categoryLabel: known.label || String(raw.category_label || raw.category || "Preparedness"),
-            icon: known.icon || "bi-shield-check",
-            art: known.art || "art-general",
-            level: String(raw.level || raw.difficulty || "Self-paced"),
-            duration,
-            lessonsCount,
-            videoCount,
-            progress: safeProgress(progressValue),
-            completed,
-            raw
+            title: String(raw.title || slug),
+            description: String(
+                raw.description ||
+                "Learn practical steps to prepare for this disaster."
+            ),
+            category: meta.category || "general-safety",
+            categoryLabel: meta.label || "Preparedness",
+            icon: meta.icon || "bi-shield-check",
+            art: meta.art || "art-general",
+            duration: Number(raw.duration_minutes) || null,
+            lessonsCount: Number(raw.lessons_count ?? raw.total_sections ?? 0),
+            progress,
+            completed: raw.completed === true || progress >= 100
         };
     }
 
-    function normalizeProgressRecords(payload) {
-        const items = normalizeList(payload);
-        if (!items) return [];
-
-        return items.map((item) => ({
-            slug: String(item.course_slug || item.slug || item.course?.slug || ""),
-            progress: safeProgress(item.progress ?? item.progress_percent ?? 0),
-            completed: item.completed === true || item.is_completed === true
-        })).filter((item) => item.slug);
-    }
-
-    function mergeProgress(courses, progressRecords) {
-        const progressMap = new Map(
-            progressRecords.map((record) => [record.slug, record])
-        );
-
-        return courses.map((course) => {
-            const record = progressMap.get(course.slug);
-            if (!record) return course;
-
-            return {
-                ...course,
-                progress: record.progress,
-                completed: record.completed || course.completed
-            };
-        });
-    }
-
-    async function fetchCourses() {
-        let lastError;
-
-        for (const endpoint of ["/api/courses", "/api/courses/"]) {
-            try {
-                const payload = await requestJSON(endpoint);
-                const list = normalizeList(payload);
-
-                if (!list) {
-                    throw new Error("The courses API returned an unexpected response format.");
-                }
-
-                return list.map(normalizeCourse).filter(Boolean);
-            } catch (error) {
-                lastError = error;
-                if (error.message?.includes("session may have expired")) throw error;
-            }
-        }
-
-        throw lastError || new Error("Unable to load courses.");
-    }
-
-    async function fetchProgress() {
-        /*
-         * Progress is supplementary. Course browsing still works if the
-         * dashboard endpoint is unavailable, but no progress is fabricated.
-         */
-        try {
-            const payload = await requestJSON("/api/dashboard");
-            const dashboard = payload?.data || payload;
-            return normalizeProgressRecords(dashboard?.course_progress);
-        } catch (error) {
-            console.warn("[Learn] Course progress unavailable:", error.message);
-            return [];
-        }
-    }
-
-    function getCourseURL(course) {
-        return `course.html?slug=${encodeURIComponent(course.slug)}`;
-    }
-
-    function getLessonURL(course) {
-        return `lesson.html?course=${encodeURIComponent(course.slug)}`;
-    }
-
-    function categoryMatches(course, selected) {
-        if (selected === "all") return true;
-        return course.category === selected;
-    }
-
-    function searchMatches(course, query) {
-        if (!query) return true;
-
-        const searchable = [
-            course.title,
-            course.description,
-            course.categoryLabel,
-            course.level,
-            course.slug
-        ].join(" ").toLowerCase();
-
-        return searchable.includes(query);
+    function categoryMatches(course) {
+        return state.category === "all" ||
+            course.category === state.category;
     }
 
     function getFilteredCourses() {
         const query = state.search.trim().toLowerCase();
 
-        const courses = state.courses.filter((course) =>
-            categoryMatches(course, state.category) &&
-            searchMatches(course, query)
-        );
+        const list = state.courses.filter(course => {
+            const matchesSearch = !query || [
+                course.title,
+                course.description,
+                course.slug,
+                course.categoryLabel
+            ].join(" ").toLowerCase().includes(query);
 
-        switch (state.sort) {
-            case "title":
-                courses.sort((a, b) => a.title.localeCompare(b.title));
-                break;
-            case "duration":
-                courses.sort((a, b) =>
-                    (a.duration ?? Number.MAX_SAFE_INTEGER) -
-                    (b.duration ?? Number.MAX_SAFE_INTEGER)
-                );
-                break;
-            case "progress":
-                courses.sort((a, b) => b.progress - a.progress);
-                break;
-            default:
-                courses.sort((a, b) => {
-                    const rank = (course) =>
-                        course.completed ? 2 : course.progress > 0 ? 0 : 1;
-                    return rank(a) - rank(b) || a.title.localeCompare(b.title);
-                });
+            return categoryMatches(course) && matchesSearch;
+        });
+
+        if (state.sort === "title") {
+            list.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (state.sort === "duration") {
+            list.sort((a, b) =>
+                (a.duration ?? Infinity) - (b.duration ?? Infinity)
+            );
+        } else if (state.sort === "progress") {
+            list.sort((a, b) => b.progress - a.progress);
+        } else {
+            list.sort((a, b) => {
+                const rank = c => c.completed ? 2 : c.progress > 0 ? 0 : 1;
+                return rank(a) - rank(b) || a.title.localeCompare(b.title);
+            });
         }
 
-        return courses;
+        return list;
     }
 
     function renderSummary() {
-        const completed = state.courses.filter((course) => course.completed).length;
-        const inProgress = state.courses.filter(
-            (course) => !course.completed && course.progress > 0
-        ).length;
-
-        elements.courseCount.textContent = String(state.courses.length);
-        elements.completedCount.textContent = String(completed);
-        elements.inProgressCount.textContent = String(inProgress);
+        if (el.courseCount) {
+            el.courseCount.textContent = String(state.courses.length);
+        }
+        if (el.completedCount) {
+            el.completedCount.textContent = String(
+                state.courses.filter(c => c.completed).length
+            );
+        }
+        if (el.inProgressCount) {
+            el.inProgressCount.textContent = String(
+                state.courses.filter(c => !c.completed && c.progress > 0).length
+            );
+        }
     }
 
-    function renderCourseCard(course) {
-        const courseURL = getCourseURL(course);
-        const progress = course.progress;
+    function renderCard(course) {
         const status = course.completed
             ? "Completed"
-            : progress > 0 ? "In progress" : "Not started";
+            : course.progress > 0 ? "In progress" : "Not started";
 
-        const lessonText = course.lessonsCount === null
-            ? "Lessons"
-            : `${course.lessonsCount} lesson${course.lessonsCount === 1 ? "" : "s"}`;
-
-        const videoText = course.videoCount === null
-            ? ""
-            : `<span><i class="bi bi-play-circle"></i> ${course.videoCount} video${course.videoCount === 1 ? "" : "s"}</span>`;
-
-        const durationText = formatDuration(course.duration);
+        const action = course.completed
+            ? "Review course"
+            : course.progress > 0 ? "Continue" : "Explore course";
 
         return `
             <article class="learn-course-card">
@@ -438,38 +227,49 @@
                     <span class="learn-course-icon">
                         <i class="bi ${escapeHTML(course.icon)}"></i>
                     </span>
-                    <span class="learn-course-tag">${escapeHTML(course.categoryLabel)}</span>
+                    <span class="learn-course-tag">
+                        ${escapeHTML(course.categoryLabel)}
+                    </span>
                 </div>
 
                 <div class="learn-course-body">
                     <div class="learn-course-meta">
-                        <span><i class="bi bi-journal-text"></i> ${escapeHTML(lessonText)}</span>
-                        <span><i class="bi bi-clock"></i> ${escapeHTML(durationText)}</span>
-                        ${videoText}
+                        <span>
+                            <i class="bi bi-journal-text"></i>
+                            ${course.lessonsCount} lessons
+                        </span>
+                        <span>
+                            <i class="bi bi-clock"></i>
+                            ${escapeHTML(durationText(course.duration))}
+                        </span>
                     </div>
 
                     <h3>${escapeHTML(course.title)}</h3>
-                    <p class="learn-course-description">${escapeHTML(course.description)}</p>
+                    <p class="learn-course-description">
+                        ${escapeHTML(course.description)}
+                    </p>
 
                     <div class="learn-course-progress">
                         <div class="learn-course-progress-label">
-                            <span>${escapeHTML(status)}</span>
-                            <strong>${progress}%</strong>
+                            <span>${status}</span>
+                            <strong>${course.progress}%</strong>
                         </div>
                         <div class="learn-progress-track"
                              role="progressbar"
                              aria-label="${escapeHTML(course.title)} progress"
                              aria-valuemin="0"
                              aria-valuemax="100"
-                             aria-valuenow="${progress}">
-                            <div class="learn-progress-fill" style="width:${progress}%"></div>
+                             aria-valuenow="${course.progress}">
+                            <div class="learn-progress-fill"
+                                 style="width:${course.progress}%"></div>
                         </div>
                     </div>
 
                     <div class="learn-course-footer">
-                        <span class="learn-level">${escapeHTML(course.level)}</span>
-                        <a class="learn-course-link" href="${courseURL}">
-                            ${course.completed ? "Review course" : progress > 0 ? "Continue" : "Explore course"}
+                        <span class="learn-level">Self-paced</span>
+                        <a class="learn-course-link"
+                           href="course.html?slug=${encodeURIComponent(course.slug)}">
+                            ${action}
                             <i class="bi bi-arrow-up-right"></i>
                         </a>
                     </div>
@@ -478,170 +278,177 @@
         `;
     }
 
-    function renderCourses() {
-        const filtered = getFilteredCourses();
+    function renderContinue() {
+        if (!el.continueSection || !el.continueCard) return;
 
-        elements.loading.hidden = true;
-        elements.error.hidden = true;
-        elements.grid.hidden = filtered.length === 0;
-        elements.empty.hidden = filtered.length !== 0;
-
-        elements.grid.innerHTML = filtered.map(renderCourseCard).join("");
-        elements.libraryCount.textContent =
-            `${filtered.length} course${filtered.length === 1 ? "" : "s"}`;
-
-        if (state.courses.length === 0) {
-            elements.empty.hidden = false;
-            elements.grid.hidden = true;
-            elements.empty.querySelector("h3").textContent = "No courses available yet";
-            elements.empty.querySelector("p").textContent =
-                "Learning courses will appear here when they are available.";
-        } else {
-            elements.empty.querySelector("h3").textContent = "No matching courses";
-            elements.empty.querySelector("p").textContent =
-                "Try another search term or select a different category.";
-        }
-
-        renderContinueCard();
-    }
-
-    function renderContinueCard() {
         const course = state.courses.find(
-            (item) => !item.completed && item.progress > 0
+            c => !c.completed && c.progress > 0
         );
 
         if (!course) {
-            elements.continueSection.hidden = true;
-            elements.continueCard.innerHTML = "";
+            el.continueSection.hidden = true;
+            el.continueCard.innerHTML = "";
             return;
         }
 
-        elements.continueSection.hidden = false;
-        elements.continueCard.innerHTML = `
+        el.continueSection.hidden = false;
+        el.continueCard.innerHTML = `
             <article class="learn-continue-card">
                 <div>
                     <div class="learn-continue-meta">
-                        <span><i class="bi bi-journal-bookmark"></i> ${escapeHTML(course.categoryLabel)}</span>
-                        <span><i class="bi bi-clock"></i> ${escapeHTML(formatDuration(course.duration))}</span>
+                        <span>${escapeHTML(course.categoryLabel)}</span>
+                        <span>${course.progress}% complete</span>
                     </div>
                     <h3>${escapeHTML(course.title)}</h3>
                     <p>${escapeHTML(course.description)}</p>
                     <div class="learn-progress-track"
                          role="progressbar"
-                         aria-label="Course progress"
                          aria-valuemin="0"
                          aria-valuemax="100"
                          aria-valuenow="${course.progress}">
-                        <div class="learn-progress-fill" style="width:${course.progress}%"></div>
-                    </div>
-                    <div class="learn-continue-progress">
-                        <span>${course.progress}% completed</span>
-                        <span>${course.lessonsCount === null ? "Course in progress" : `${course.lessonsCount} total lessons`}</span>
+                        <div class="learn-progress-fill"
+                             style="width:${course.progress}%"></div>
                     </div>
                 </div>
-                <a class="learn-btn learn-btn-primary" href="${getCourseURL(course)}">
+                <a class="learn-btn learn-btn-primary"
+                   href="course.html?slug=${encodeURIComponent(course.slug)}">
                     Continue learning <i class="bi bi-arrow-right"></i>
                 </a>
             </article>
         `;
     }
 
+    function renderCourses() {
+        if (!el.grid || !el.loading || !el.empty) return;
+
+        const filtered = getFilteredCourses();
+        el.loading.hidden = true;
+        if (el.error) el.error.hidden = true;
+
+        el.grid.innerHTML = filtered.map(renderCard).join("");
+        el.grid.hidden = filtered.length === 0;
+        el.empty.hidden = filtered.length !== 0;
+
+        if (el.libraryCount) {
+            el.libraryCount.textContent =
+                `${filtered.length} course${filtered.length === 1 ? "" : "s"}`;
+        }
+
+        const heading = el.empty?.querySelector("h3");
+        const paragraph = el.empty?.querySelector("p");
+
+        if (heading && paragraph) {
+            if (state.courses.length === 0) {
+                heading.textContent = "No courses available yet";
+                paragraph.textContent =
+                    "Add course records to your database to display courses here.";
+            } else {
+                heading.textContent = "No matching courses";
+                paragraph.textContent =
+                    "Try another search term or select a different category.";
+            }
+        }
+
+        renderContinue();
+    }
+
     function showError(error) {
-        elements.loading.hidden = true;
-        elements.grid.hidden = true;
-        elements.empty.hidden = true;
-        elements.error.hidden = false;
-        elements.libraryCount.textContent = "Unavailable";
-        elements.errorMessage.textContent =
-            error?.message || "An unexpected error occurred. Please try again.";
+        if (el.loading) el.loading.hidden = true;
+        if (el.grid) el.grid.hidden = true;
+        if (el.empty) el.empty.hidden = true;
+        if (el.error) el.error.hidden = false;
+
+        if (el.errorMessage) {
+            el.errorMessage.textContent =
+                error?.message || "Unable to load courses.";
+        }
+        if (el.libraryCount) el.libraryCount.textContent = "Unavailable";
     }
 
     async function loadCourses() {
         if (state.loading) return;
-
         state.loading = true;
-        state.error = null;
-        elements.loading.hidden = false;
-        elements.grid.hidden = true;
-        elements.empty.hidden = true;
-        elements.error.hidden = true;
-        elements.libraryCount.textContent = "Loading courses…";
+
+        if (el.loading) el.loading.hidden = false;
+        if (el.grid) el.grid.hidden = true;
+        if (el.empty) el.empty.hidden = true;
+        if (el.error) el.error.hidden = true;
+        if (el.libraryCount) el.libraryCount.textContent = "Loading courses…";
 
         try {
-            const [rawCourses, progress] = await Promise.all([
-                fetchCourses(),
-                fetchProgress()
-            ]);
-
-            state.progress = progress;
-            state.courses = mergeProgress(rawCourses, progress);
+            const data = await requestJSON("/api/courses");
+            state.courses = normalizeList(data).map(normalizeCourse).filter(Boolean);
 
             renderSummary();
             renderCourses();
         } catch (error) {
-            console.error("[Learn] Unable to load courses:", error);
-            state.error = error;
+            console.error("[AapdaSetu Learn] Course loading failed:", error);
             showError(error);
         } finally {
             state.loading = false;
         }
     }
 
-    function setCategory(category) {
-        state.category = category;
-
-        elements.filters.querySelectorAll("[data-category]").forEach((button) => {
-            const active = button.dataset.category === category;
-            button.classList.toggle("active", active);
-            button.setAttribute("aria-pressed", String(active));
-        });
-
-        renderCourses();
-    }
-
     function bindEvents() {
-        elements.search.addEventListener("input", () => {
-            state.search = elements.search.value;
+        el.search?.addEventListener("input", () => {
+            state.search = el.search.value;
             renderCourses();
         });
 
-        elements.sort.addEventListener("change", () => {
-            state.sort = elements.sort.value;
+        el.sort?.addEventListener("change", () => {
+            state.sort = el.sort.value;
             renderCourses();
         });
 
-        elements.filters.addEventListener("click", (event) => {
+        el.filters?.addEventListener("click", event => {
             const button = event.target.closest("[data-category]");
             if (!button) return;
-            setCategory(button.dataset.category);
+
+            state.category = button.dataset.category;
+
+            el.filters.querySelectorAll("[data-category]").forEach(item => {
+                const active = item === button;
+                item.classList.toggle("active", active);
+                item.setAttribute("aria-pressed", String(active));
+            });
+
+            renderCourses();
         });
 
-        elements.clearFilters.addEventListener("click", () => {
-            elements.search.value = "";
-            elements.sort.value = "recommended";
+        el.clearFilters?.addEventListener("click", () => {
+            if (el.search) el.search.value = "";
+            if (el.sort) el.sort.value = "recommended";
             state.search = "";
             state.sort = "recommended";
-            setCategory("all");
+            state.category = "all";
+
+            el.filters?.querySelectorAll("[data-category]").forEach(item => {
+                const active = item.dataset.category === "all";
+                item.classList.toggle("active", active);
+                item.setAttribute("aria-pressed", String(active));
+            });
+
+            renderCourses();
         });
 
-        elements.retry.addEventListener("click", loadCourses);
+        el.retry?.addEventListener("click", loadCourses);
 
-        document.addEventListener("keydown", (event) => {
+        document.addEventListener("keydown", event => {
             const target = event.target;
             const typing = target instanceof HTMLElement &&
                 (target.isContentEditable ||
                  ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
 
-            if (event.key === "/" && !typing && !event.ctrlKey && !event.metaKey && !event.altKey) {
+            if (event.key === "/" && !typing) {
                 event.preventDefault();
-                elements.search.focus();
+                el.search?.focus();
             }
 
-            if (event.key === "Escape" && document.activeElement === elements.search) {
-                elements.search.value = "";
+            if (event.key === "Escape" && document.activeElement === el.search) {
+                el.search.value = "";
                 state.search = "";
                 renderCourses();
-                elements.search.blur();
+                el.search.blur();
             }
         });
     }
