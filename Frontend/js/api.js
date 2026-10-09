@@ -1,55 +1,35 @@
 javascript
 /**
  * AapdaSetu AI — Shared API Client
- *
- * Usage:
- *   const courses = await apiFetch("/api/courses");
- *
- *   const course = await apiFetch("/api/courses/cyclone");
- *
- *   await apiFetch("/api/courses/cyclone/progress", {
- *     method: "POST",
- *     body: {
- *       progress: 25,
- *       viewed_sections: ["section-1"]
- *     }
- *   });
- *
- * Options:
- *   method: HTTP method, defaults to GET
- *   body: JavaScript object, string, or FormData
- *   auth: attach JWT and handle 401, defaults to true
- *   isForm: send FormData without JSON encoding
- *   credentials: fetch credentials mode, defaults to same-origin
+ * Compatible with existing login, dashboard, courses and other pages.
  */
 
 (function () {
   "use strict";
 
-  const config = window.APP_CONFIG || {};
+  var config = window.APP_CONFIG || {};
 
-  const API_BASE_URL = String(
-    config.API_BASE_URL || ""
-  ).replace(/\/+$/, "");
+  var API_BASE_URL = String(config.API_BASE_URL || "")
+    .replace(/\/+$/, "");
 
   function apiAuthHeader() {
-    let token = null;
+    var token = null;
 
     try {
       token = localStorage.getItem("token");
     } catch (error) {
-      console.warn("Unable to access stored authentication token.");
+      console.warn("Could not read authentication token.");
     }
 
     return token
-      ? { Authorization: `Bearer ${token}` }
+      ? { Authorization: "Bearer " + token }
       : {};
   }
 
   function apiLoginRedirectPath() {
-    const pathname = window.location.pathname;
+    var pathname = window.location.pathname;
 
-    const subfolders = [
+    var folders = [
       "earthquake",
       "flood",
       "tornado",
@@ -58,13 +38,11 @@ javascript
       "legacy"
     ];
 
-    const inSubfolder = subfolders.some((folder) =>
-      pathname.includes(`/${folder}/`)
-    );
+    var inSubfolder = folders.some(function (folder) {
+      return pathname.indexOf("/" + folder + "/") !== -1;
+    });
 
-    return inSubfolder
-      ? "../login.html"
-      : "login.html";
+    return inSubfolder ? "../login.html" : "login.html";
   }
 
   function apiHandleUnauthorized() {
@@ -72,45 +50,25 @@ javascript
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     } catch (error) {
-      console.warn("Unable to clear local authentication data.");
+      console.warn("Could not clear authentication storage.");
     }
 
-    const loginPath = apiLoginRedirectPath();
-
-    // Avoid repeatedly redirecting when already on the login page.
-    if (!window.location.pathname.endsWith("/login.html")) {
-      window.location.href = loginPath;
+    if (!/\/login\.html$/.test(window.location.pathname)) {
+      window.location.href = apiLoginRedirectPath();
     }
   }
 
   function apiBuildURL(path) {
     if (typeof path !== "string" || !path.trim()) {
-      throw new Error("apiFetch requires a non-empty URL path.");
+      throw new Error("apiFetch requires a valid URL path.");
     }
 
     if (/^https?:\/\//i.test(path)) {
-      const target = new URL(path);
-      const baseOrigin = API_BASE_URL
-        ? new URL(API_BASE_URL, window.location.origin).origin
-        : window.location.origin;
-
-      if (
-        target.origin !== baseOrigin
-        && target.origin !== window.location.origin
-      ) {
-        throw new Error(
-          "Cross-origin API requests are not allowed by this API client."
-        );
-      }
-
-      return target.href;
+      return path;
     }
 
-    const normalizedPath = path.startsWith("/")
-      ? path
-      : `/${path}`;
-
-    return `${API_BASE_URL}${normalizedPath}`;
+    return API_BASE_URL +
+      (path.charAt(0) === "/" ? path : "/" + path);
   }
 
   async function apiParseResponse(response) {
@@ -118,40 +76,35 @@ javascript
       return null;
     }
 
-    const text = await response.text();
+    var text = await response.text();
 
     if (!text) {
       return null;
     }
 
-    const contentType = (
-      response.headers.get("content-type") || ""
-    ).toLowerCase();
-
-    if (contentType.includes("application/json")) {
-      try {
-        return JSON.parse(text);
-      } catch {
-        throw new Error("The server returned invalid JSON.");
-      }
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      return text;
     }
-
-    return text;
   }
 
-  function apiCreateHTTPError(response, data) {
-    const detail = data && typeof data === "object"
-      ? (data.detail ?? data.message ?? data.error)
-      : null;
+  function apiCreateError(response, data) {
+    var message = "Request failed (" + response.status + ")";
 
-    const message = detail == null
-      ? `Request failed (${response.status})`
-      : typeof detail === "string"
-        ? detail
-        : JSON.stringify(detail);
+    if (data && typeof data === "object") {
+      if (typeof data.detail === "string") {
+        message = data.detail;
+      } else if (typeof data.message === "string") {
+        message = data.message;
+      } else if (data.detail) {
+        message = JSON.stringify(data.detail);
+      }
+    } else if (typeof data === "string" && data.trim()) {
+      message = data;
+    }
 
-    const error = new Error(message);
-
+    var error = new Error(message);
     error.status = response.status;
     error.data = data;
 
@@ -159,57 +112,52 @@ javascript
   }
 
   /**
-   * Send a request and return parsed response data.
+   * apiFetch(path, options) returns parsed response data.
    *
-   * This function returns JSON directly; it does not return a Response object.
+   * Examples:
+   *   await apiFetch("/api/courses");
+   *
+   *   await apiFetch("/api/courses/cyclone/progress", {
+   *     method: "POST",
+   *     body: { progress: 25, viewed_sections: ["section-1"] }
+   *   });
    */
-  async function apiFetch(path, options = {}) {
-    const {
-      method = "GET",
-      body,
-      auth = true,
-      isForm = false,
-      credentials = "same-origin",
-      headers: customHeaders = {},
-      signal
-    } = options;
+  async function apiFetch(path, options) {
+    options = options || {};
 
-    const requestMethod = String(method).toUpperCase();
-
-    const headers = {
-      Accept: "application/json",
-      ...customHeaders
+    var method = options.method || "GET";
+    var body = options.body;
+    var auth = options.auth !== false;
+    var isForm = options.isForm === true;
+    var headers = {
+      Accept: "application/json"
     };
+
+    if (options.headers) {
+      Object.keys(options.headers).forEach(function (key) {
+        headers[key] = options.headers[key];
+      });
+    }
 
     if (auth) {
       Object.assign(headers, apiAuthHeader());
     }
 
-    let requestBody;
+    var requestBody;
 
     if (body !== undefined && body !== null) {
-      const isFormData = (
-        typeof FormData !== "undefined"
-        && body instanceof FormData
-      );
+      var isFormData =
+        typeof FormData !== "undefined" &&
+        body instanceof FormData;
 
       if (isForm || isFormData) {
-        // The browser must set the multipart boundary itself.
+        requestBody = body;
         delete headers["Content-Type"];
         delete headers["content-type"];
-        requestBody = body;
-      } else if (
-        typeof body === "string"
-        || body instanceof Blob
-        || body instanceof ArrayBuffer
-      ) {
+      } else if (typeof body === "string") {
         requestBody = body;
 
-        if (
-          typeof body === "string"
-          && !headers["Content-Type"]
-          && !headers["content-type"]
-        ) {
+        if (!headers["Content-Type"] && !headers["content-type"]) {
           headers["Content-Type"] = "application/json";
         }
       } else {
@@ -218,23 +166,23 @@ javascript
       }
     }
 
-    let response;
+    var response;
 
     try {
       response = await fetch(apiBuildURL(path), {
-        method: requestMethod,
-        headers,
+        method: method,
+        headers: headers,
         body: requestBody,
-        credentials,
-        signal
+        credentials: options.credentials || "same-origin",
+        signal: options.signal
       });
     } catch (networkError) {
       if (networkError.name === "AbortError") {
         throw networkError;
       }
 
-      const error = new Error(
-        "Network error. Check whether the backend is running and the API URL is correct."
+      var error = new Error(
+        "API fetch failed. Check the backend URL, server status, and network connection."
       );
 
       error.status = 0;
@@ -246,29 +194,27 @@ javascript
     if (response.status === 401 && auth) {
       apiHandleUnauthorized();
 
-      const error = new Error(
-        "Your session has expired. Please sign in again."
+      var authError = new Error(
+        "Authentication failed. Please sign in again."
       );
 
-      error.status = 401;
-
-      throw error;
+      authError.status = 401;
+      throw authError;
     }
 
-    const data = await apiParseResponse(response);
+    var data = await apiParseResponse(response);
 
     if (!response.ok) {
-      throw apiCreateHTTPError(response, data);
+      throw apiCreateError(response, data);
     }
 
     return data;
   }
 
-  // Expose a single consistent client to classic frontend scripts.
+  // Keep these names available to existing frontend scripts.
   window.apiFetch = apiFetch;
   window.API_BASE_URL = API_BASE_URL;
-
-  // Preserve compatibility with code using these helpers directly.
   window.apiAuthHeader = apiAuthHeader;
   window.apiHandleUnauthorized = apiHandleUnauthorized;
+
 })();
