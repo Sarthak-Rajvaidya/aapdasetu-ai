@@ -2,205 +2,211 @@ javascript
 (() => {
   "use strict";
 
+  console.info("[AapdaSetu Learn] course.js loaded");
+
   const $ = (id) => document.getElementById(id);
 
   const state = {
-    course: null,
-    sections: [],
-    loading: false
+    loading: false,
+    requestId: 0
   };
 
-  const CATEGORY_LABELS = {
-    flood: "Flood Preparedness",
-    earthquake: "Earthquake Safety",
-    fire: "Fire Safety",
-    wildfire: "Wildfire Safety",
-    cyclone: "Cyclone Preparedness",
-    tornado: "Tornado Safety",
-    landslide: "Landslide Safety",
-    drought: "Drought Preparedness",
-    tsunami: "Tsunami Safety",
-    general: "Disaster Preparedness"
-  };
-
-  function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[char]);
+  function setText(id, value) {
+    const element = $(id);
+    if (element) element.textContent = String(value ?? "");
   }
 
-  function getCourseSlug() {
+  function setHidden(id, hidden) {
+    const element = $(id);
+    if (element) element.hidden = hidden;
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (character) => {
+      const entities = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+
+      return entities[character];
+    });
+  }
+
+  function getSlug() {
     const params = new URLSearchParams(window.location.search);
 
     return (
-      params.get("slug")
-      || params.get("course")
-      || params.get("id")
-      || ""
+      params.get("slug") ||
+      params.get("course") ||
+      params.get("id") ||
+      ""
     ).trim();
   }
 
-  function getApiBase() {
-    const config = window.APP_CONFIG || {};
-    return String(config.API_BASE_URL || "").replace(/\/+$/, "");
+  function showError(message) {
+    console.error("[AapdaSetu Learn]", message);
+
+    setHidden("courseLoading", true);
+    setHidden("courseContent", true);
+    setHidden("courseError", false);
+    setText("courseErrorMessage", message);
   }
 
-  /*
-   * apiFetch() in your existing api.js already returns parsed JSON.
-   * Do not call result.json() on its return value.
-   */
-  async function requestJSON(path) {
-    if (typeof window.apiFetch === "function") {
-      return await window.apiFetch(path, { method: "GET" });
+  function showLoading() {
+    setHidden("courseLoading", false);
+    setHidden("courseError", true);
+    setHidden("courseContent", true);
+  }
+
+  function normalizeCourse(data) {
+    const course = data?.course ?? data?.data ?? data;
+
+    if (
+      !course ||
+      typeof course !== "object" ||
+      Array.isArray(course)
+    ) {
+      throw new Error("The API returned an invalid course response.");
     }
 
-    // Fallback for pages where api.js did not load.
+    const progressNumber = Number(course.progress ?? 0);
+    const totalNumber = Number(course.total_sections ?? 0);
+
+    return {
+      id: course.id ?? "",
+      slug: String(course.slug || getSlug()),
+      title: String(course.title || "Untitled course"),
+      description: String(course.description || ""),
+      category: String(
+        course.disaster_type || course.category || "general"
+      ),
+      totalSections: Number.isFinite(totalNumber)
+        ? Math.max(0, totalNumber)
+        : 0,
+      viewedSections: Array.isArray(course.viewed_sections)
+        ? course.viewed_sections
+        : [],
+      progress: Number.isFinite(progressNumber)
+        ? Math.max(0, Math.min(100, progressNumber))
+        : 0,
+      completed: Boolean(course.completed)
+    };
+  }
+
+  function categoryLabel(category) {
+    const labels = {
+      flood: "Flood Preparedness",
+      earthquake: "Earthquake Safety",
+      fire: "Fire Safety",
+      wildfire: "Wildfire Safety",
+      cyclone: "Cyclone Preparedness",
+      tornado: "Tornado Safety",
+      landslide: "Landslide Safety",
+      drought: "Drought Preparedness",
+      tsunami: "Tsunami Safety",
+      general: "Disaster Preparedness"
+    };
+
+    const key = String(category || "general").toLowerCase().trim();
+
+    return labels[key] ||
+      key.replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  async function requestCourse(slug) {
+    const path = `/api/courses/${encodeURIComponent(slug)}`;
+
+    console.info("[AapdaSetu Learn] Requesting:", path);
+    console.info("[AapdaSetu Learn] apiFetch available:", typeof window.apiFetch);
+
+    // Prefer the application's shared API client.
+    if (typeof window.apiFetch === "function") {
+      return window.apiFetch(path, { method: "GET" });
+    }
+
+    // Fallback if api.js failed to expose the helper.
+    const config = window.APP_CONFIG || {};
+    const baseURL = String(config.API_BASE_URL || "").replace(/\/+$/, "");
     const token = localStorage.getItem("token");
+
     const headers = { Accept: "application/json" };
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${getApiBase()}${path}`, {
-      method: "GET",
-      headers
-    });
-
-    const text = await response.text();
-    let data = null;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
 
     try {
-      data = text ? JSON.parse(text) : null;
-    } catch {
-      data = text;
-    }
+      const response = await fetch(`${baseURL}${path}`, {
+        method: "GET",
+        headers,
+        signal: controller.signal
+      });
 
-    if (!response.ok) {
-      const message = data?.detail || data?.message || `Request failed (${response.status})`;
-      throw new Error(
-        typeof message === "string" ? message : JSON.stringify(message)
-      );
-    }
+      const responseText = await response.text();
+      let data;
 
-    return data;
+      try {
+        data = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        data = responseText;
+      }
+
+      console.info("[AapdaSetu Learn] HTTP status:", response.status);
+
+      if (!response.ok) {
+        const detail = data && typeof data === "object"
+          ? data.detail || data.message
+          : null;
+
+        const error = new Error(
+          typeof detail === "string"
+            ? detail
+            : `Course request failed (HTTP ${response.status}).`
+        );
+
+        error.status = response.status;
+        throw error;
+      }
+
+      return data;
+    } finally {
+      window.clearTimeout(timeout);
+    }
   }
 
-  function normalizeCourse(raw) {
-    // Your current GET /api/courses/{slug} returns a course object directly.
-    const course = raw?.course || raw?.data || raw;
+  function renderObjectives(course) {
+    const element = $("courseObjectives");
+    if (!element) return;
 
-    if (!course || typeof course !== "object" || Array.isArray(course)) {
-      throw new Error("The server returned an unexpected course response.");
-    }
-
-    const totalSections = Math.max(
-      0,
-      Number(course.total_sections || 0)
-    );
-
-    const viewedSections = Array.isArray(course.viewed_sections)
-      ? course.viewed_sections
-      : [];
-
-    let progress = Number(course.progress || 0);
-
-    if (!Number.isFinite(progress)) {
-      progress = 0;
-    }
-
-    progress = Math.max(0, Math.min(100, progress));
-
-    return {
-      id: course.id ?? "",
-      slug: String(course.slug || getCourseSlug()),
-      title: course.title || "Untitled course",
-      description: course.description || "",
-      category: course.disaster_type || course.category || "general",
-      totalSections,
-      viewedSections,
-      progress,
-      completed: Boolean(course.completed)
-    };
-  }
-
-  function categoryLabel(category) {
-    const key = String(category || "general")
-      .trim()
-      .toLowerCase()
-      .replace(/[\s-]+/g, "_");
-
-    return CATEGORY_LABELS[key]
-      || String(category || "Disaster Preparedness")
-        .replace(/[_-]+/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-  function formatDuration(minutes) {
-    const value = Number(minutes);
-
-    if (!Number.isFinite(value) || value <= 0) {
-      return "Duration not specified";
-    }
-
-    if (value < 60) {
-      return `${value} minutes`;
-    }
-
-    const hours = Math.floor(value / 60);
-    const remaining = value % 60;
-
-    return remaining
-      ? `${hours} hr ${remaining} min`
-      : `${hours} hr`;
-  }
-
-  function showLoading() {
-    $("courseLoading").hidden = false;
-    $("courseError").hidden = true;
-    $("courseContent").hidden = true;
-  }
-
-  function showError(message) {
-    $("courseLoading").hidden = true;
-    $("courseContent").hidden = true;
-    $("courseError").hidden = false;
-    $("courseErrorMessage").textContent = message;
-  }
-
-  function renderObjectives() {
-    const container = $("courseObjectives");
-
-    container.innerHTML = `
-      <li class="mb-2">Understand ${escapeHTML(state.course.title)}.</li>
-      <li class="mb-2">Review the available course sections.</li>
-      <li class="mb-2">Track your learning progress as you study.</li>
+    element.innerHTML = `
+      <li class="mb-2">Understand ${escapeHTML(course.title)}.</li>
+      <li class="mb-2">Review the course sections and safety guidance.</li>
+      <li class="mb-2">Track your progress through the course.</li>
     `;
   }
 
-  function renderSections() {
+  function renderSections(course) {
     const container = $("lessonList");
-    const course = state.course;
+    if (!container) {
+      throw new Error(
+        'The HTML is missing the element with id="lessonList".'
+      );
+    }
 
-    /*
-     * The current backend response includes total_sections and viewed_sections,
-     * but does not include section titles or section content.
-     *
-     * Do not fabricate lesson titles or links. Show a clear explanation until
-     * the backend provides actual section metadata.
-     */
-    if (!course.totalSections) {
+    if (course.totalSections === 0) {
       container.innerHTML = `
         <div class="course-state">
           <i class="bi bi-journal-text" aria-hidden="true"></i>
-          <strong>No course sections are configured yet.</strong>
+          <strong>No sections are configured for this course yet.</strong>
           <p class="mb-0 mt-2">
-            This course exists, but its section count is zero. Add course
-            sections in the backend before starting lessons.
+            The course was loaded successfully, but the backend reports
+            zero sections. Course section content must be added in the backend.
           </p>
         </div>
       `;
@@ -210,39 +216,63 @@ javascript
     container.innerHTML = `
       <div class="course-state">
         <i class="bi bi-journal-check" aria-hidden="true"></i>
-        <strong>${course.totalSections} course sections configured</strong>
+        <strong>${course.totalSections} sections configured</strong>
         <p class="mb-0 mt-2">
-          Your backend currently returns section counts and viewed-section
-          progress, but not the section titles or lesson content. The syllabus
-          will appear here once those details are exposed by the API.
+          Your current API provides the section count and viewed-section
+          progress, but not section titles or lesson content yet.
         </p>
       </div>
     `;
   }
 
-  function renderCourse() {
-    const course = state.course;
+  function renderCourse(course) {
+    const requiredIds = [
+      "courseCategory",
+      "courseTitle",
+      "courseDescription",
+      "courseDuration",
+      "courseLevel",
+      "courseLessonCount",
+      "courseProgressPercent",
+      "courseCompletedLessons",
+      "courseRemainingLessons",
+      "courseQuizCount",
+      "courseProgressFill",
+      "courseProgressBar",
+      "resumeCourse"
+    ];
 
-    $("courseCategory").textContent = categoryLabel(course.category);
-    $("courseTitle").textContent = course.title;
-    $("courseDescription").textContent = course.description
-      || "Explore this disaster-preparedness course and track your learning progress.";
+    const missingIds = requiredIds.filter((id) => !$(id));
 
-    $("courseDuration").textContent = formatDuration(0);
-    $("courseLevel").textContent = "All levels";
-    $("courseLessonCount").textContent =
-      `${course.totalSections} ${course.totalSections === 1 ? "section" : "sections"}`;
+    if (missingIds.length) {
+      throw new Error(
+        "Missing HTML elements: " + missingIds.join(", ")
+      );
+    }
 
-    $("courseProgressPercent").textContent = `${course.progress}%`;
+    setText("courseCategory", categoryLabel(course.category));
+    setText("courseTitle", course.title);
+    setText(
+      "courseDescription",
+      course.description ||
+        "Explore this disaster-preparedness course and track your learning progress."
+    );
+    setText("courseDuration", "Duration not specified");
+    setText("courseLevel", "All levels");
+    setText(
+      "courseLessonCount",
+      `${course.totalSections} ${
+        course.totalSections === 1 ? "section" : "sections"
+      }`
+    );
 
-    const viewedCount = course.viewedSections.length;
-    const total = course.totalSections;
-
-    $("courseCompletedLessons").textContent = viewedCount;
-    $("courseRemainingLessons").textContent = Math.max(0, total - viewedCount);
-
-    // The current API does not return quiz counts.
-    $("courseQuizCount").textContent = "—";
+    setText("courseProgressPercent", `${course.progress}%`);
+    setText("courseCompletedLessons", course.viewedSections.length);
+    setText(
+      "courseRemainingLessons",
+      Math.max(0, course.totalSections - course.viewedSections.length)
+    );
+    setText("courseQuizCount", "—");
 
     $("courseProgressFill").style.width = `${course.progress}%`;
     $("courseProgressBar").setAttribute(
@@ -250,62 +280,84 @@ javascript
       String(course.progress)
     );
 
-    renderObjectives();
-    renderSections();
+    renderObjectives(course);
+    renderSections(course);
 
     const resumeButton = $("resumeCourse");
-
-    /*
-     * There is currently no section-detail route in the supplied courses.py.
-     * Avoid linking users to a lesson page that the backend cannot populate.
-     */
     resumeButton.href = "#courseLessons";
     resumeButton.innerHTML = course.completed
       ? '<i class="bi bi-check-circle" aria-hidden="true"></i> Course completed'
       : '<i class="bi bi-journal-text" aria-hidden="true"></i> View course sections';
 
-    $("courseLoading").hidden = true;
-    $("courseError").hidden = true;
-    $("courseContent").hidden = false;
+    setHidden("courseLoading", true);
+    setHidden("courseError", true);
+    setHidden("courseContent", false);
+
+    console.info("[AapdaSetu Learn] Course rendered:", course.slug);
   }
 
-  async function fetchCourse() {
+  async function loadCourse() {
     if (state.loading) return;
 
-    const slug = getCourseSlug();
+    const slug = getSlug();
 
     if (!slug) {
       showError(
-        "The course URL is missing its slug. Return to the course library and select a course."
+        "The URL is missing a course slug. Open Learn and select a course again."
       );
       return;
     }
 
     state.loading = true;
+    const requestId = ++state.requestId;
+
     showLoading();
 
-    try {
-      const path = `/api/courses/${encodeURIComponent(slug)}`;
-      const response = await requestJSON(path);
+    // A visible timeout message prevents a permanent loading screen.
+    const loadingTimeout = window.setTimeout(() => {
+      if (state.loading && requestId === state.requestId) {
+        showError(
+          "The course request is taking too long. Check that FastAPI is running, the API URL is correct, and your session is valid."
+        );
+      }
+    }, 18000);
 
-      if (!response) {
+    try {
+      const data = await requestCourse(slug);
+
+      if (requestId !== state.requestId) return;
+
+      if (!data) {
         throw new Error("The server returned an empty response.");
       }
 
-      state.course = normalizeCourse(response);
-      renderCourse();
+      const course = normalizeCourse(data);
+      renderCourse(course);
     } catch (error) {
-      console.error("Failed to load course:", error);
+      if (requestId !== state.requestId) return;
 
-      const message = error?.status === 404
-        ? "This course was not found. Check that the course slug exists in your database."
-        : error?.status === 401
-          ? "Your session has expired. Please sign in again."
-          : error?.message || "An unexpected error occurred while loading the course.";
+      console.error("[AapdaSetu Learn] Course loading failed:", error);
+
+      let message = error.message || "Unable to load course details.";
+
+      if (error.name === "AbortError") {
+        message = "The course request timed out. Check that the backend is running.";
+      } else if (error.status === 401) {
+        message = "Your session has expired. Sign in again, then reopen this course.";
+      } else if (error.status === 403) {
+        message = "You do not have permission to view this course.";
+      } else if (error.status === 404) {
+        message = `Course "${slug}" was not found. Check the course slug in your database.`;
+      } else if (error.status === 0) {
+        message = "Cannot connect to the backend. Check your API URL and server status.";
+      }
 
       showError(message);
     } finally {
-      state.loading = false;
+      window.clearTimeout(loadingTimeout);
+      if (requestId === state.requestId) {
+        state.loading = false;
+      }
     }
   }
 
@@ -313,10 +365,18 @@ javascript
     const retryButton = $("retryCourse");
 
     if (retryButton) {
-      retryButton.addEventListener("click", fetchCourse);
+      retryButton.addEventListener("click", loadCourse);
     }
 
-    fetchCourse();
+    // Ensure required containers exist before starting the request.
+    if (!$("courseLoading") || !$("courseContent") || !$("courseError")) {
+      console.error(
+        "[AapdaSetu Learn] Required loading/content/error elements are missing. Check course.html."
+      );
+      return;
+    }
+
+    loadCourse();
   }
 
   if (document.readyState === "loading") {
