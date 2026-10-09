@@ -1,39 +1,213 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Learn | AapdaSetu AI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/brand.css">
-  <script src="assets/config.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js" defer></script>
-  <script src="js/toast.js" defer></script>
-  <script src="js/nav.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07111f">
+
+    <title>Learn | AapdaSetu AI</title>
+    <meta name="description" content="Learn disaster preparedness through structured lessons, interactive knowledge checks, and practical safety courses.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/brand.css">
+    <link rel="stylesheet" href="css/learn.css">
+
+    <script src="assets/config.js"></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/toast.js" defer></script>
+    <script src="js/nav.js" defer></script>
+    <script src="js/modules.js" defer></script>
 </head>
-<body>
-<div id="as-navbar-root"></div>
 
-<section class="as-section">
-  <div class="container">
-    <h2 class="fw-bold mb-1">Learn</h2>
-    <p class="as-muted mb-4">Structured disaster-preparedness courses. Progress is saved automatically as you read.</p>
+<body class="as-learn-page">
+    <div id="as-navbar-root"></div>
 
-    <div id="coursesSkeleton" class="row g-4">
-      <div class="col-md-4"><div class="as-skeleton" style="height:180px;"></div></div>
-      <div class="col-md-4"><div class="as-skeleton" style="height:180px;"></div></div>
-      <div class="col-md-4"><div class="as-skeleton" style="height:180px;"></div></div>
-    </div>
+    <main class="learn-shell">
+        <section class="learn-hero">
+            <div class="learn-hero-copy">
+                <div class="learn-eyebrow">
+                    <span class="learn-eyebrow-dot"></span>
+                    DISASTER PREPAREDNESS ACADEMY
+                </div>
 
-    <div id="coursesGrid" class="row g-4 d-none"></div>
-    <div id="coursesError" class="alert alert-danger d-none"></div>
-  </div>
-</section>
+                <h1>Knowledge today.<br><span>Preparedness tomorrow.</span></h1>
 
-<div id="as-footer-root"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/modules.js"></script>
+                <p>
+                    Build practical disaster-readiness skills through guided lessons,
+                    safety videos, interactive scenarios and knowledge checks.
+                </p>
+
+                <div class="learn-hero-actions">
+                    <a href="#course-library" class="learn-btn learn-btn-primary">
+                        Explore courses <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <a href="dashboard.html" class="learn-btn learn-btn-secondary">
+                        <i class="bi bi-grid-1x2"></i> My dashboard
+                    </a>
+                </div>
+
+                <div class="learn-hero-points">
+                    <span><i class="bi bi-play-circle"></i> Video lessons</span>
+                    <span><i class="bi bi-patch-question"></i> Knowledge checks</span>
+                    <span><i class="bi bi-graph-up-arrow"></i> Track progress</span>
+                </div>
+            </div>
+
+            <div class="learn-hero-visual" aria-hidden="true">
+                <div class="learn-visual-glow"></div>
+                <div class="learn-visual-card learn-visual-card-back">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <div class="learn-visual-card learn-visual-card-main">
+                    <div class="learn-visual-top">
+                        <span class="learn-visual-icon"><i class="bi bi-shield-check"></i></span>
+                        <span class="learn-live-label"><span></span> LEARN & PREPARE</span>
+                    </div>
+                    <div class="learn-visual-title">Be ready when<br>it matters most.</div>
+                    <div class="learn-visual-divider"></div>
+                    <div class="learn-visual-stat">
+                        <i class="bi bi-journal-check"></i>
+                        <div>
+                            <strong>Learn. Practise. Prepare.</strong>
+                            <small>Build skills one lesson at a time.</small>
+                        </div>
+                    </div>
+                    <div class="learn-visual-stat">
+                        <i class="bi bi-lightning-charge"></i>
+                        <div>
+                            <strong>Make safer decisions</strong>
+                            <small>Apply knowledge to real-world scenarios.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="learn-visual-orbit learn-visual-orbit-one"></div>
+                <div class="learn-visual-orbit learn-visual-orbit-two"></div>
+            </div>
+        </section>
+
+        <section class="learn-summary" aria-label="Your learning summary">
+            <div class="learn-summary-card">
+                <span class="learn-summary-icon"><i class="bi bi-journal-bookmark"></i></span>
+                <div>
+                    <span class="learn-summary-label">Available courses</span>
+                    <strong id="learnCourseCount">—</strong>
+                </div>
+            </div>
+            <div class="learn-summary-card">
+                <span class="learn-summary-icon learn-summary-icon-cyan"><i class="bi bi-check2-circle"></i></span>
+                <div>
+                    <span class="learn-summary-label">Completed courses</span>
+                    <strong id="learnCompletedCount">—</strong>
+                </div>
+            </div>
+            <div class="learn-summary-card">
+                <span class="learn-summary-icon learn-summary-icon-amber"><i class="bi bi-hourglass-split"></i></span>
+                <div>
+                    <span class="learn-summary-label">In progress</span>
+                    <strong id="learnInProgressCount">—</strong>
+                </div>
+            </div>
+        </section>
+
+        <section id="continueSection" class="learn-continue-section" hidden>
+            <div class="learn-section-heading">
+                <div>
+                    <span class="learn-section-kicker">PICK UP WHERE YOU LEFT OFF</span>
+                    <h2>Continue learning</h2>
+                    <p>Your next step toward better preparedness.</p>
+                </div>
+            </div>
+            <div id="continueCourseCard"></div>
+        </section>
+
+        <section id="course-library" class="learn-library">
+            <div class="learn-section-heading learn-library-heading">
+                <div>
+                    <span class="learn-section-kicker">YOUR LEARNING PATH</span>
+                    <h2>Explore the course library</h2>
+                    <p>Choose a topic and develop practical skills at your own pace.</p>
+                </div>
+                <span class="learn-library-count" id="libraryCountLabel">Loading courses…</span>
+            </div>
+
+            <div class="learn-toolbar">
+                <label class="learn-search" for="courseSearch">
+                    <i class="bi bi-search"></i>
+                    <input id="courseSearch" type="search" placeholder="Search courses, topics or skills…" autocomplete="off">
+                    <kbd>/</kbd>
+                </label>
+
+                <label class="learn-sort">
+                    <span class="visually-hidden">Sort courses</span>
+                    <i class="bi bi-sort-down"></i>
+                    <select id="courseSort">
+                        <option value="recommended">Recommended</option>
+                        <option value="title">Title: A–Z</option>
+                        <option value="duration">Shortest first</option>
+                        <option value="progress">Progress</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="learn-filters" id="courseFilters" aria-label="Filter courses">
+                <button type="button" class="learn-filter active" data-category="all" aria-pressed="true">All courses</button>
+                <button type="button" class="learn-filter" data-category="natural-disasters" aria-pressed="false">Natural disasters</button>
+                <button type="button" class="learn-filter" data-category="emergency-response" aria-pressed="false">Emergency response</button>
+                <button type="button" class="learn-filter" data-category="first-aid" aria-pressed="false">First aid</button>
+                <button type="button" class="learn-filter" data-category="general-safety" aria-pressed="false">General safety</button>
+            </div>
+
+            <div id="courseLoading" class="learn-course-grid" aria-live="polite">
+                <div class="learn-skeleton"></div>
+                <div class="learn-skeleton"></div>
+                <div class="learn-skeleton"></div>
+            </div>
+
+            <div id="courseGrid" class="learn-course-grid" hidden></div>
+
+            <div id="courseEmpty" class="learn-state-card" hidden>
+                <span class="learn-state-icon"><i class="bi bi-search"></i></span>
+                <h3>No matching courses</h3>
+                <p>Try another search term or select a different category.</p>
+                <button type="button" class="learn-btn learn-btn-secondary" id="clearCourseFilters">Clear filters</button>
+            </div>
+
+            <div id="courseError" class="learn-state-card learn-error-card" hidden>
+                <span class="learn-state-icon"><i class="bi bi-cloud-slash"></i></span>
+                <h3>Courses could not be loaded</h3>
+                <p id="courseErrorMessage">Check your connection and try again.</p>
+                <button type="button" class="learn-btn learn-btn-primary" id="retryCourses">
+                    <i class="bi bi-arrow-clockwise"></i> Try again
+                </button>
+            </div>
+        </section>
+
+        <section class="learn-callout">
+            <div class="learn-callout-icon"><i class="bi bi-shield-check"></i></div>
+            <div>
+                <span class="learn-section-kicker">LEARN WITH PURPOSE</span>
+                <h2>Preparedness is more than memorising facts.</h2>
+                <p>Understand the risks, practise the right actions, and know how to protect yourself and others.</p>
+            </div>
+            <a href="simulations.html" class="learn-btn learn-btn-secondary">
+                Practise in simulations <i class="bi bi-arrow-up-right"></i>
+            </a>
+        </section>
+
+        <footer class="learn-footer">
+            <span> AapdaSetu AI · Learn. Simulate. Prepare. Respond.</span>
+            <a href="dashboard.html">Back to dashboard <i class="bi bi-arrow-up-right"></i></a>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
