@@ -1,61 +1,27 @@
-javascript
+
 /**
  * AapdaSetu AI — Shared API Client
- * Compatible with existing login, dashboard, courses and other pages.
+ * Load assets/config.js before this file.
  */
 
 (function () {
   "use strict";
 
-  var config = window.APP_CONFIG || {};
+  const config = window.APP_CONFIG || {};
 
-  var API_BASE_URL = String(config.API_BASE_URL || "")
+  const API_BASE_URL = String(config.API_BASE_URL || "")
     .replace(/\/+$/, "");
 
   function apiAuthHeader() {
-    var token = null;
+    let token = null;
 
     try {
       token = localStorage.getItem("token");
     } catch (error) {
-      console.warn("Could not read authentication token.");
+      console.warn("Unable to read authentication token.");
     }
 
-    return token
-      ? { Authorization: "Bearer " + token }
-      : {};
-  }
-
-  function apiLoginRedirectPath() {
-    var pathname = window.location.pathname;
-
-    var folders = [
-      "earthquake",
-      "flood",
-      "tornado",
-      "wildfire",
-      "cyclone",
-      "legacy"
-    ];
-
-    var inSubfolder = folders.some(function (folder) {
-      return pathname.indexOf("/" + folder + "/") !== -1;
-    });
-
-    return inSubfolder ? "../login.html" : "login.html";
-  }
-
-  function apiHandleUnauthorized() {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    } catch (error) {
-      console.warn("Could not clear authentication storage.");
-    }
-
-    if (!/\/login\.html$/.test(window.location.pathname)) {
-      window.location.href = apiLoginRedirectPath();
-    }
+    return token ? { Authorization: "Bearer " + token } : {};
   }
 
   function apiBuildURL(path) {
@@ -67,30 +33,24 @@ javascript
       return path;
     }
 
-    return API_BASE_URL +
-      (path.charAt(0) === "/" ? path : "/" + path);
+    return API_BASE_URL + (path.startsWith("/") ? path : "/" + path);
   }
 
   async function apiParseResponse(response) {
-    if (response.status === 204) {
-      return null;
-    }
+    if (response.status === 204) return null;
 
-    var text = await response.text();
-
-    if (!text) {
-      return null;
-    }
+    const text = await response.text();
+    if (!text) return null;
 
     try {
       return JSON.parse(text);
-    } catch (error) {
+    } catch {
       return text;
     }
   }
 
   function apiCreateError(response, data) {
-    var message = "Request failed (" + response.status + ")";
+    let message = "Request failed (" + response.status + ")";
 
     if (data && typeof data === "object") {
       if (typeof data.detail === "string") {
@@ -104,53 +64,30 @@ javascript
       message = data;
     }
 
-    var error = new Error(message);
+    const error = new Error(message);
     error.status = response.status;
     error.data = data;
-
     return error;
   }
 
-  /**
-   * apiFetch(path, options) returns parsed response data.
-   *
-   * Examples:
-   *   await apiFetch("/api/courses");
-   *
-   *   await apiFetch("/api/courses/cyclone/progress", {
-   *     method: "POST",
-   *     body: { progress: 25, viewed_sections: ["section-1"] }
-   *   });
-   */
-  async function apiFetch(path, options) {
-    options = options || {};
+  async function apiFetch(path, options = {}) {
+    const method = options.method || "GET";
+    const auth = options.auth !== false;
+    const body = options.body;
 
-    var method = options.method || "GET";
-    var body = options.body;
-    var auth = options.auth !== false;
-    var isForm = options.isForm === true;
-    var headers = {
-      Accept: "application/json"
+    const headers = {
+      Accept: "application/json",
+      ...(options.headers || {})
     };
-
-    if (options.headers) {
-      Object.keys(options.headers).forEach(function (key) {
-        headers[key] = options.headers[key];
-      });
-    }
 
     if (auth) {
       Object.assign(headers, apiAuthHeader());
     }
 
-    var requestBody;
+    let requestBody;
 
     if (body !== undefined && body !== null) {
-      var isFormData =
-        typeof FormData !== "undefined" &&
-        body instanceof FormData;
-
-      if (isForm || isFormData) {
+      if (body instanceof FormData) {
         requestBody = body;
         delete headers["Content-Type"];
         delete headers["content-type"];
@@ -166,43 +103,28 @@ javascript
       }
     }
 
-    var response;
+    let response;
 
     try {
       response = await fetch(apiBuildURL(path), {
-        method: method,
-        headers: headers,
+        method,
+        headers,
         body: requestBody,
         credentials: options.credentials || "same-origin",
         signal: options.signal
       });
-    } catch (networkError) {
-      if (networkError.name === "AbortError") {
-        throw networkError;
-      }
+    } catch (error) {
+      if (error.name === "AbortError") throw error;
 
-      var error = new Error(
-        "API fetch failed. Check the backend URL, server status, and network connection."
+      const networkError = new Error(
+        "Cannot connect to the API. Check the backend URL and server."
       );
-
-      error.status = 0;
-      error.cause = networkError;
-
-      throw error;
+      networkError.status = 0;
+      networkError.cause = error;
+      throw networkError;
     }
 
-    if (response.status === 401 && auth) {
-      apiHandleUnauthorized();
-
-      var authError = new Error(
-        "Authentication failed. Please sign in again."
-      );
-
-      authError.status = 401;
-      throw authError;
-    }
-
-    var data = await apiParseResponse(response);
+    const data = await apiParseResponse(response);
 
     if (!response.ok) {
       throw apiCreateError(response, data);
@@ -211,10 +133,10 @@ javascript
     return data;
   }
 
-  // Keep these names available to existing frontend scripts.
+  // Export functions globally for existing classic-script pages.
   window.apiFetch = apiFetch;
   window.API_BASE_URL = API_BASE_URL;
   window.apiAuthHeader = apiAuthHeader;
-  window.apiHandleUnauthorized = apiHandleUnauthorized;
 
+  console.info("AapdaSetu API client loaded.");
 })();
