@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -307,6 +306,7 @@
 
   <main class="as-course-page">
     <div class="course-container">
+
       <a class="course-back" href="modules.html">
         <i class="bi bi-arrow-left" aria-hidden="true"></i>
         Back to courses
@@ -317,113 +317,216 @@
         Loading course details…
       </div>
 
-      <div id="courseError" class="course-state course-error" role="alert" hidden>
+      <div
+        id="courseError"
+        class="course-state course-error"
+        role="alert"
+        hidden
+      >
         <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
-        <p id="courseErrorMessage">We couldn't load this course.</p>
-        <button id="retryCourse" class="course-primary-btn" type="button">
+        <p id="courseErrorMessage">
+          We couldn't load this course.
+        </p>
+
+        <button
+          id="retryCourse"
+          class="course-primary-btn"
+          type="button"
+        >
           <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
           Try again
         </button>
       </div>
 
       <div id="courseContent" hidden>
+
         <section class="course-hero" aria-labelledby="courseTitle">
+
           <span class="course-category">
             <i class="bi bi-shield-check" aria-hidden="true"></i>
-            <span id="courseCategory">Disaster Preparedness</span>
+            <span id="courseCategory">
+              Disaster Preparedness
+            </span>
           </span>
 
-          <h1 class="course-title" id="courseTitle">Course title</h1>
-          <p class="course-description" id="courseDescription"></p>
+          <h1 class="course-title" id="courseTitle">
+            Course title
+          </h1>
+
+          <p
+            class="course-description"
+            id="courseDescription"
+          ></p>
 
           <div class="course-meta">
-            <span><i class="bi bi-clock" aria-hidden="true"></i><span id="courseDuration">Duration varies</span></span>
-            <span><i class="bi bi-bar-chart" aria-hidden="true"></i><span id="courseLevel">All levels</span></span>
-            <span><i class="bi bi-play-circle" aria-hidden="true"></i><span id="courseLessonCount">Lessons</span></span>
+
+            <span>
+              <i class="bi bi-clock" aria-hidden="true"></i>
+              <span id="courseDuration">Duration varies</span>
+            </span>
+
+            <span>
+              <i class="bi bi-bar-chart" aria-hidden="true"></i>
+              <span id="courseLevel">All levels</span>
+            </span>
+
+            <span>
+              <i class="bi bi-play-circle" aria-hidden="true"></i>
+              <span id="courseLessonCount">Lessons</span>
+            </span>
+
           </div>
 
-          <a href="#courseLessons" class="course-primary-btn" id="resumeCourse">
+          <a
+            href="#courseLessons"
+            class="course-primary-btn"
+            id="resumeCourse"
+          >
             <i class="bi bi-play-fill" aria-hidden="true"></i>
             Start learning
           </a>
+
         </section>
 
-        <section class="row g-3 my-4" aria-label="Course progress summary">
+        <section
+          class="row g-3 my-4"
+          aria-label="Course progress summary"
+        >
+
           <div class="col-6 col-lg-3">
             <div class="course-stat">
               <strong id="courseProgressPercent">0%</strong>
               <span class="course-muted">Course progress</span>
             </div>
           </div>
+
           <div class="col-6 col-lg-3">
             <div class="course-stat">
               <strong id="courseCompletedLessons">0</strong>
               <span class="course-muted">Lessons completed</span>
             </div>
           </div>
+
           <div class="col-6 col-lg-3">
             <div class="course-stat">
               <strong id="courseRemainingLessons">0</strong>
               <span class="course-muted">Lessons remaining</span>
             </div>
           </div>
+
           <div class="col-6 col-lg-3">
             <div class="course-stat">
               <strong id="courseQuizCount">—</strong>
               <span class="course-muted">Knowledge checks</span>
             </div>
           </div>
+
         </section>
 
         <div class="row g-4">
-          <div class="col-lg-8">
-            <section class="course-panel" id="courseLessons" aria-labelledby="lessonHeading">
-              <h2 class="course-section-title" id="lessonHeading">Course syllabus</h2>
-              <p class="course-muted">Work through each lesson and test your understanding along the way.</p>
 
-              <div class="course-progress-track"
-                   role="progressbar"
-                   id="courseProgressBar"
-                   aria-label="Course completion"
-                   aria-valuemin="0"
-                   aria-valuemax="100"
-                   aria-valuenow="0">
-                <div class="course-progress-fill" id="courseProgressFill"></div>
+          <div class="col-lg-8">
+
+            <section
+              class="course-panel"
+              id="courseLessons"
+              aria-labelledby="lessonHeading"
+            >
+
+              <h2
+                class="course-section-title"
+                id="lessonHeading"
+              >
+                Course syllabus
+              </h2>
+
+              <p class="course-muted">
+                Work through each lesson and test your understanding
+                along the way.
+              </p>
+
+              <div
+                class="course-progress-track"
+                role="progressbar"
+                id="courseProgressBar"
+                aria-label="Course completion"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <div
+                  class="course-progress-fill"
+                  id="courseProgressFill"
+                ></div>
               </div>
 
               <div id="lessonList" class="lesson-list">
-                <div class="course-state">Loading lessons…</div>
+                <div class="course-state">
+                  Loading lessons…
+                </div>
               </div>
+
             </section>
+
           </div>
 
           <div class="col-lg-4">
+
             <aside class="course-panel">
-              <h2 class="course-section-title">What you'll learn</h2>
-              <p class="course-muted">Review the course objectives before starting.</p>
-              <ul id="courseObjectives" class="course-muted ps-3 mb-4">
-                <li>Course objectives will appear when available.</li>
+
+              <h2 class="course-section-title">
+                What you'll learn
+              </h2>
+
+              <p class="course-muted">
+                Review the course objectives before starting.
+              </p>
+
+              <ul
+                id="courseObjectives"
+                class="course-muted ps-3 mb-4"
+              >
+                <li>
+                  Course objectives will appear when available.
+                </li>
               </ul>
 
               <hr style="border-color: rgba(148,174,210,.16)">
 
-              <h2 class="course-section-title mt-4">Learning tip</h2>
+              <h2 class="course-section-title mt-4">
+                Learning tip
+              </h2>
+
               <p class="course-muted mb-0">
-                Take notes on emergency actions, complete the knowledge checks,
-                and revisit any topic you find difficult.
+                Take notes on emergency actions, complete the
+                knowledge checks, and revisit any topic you find
+                difficult.
               </p>
+
             </aside>
+
           </div>
+
         </div>
+
+        <section
+          class="course-panel course-official-panel mt-4"
+          id="courseOfficialResources"
+          aria-label="Official cyclone resources"
+          hidden
+        ></section>
+
       </div>
     </div>
   </main>
 
+  <!-- Keep these script paths and their order. -->
   <script src="assets/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/toast.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/course.js"></script>
+
 </body>
 </html>
