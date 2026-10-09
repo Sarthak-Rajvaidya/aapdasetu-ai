@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060f1f">
+  <meta name="description" content="Learn disaster preparedness with AapdaSetu AI lessons and knowledge checks.">
+
+  <title>Lesson | AapdaSetu AI</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/brand.css">
+  <link rel="stylesheet" href="css/learn.css">
+
+  <style>
+    .as-lesson-page {
+      min-height: 100vh;
+      padding-bottom: 64px;
+      color: #edf4ff;
+    }
+
+    .as-lesson-page .lesson-container {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .as-lesson-page .lesson-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 28px 0 20px;
+      color: #a9bdd9;
+      text-decoration: none;
+    }
+
+    .as-lesson-page .lesson-back:hover {
+      color: #fff;
+    }
+
+    .as-lesson-page .lesson-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      align-items: start;
+      gap: 24px;
+    }
+
+    .as-lesson-page .lesson-main,
+    .as-lesson-page .lesson-sidebar {
+      min-width: 0;
+    }
+
+    .as-lesson-page .lesson-panel {
+      padding: 24px;
+      border: 1px solid rgba(148, 174, 210, .16);
+      border-radius: 18px;
+      background: rgba(11, 26, 48, .82);
+    }
+
+    .as-lesson-page .lesson-heading {
+      margin: 0 0 12px;
+      font-size: clamp(1.65rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.035em;
+      overflow-wrap: anywhere;
+    }
+
+    .as-lesson-page .lesson-muted {
+      color: #a9bdd9;
+      line-height: 1.75;
+    }
+
+    .as-lesson-page .lesson-kicker {
+      color: #67e8f9;
+      font-size: .8rem;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .as-lesson-page .lesson-video {
+      display: grid;
+      overflow: hidden;
+      min-height: 220px;
+      aspect-ratio: 16 / 9;
+      place-items: center;
+      border: 1px solid rgba(148, 174, 210, .2);
+      border-radius: 16px;
+      background:
+        radial-gradient(ellipse at center, rgba(47, 111, 237, .18), transparent 55%),
+        #050d19;
+    }
+
+    .as-lesson-page .lesson-video video,
+    .as-lesson-page .lesson-video iframe {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      background: #050d19;
+    }
+
+    .as-lesson-page .lesson-video-placeholder {
+      max-width: 360px;
+      padding: 24px;
+      color: #a9bdd9;
+      text-align: center;
+    }
+
+    .as-lesson-page .lesson-video-placeholder i {
+      display: block;
+      margin-bottom: 12px;
+      color: #67e8f9;
+      font-size: 2.6rem;
+    }
+
+    .as-lesson-page .lesson-section-title {
+      margin-bottom: 14px;
+      font-size: 1.12rem;
+      font-weight: 750;
+    }
+
+    .as-lesson-page .lesson-content {
+      color: #c5d3e7;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    .as-lesson-page .lesson-content p {
+      margin-bottom: 1rem;
+    }
+
+    .as-lesson-page .lesson-content ul,
+    .as-lesson-page .lesson-content ol {
+      padding-left: 1.4rem;
+    }
+
+    .as-lesson-page .lesson-content li {
+      margin-bottom: .55rem;
+    }
+
+    .as-lesson-page .lesson-takeaways {
+      display: grid;
+      gap: 12px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .as-lesson-page .lesson-takeaways li {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      color: #c5d3e7;
+      line-height: 1.6;
+    }
+
+    .as-lesson-page .lesson-takeaways i {
+      margin-top: 3px;
+      color: #67e8f9;
+    }
+
+    .as-lesson-page .lesson-primary-btn,
+    .as-lesson-page .lesson-secondary-btn {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 10px 16px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .as-lesson-page .lesson-primary-btn {
+      color: #fff;
+      background: #2f6fed;
+    }
+
+    .as-lesson-page .lesson-primary-btn:hover {
+      color: #fff;
+      background: #245bd0;
+    }
+
+    .as-lesson-page .lesson-secondary-btn {
+      color: #dbeafe;
+      border-color: rgba(148, 174, 210, .24);
+      background: rgba(18, 35, 61, .65);
+    }
+
+    .as-lesson-page .lesson-secondary-btn:hover {
+      color: #fff;
+      background: #1a3152;
+    }
+
+    .as-lesson-page button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+
+    .as-lesson-page button:focus-visible,
+    .as-lesson-page a:focus-visible,
+    .as-lesson-page input:focus-visible {
+      outline: 3px solid #67e8f9;
+      outline-offset: 3px;
+    }
+
+    .as-lesson-page .lesson-question {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(148, 174, 210, .14);
+    }
+
+    .as-lesson-page .lesson-question:last-child {
+      border-bottom: 0;
+    }
+
+    .as-lesson-page .lesson-question-title {
+      margin-bottom: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .as-lesson-page .lesson-option {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 12px;
+      margin-bottom: 9px;
+      border: 1px solid rgba(148, 174, 210, .17);
+      border-radius: 11px;
+      color: #c5d3e7;
+      background: rgba(18, 35, 61, .42);
+      cursor: pointer;
+    }
+
+    .as-lesson-page .lesson-option:hover {
+      border-color: rgba(103, 232, 249, .45);
+    }
+
+    .as-lesson-page .lesson-option input {
+      flex-shrink: 0;
+      margin-top: 5px;
+      accent-color: #2f6fed;
+    }
+
+    .as-lesson-page .lesson-option.is-correct {
+      border-color: #34d399;
+      background: rgba(16, 185, 129, .1);
+    }
+
+    .as-lesson-page .lesson-option.is-incorrect {
+      border-color: #fb7185;
+      background: rgba(244, 63, 94, .08);
+    }
+
+    .as-lesson-page .lesson-feedback {
+      padding: 14px;
+      margin-top: 14px;
+      border-radius: 12px;
+      color: #c5d3e7;
+      background: rgba(18, 35, 61, .8);
+      line-height: 1.65;
+    }
+
+    .as-lesson-page .lesson-feedback.success {
+      border: 1px solid rgba(52, 211, 153, .3);
+    }
+
+    .as-lesson-page .lesson-feedback.warning {
+      border: 1px solid rgba(251, 191, 36, .3);
+    }
+
+    .as-lesson-page .lesson-feedback.error {
+      border: 1px solid rgba(251, 113, 133, .3);
+    }
+
+    .as-lesson-page .lesson-progress-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #263750;
+    }
+
+    .as-lesson-page .lesson-progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #2f6fed, #22d3ee);
+    }
+
+    .as-lesson-page .lesson-sidebar-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(148, 174, 210, .13);
+      color: #c5d3e7;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+
+    .as-lesson-page .lesson-sidebar-item:last-child {
+      border-bottom: 0;
+    }
+
+    .as-lesson-page .lesson-sidebar-item i {
+      margin-top: 3px;
+      color: #67e8f9;
+    }
+
+    .as-lesson-page .lesson-sidebar-item.current {
+      color: #fff;
+    }
+
+    .as-lesson-page .lesson-state {
+      padding: 26px 16px;
+      border: 1px dashed rgba(148, 174, 210, .25);
+      border-radius: 14px;
+      color: #a9bdd9;
+      text-align: center;
+    }
+
+    .as-lesson-page .lesson-state[hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .as-lesson-page .lesson-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .as-lesson-page .lesson-sidebar {
+        order: 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .as-lesson-page .lesson-container {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .as-lesson-page .lesson-panel {
+        padding: 17px;
+      }
+
+      .as-lesson-page .lesson-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .as-lesson-page .lesson-actions > * {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .as-lesson-page *,
+      .as-lesson-page *::before,
+      .as-lesson-page *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="as-navbar-root"></div>
+
+  <main class="as-lesson-page">
+    <div class="lesson-container">
+      <a id="backToCourse" class="lesson-back" href="modules.html">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        Back to course
+      </a>
+
+      <div id="lessonLoading" class="lesson-state" role="status">
+        <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+        Loading lesson…
+      </div>
+
+      <div id="lessonError" class="lesson-state" role="alert" hidden>
+        <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+        <p id="lessonErrorMessage">We couldn't load this lesson.</p>
+        <button id="retryLesson" class="lesson-primary-btn" type="button">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          Try again
+        </button>
+      </div>
+
+      <div id="lessonContent" hidden>
+        <header class="mb-4">
+          <p class="lesson-kicker mb-2" id="lessonCourseName">AapdaSetu AI Learning</p>
+          <h1 class="lesson-heading" id="lessonTitle">Lesson title</h1>
+          <p class="lesson-muted mb-0" id="lessonDescription"></p>
+        </header>
+
+        <div class="lesson-layout">
+          <div class="lesson-main">
+            <section class="lesson-panel mb-4" aria-label="Lesson video">
+              <div id="lessonVideo" class="lesson-video">
+                <div class="lesson-video-placeholder">
+                  <i class="bi bi-play-circle" aria-hidden="true"></i>
+                  <p class="mb-0">Lesson video will appear here if one is available.</p>
+                </div>
+              </div>
+              <p class="lesson-muted small mt-3 mb-0" id="videoCaption">
+                You can also read the lesson content below.
+              </p>
+            </section>
+
+            <section class="lesson-panel mb-4">
+              <h2 class="lesson-section-title">Lesson content</h2>
+              <div id="lessonBody" class="lesson-content">
+                Lesson content will appear here.
+              </div>
+            </section>
+
+            <section class="lesson-panel mb-4">
+              <h2 class="lesson-section-title">
+                <i class="bi bi-lightbulb me-2" aria-hidden="true"></i>
+                Key takeaways
+              </h2>
+              <ul id="lessonTakeaways" class="lesson-takeaways">
+                <li><i class="bi bi-check-circle" aria-hidden="true"></i><span>Review the main ideas from this lesson.</span></li>
+              </ul>
+            </section>
+
+            <section class="lesson-panel mb-4" id="knowledgeCheck">
+              <h2 class="lesson-section-title">
+                <i class="bi bi-patch-question me-2" aria-hidden="true"></i>
+                Quick knowledge check
+              </h2>
+              <p class="lesson-muted">
+                Choose the best answer for each question, then submit to review your results.
+              </p>
+
+              <form id="lessonQuizForm">
+                <div id="lessonQuizQuestions"></div>
+                <div class="lesson-actions d-flex flex-wrap gap-2 mt-3">
+                  <button class="lesson-primary-btn" id="submitQuiz" type="submit">
+                    <i class="bi bi-check2-circle" aria-hidden="true"></i>
+                    Check answers
+                  </button>
+                  <button class="lesson-secondary-btn" id="retryQuiz" type="button" hidden>
+                    <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+                    Try again
+                  </button>
+                </div>
+              </form>
+
+              <div id="quizFeedback" class="lesson-feedback mt-3" role="status" aria-live="polite" hidden></div>
+            </section>
+
+            <section class="lesson-panel">
+              <h2 class="lesson-section-title">Finish this lesson</h2>
+              <p class="lesson-muted">
+                Complete the lesson when you have reviewed its content and any required knowledge check.
+              </p>
+
+              <div id="completionFeedback" class="lesson-feedback mb-3" role="status" aria-live="polite" hidden></div>
+
+              <div class="lesson-actions d-flex flex-wrap gap-2">
+                <button id="markLessonComplete" class="lesson-primary-btn" type="button">
+                  <i class="bi bi-check-circle" aria-hidden="true"></i>
+                  Mark lesson complete
+                </button>
+                <a id="nextLesson" class="lesson-secondary-btn" href="#" hidden>
+                  Next lesson
+                  <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </section>
+          </div>
+
+          <aside class="lesson-sidebar">
+            <section class="lesson-panel mb-4">
+              <h2 class="lesson-section-title">Your course progress</h2>
+              <div class="d-flex justify-content-between gap-3 mb-2">
+                <span class="lesson-muted small">Completed lessons</span>
+                <strong id="lessonProgressLabel">0%</strong>
+              </div>
+              <div class="lesson-progress-track"
+                   id="lessonProgressBar"
+                   role="progressbar"
+                   aria-label="Course progress"
+                   aria-valuemin="0"
+                   aria-valuemax="100"
+                   aria-valuenow="0">
+                <div id="lessonProgressFill" class="lesson-progress-fill"></div>
+              </div>
+              <p class="lesson-muted small mt-3 mb-0" id="lessonProgressDetail">
+                Complete lessons to track your progress.
+              </p>
+            </section>
+
+            <section class="lesson-panel">
+              <h2 class="lesson-section-title">Course lessons</h2>
+              <div id="lessonSidebarList">
+                <p class="lesson-muted small mb-0">Loading lesson list…</p>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/lesson.js"></script>
+</body>
+</html>
