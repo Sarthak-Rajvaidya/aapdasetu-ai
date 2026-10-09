@@ -7,22 +7,10 @@
 (function () {
   "use strict";
 
-  const PUBLIC_PAGES = [
-    "login.html",
-    "register.html",
-    "index.html"
-  ];
-
-  function isPublicPage() {
-    const path = window.location.pathname;
-    return path === "/" ||
-      PUBLIC_PAGES.some(page => path.endsWith("/" + page));
-  }
-
   function getLoginPath() {
     const path = window.location.pathname;
 
-    const folders = [
+    const subfolders = [
       "earthquake",
       "flood",
       "tornado",
@@ -31,7 +19,7 @@
       "legacy"
     ];
 
-    const inSubfolder = folders.some(folder =>
+    const inSubfolder = subfolders.some(folder =>
       path.includes("/" + folder + "/")
     );
 
@@ -41,8 +29,7 @@
   function getToken() {
     try {
       return localStorage.getItem("token");
-    } catch (error) {
-      console.error("Unable to read authentication storage.");
+    } catch {
       return null;
     }
   }
@@ -51,53 +38,52 @@
     try {
       const value = localStorage.getItem("user");
       return value ? JSON.parse(value) : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
 
-  function logout() {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    } catch (error) {
-      console.error("Unable to clear authentication storage.");
-    }
-
-    window.location.href = getLoginPath();
+  function saveUser(user) {
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
   async function login(userId, password) {
+    if (typeof window.apiFetch !== "function") {
+      return {
+        ok: false,
+        message: "API client did not load. Check the script order in login.html."
+      };
+    }
+
     try {
       const data = await window.apiFetch("/api/auth/login-json", {
         method: "POST",
         auth: false,
         body: {
-          user_id: userId.trim(),
-          password: password
+          user_id: String(userId || "").trim(),
+          password: String(password || "")
         }
       });
 
       if (!data || !data.access_token) {
         return {
           ok: false,
-          message: "Login response did not contain an access token."
+          message: "The server did not return an access token."
         };
       }
 
-      // Store the token before requesting the current user.
       localStorage.setItem("token", data.access_token);
 
+      // Validate the new token with the backend.
       const user = await window.apiFetch("/api/auth/me");
+      saveUser(user);
 
-      localStorage.setItem("user", JSON.stringify(user));
-
-      return {
-        ok: true,
-        user: user
-      };
+      return { ok: true, user };
     } catch (error) {
-      // Do not silently replace API errors with a success response.
+      // Clear only the failed login session.
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
       return {
         ok: false,
         message: error.message || "Login failed."
@@ -106,14 +92,21 @@
   }
 
   async function register(userData) {
+    if (typeof window.apiFetch !== "function") {
+      return {
+        ok: false,
+        message: "API client did not load. Check the script order."
+      };
+    }
+
     try {
-      await window.apiFetch("/api/auth/register", {
+      const result = await window.apiFetch("/api/auth/register", {
         method: "POST",
         auth: false,
         body: userData
       });
 
-      return { ok: true };
+      return { ok: true, data: result };
     } catch (error) {
       return {
         ok: false,
@@ -122,30 +115,47 @@
     }
   }
 
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = getLoginPath();
+  }
+
   function checkAuth() {
-    if (!isPublicPage() && !getToken()) {
+    const path = window.location.pathname;
+
+    const publicPages = [
+      "login.html",
+      "register.html",
+      "index.html"
+    ];
+
+    const isPublic =
+      path === "/" ||
+      publicPages.some(page => path.endsWith("/" + page));
+
+    if (!isPublic && !getToken()) {
       window.location.replace(getLoginPath());
+      return false;
     }
+
+    return true;
   }
 
   async function refreshCurrentUser() {
-    const token = getToken();
-
-    if (!token) {
-      return null;
-    }
+    if (!getToken()) return null;
 
     try {
       const user = await window.apiFetch("/api/auth/me");
-      localStorage.setItem("user", JSON.stringify(user));
+      saveUser(user);
       return user;
     } catch (error) {
-      console.error("Could not validate the current user:", error.message);
+      console.error("Unable to validate session:", error.message);
       return null;
     }
   }
 
-  // Expose functions for existing frontend pages.
+  // Maintain compatibility with existing pages.
   window.login = login;
   window.register = register;
   window.logout = logout;
@@ -155,7 +165,13 @@
   window.refreshCurrentUser = refreshCurrentUser;
 
   document.addEventListener("DOMContentLoaded", function () {
-    if (!isPublicPage()) {
+    const path = window.location.pathname;
+
+    const isLoginOrRegister =
+      path.endsWith("/login.html") ||
+      path.endsWith("/register.html");
+
+    if (!isLoginOrRegister) {
       checkAuth();
     }
 
