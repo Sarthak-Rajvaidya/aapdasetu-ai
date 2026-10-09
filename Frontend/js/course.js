@@ -1,24 +1,28 @@
-
 /* AapdaSetu AI — Course Details, Lessons and Knowledge Quiz */
+
 (() => {
     "use strict";
 
-    const $ = id => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
     let course = null;
     let viewed = new Set();
     let saving = false;
 
-    const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[c]);
+    // Safely escape content before inserting it into HTML.
+    const escapeHTML = (value) =>
+        String(value ?? "").replace(/[&<>"']/g, (character) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
 
+    // Read the course slug from the current URL.
     function getSlug() {
         const params = new URLSearchParams(window.location.search);
+
         return (
             params.get("slug") ||
             params.get("course") ||
@@ -39,9 +43,11 @@
 
     function showError(message) {
         console.error("[AapdaSetu Learn]", message);
+
         setHidden("courseLoading", true);
         setHidden("courseContent", true);
         setHidden("courseError", false);
+
         setText("courseErrorMessage", message);
     }
 
@@ -51,6 +57,12 @@
         setHidden("courseError", true);
     }
 
+    /*
+     * API requests:
+     * Use the application's existing apiFetch helper when available.
+     * Otherwise, use the configured API URL and existing token/session.
+     * Authentication files are not modified by this script.
+     */
     async function requestJSON(path, options = {}) {
         if (typeof window.apiFetch === "function") {
             return window.apiFetch(path, options);
@@ -59,11 +71,17 @@
         const config = window.APP_CONFIG || {};
         const base = String(config.API_BASE_URL || "").replace(/\/+$/, "");
         const token = localStorage.getItem("token");
-        const headers = { Accept: "application/json" };
 
-        if (token) headers.Authorization = `Bearer ${token}`;
+        const headers = {
+            Accept: "application/json"
+        };
+
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
 
         let body;
+
         if (options.body !== undefined) {
             headers["Content-Type"] = "application/json";
             body = JSON.stringify(options.body);
@@ -76,21 +94,27 @@
             credentials: "include"
         });
 
-        const text = await response.text();
+        const responseText = await response.text();
         let data = null;
 
         try {
-            data = text ? JSON.parse(text) : null;
+            data = responseText ? JSON.parse(responseText) : null;
         } catch {
-            data = text;
+            data = responseText;
         }
 
         if (!response.ok) {
-            const message = data?.detail || data?.message ||
+            const message =
+                data?.detail ||
+                data?.message ||
                 `Request failed (HTTP ${response.status}).`;
+
             const error = new Error(
-                typeof message === "string" ? message : JSON.stringify(message)
+                typeof message === "string"
+                    ? message
+                    : JSON.stringify(message)
             );
+
             error.status = response.status;
             throw error;
         }
@@ -98,6 +122,7 @@
         return data;
     }
 
+    // Normalize the response without changing the backend schema.
     function normalizeCourse(data) {
         const raw = data?.course ?? data?.data ?? data;
 
@@ -106,6 +131,7 @@
         }
 
         const lessons = Array.isArray(raw.lessons) ? raw.lessons : [];
+
         const sections = Array.isArray(raw.viewed_sections)
             ? raw.viewed_sections.map(String)
             : [];
@@ -115,14 +141,22 @@
             slug: String(raw.slug || getSlug()),
             title: String(raw.title || "Untitled course"),
             description: String(raw.description || ""),
-            category: String(raw.disaster_type || raw.category || "general"),
+            category: String(
+                raw.disaster_type || raw.category || "general"
+            ),
             lessons,
-            objectives: Array.isArray(raw.objectives) ? raw.objectives : [],
+            objectives: Array.isArray(raw.objectives)
+                ? raw.objectives
+                : [],
             quiz: Array.isArray(raw.quiz) ? raw.quiz : [],
-            progress: Math.max(0, Math.min(100, Number(raw.progress) || 0)),
+            progress: Math.max(
+                0,
+                Math.min(100, Number(raw.progress) || 0)
+            ),
             viewedSections: sections,
             completed: Boolean(raw.completed),
-            quizCount: Number(raw.quiz_count) || (raw.quiz?.length ? 1 : 0),
+            quizCount: Number(raw.quiz_count) ||
+                (raw.quiz?.length ? 1 : 0),
             duration: Number(raw.duration_minutes) || 0
         };
     }
@@ -135,10 +169,13 @@
             wildfire: "Wildfire Safety",
             tornado: "Tornado Safety"
         };
+
         const key = String(value || "general").toLowerCase();
+
         return labels[key] || key.replace(/[-_]/g, " ");
     }
 
+    // Render course learning objectives.
     function renderObjectives() {
         const element = $("courseObjectives");
         if (!element) return;
@@ -151,68 +188,96 @@
                 "Recognise safer actions during and after a disaster."
             ];
 
-        element.innerHTML = objectives.map(item =>
-            `<li class="mb-2">${escapeHTML(item)}</li>`
-        ).join("");
+        element.innerHTML = objectives.map((item) => `
+            <li class="mb-2">${escapeHTML(item)}</li>
+        `).join("");
     }
 
+    // Render the course knowledge quiz.
     function renderQuiz() {
         if (!course.quiz.length) {
             return `
                 <section class="course-state" aria-label="Knowledge quiz">
                     <h3>Knowledge check</h3>
-                    <p>No quiz questions have been configured for this course yet.</p>
+                    <p>
+                        No quiz questions have been configured
+                        for this course yet.
+                    </p>
                 </section>
             `;
         }
 
         return `
-            <section class="lesson-card course-quiz" id="courseKnowledgeQuiz">
+            <section
+                class="lesson-card course-quiz"
+                id="courseKnowledgeQuiz"
+            >
                 <h3>Knowledge check</h3>
-                <p>Answer the following questions to review what you learned.</p>
+                <p>
+                    Answer the following questions to review
+                    what you learned.
+                </p>
 
                 <form id="courseQuizForm">
                     ${course.quiz.map((question, index) => `
                         <fieldset class="quiz-question mb-4">
                             <legend>
-                                ${index + 1}. ${escapeHTML(question.question)}
+                                ${index + 1}.
+                                ${escapeHTML(question.question)}
                             </legend>
-                            ${(question.options || []).map((option, optionIndex) => `
-                                <label class="quiz-option d-block mb-2">
-                                    <input
-                                        type="radio"
-                                        name="question-${index}"
-                                        value="${optionIndex}"
-                                        required
-                                    >
-                                    ${escapeHTML(option)}
-                                </label>
-                            `).join("")}
+
+                            ${(question.options || []).map(
+                                (option, optionIndex) => `
+                                    <label class="quiz-option d-block mb-2">
+                                        <input
+                                            type="radio"
+                                            name="question-${index}"
+                                            value="${optionIndex}"
+                                            required
+                                        >
+                                        ${escapeHTML(option)}
+                                    </label>
+                                `
+                            ).join("")}
                         </fieldset>
                     `).join("")}
 
-                    <button class="learn-btn learn-btn-primary" type="submit">
+                    <button
+                        class="learn-btn learn-btn-primary"
+                        type="submit"
+                    >
                         Check answers
                     </button>
                 </form>
 
-                <div id="courseQuizResult" class="mt-3" role="status" hidden></div>
+                <div
+                    id="courseQuizResult"
+                    class="mt-3"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                ></div>
             </section>
         `;
     }
 
+    // Render all lessons and attach their event handlers.
     function renderLessons() {
         const container = $("lessonList");
 
         if (!container) {
-            throw new Error('The course page is missing id="lessonList".');
+            throw new Error(
+                'The course page is missing id="lessonList".'
+            );
         }
 
         if (!course.lessons.length) {
             container.innerHTML = `
                 <div class="course-state">
                     <h3>Lessons are not configured</h3>
-                    <p>This course currently has no lesson content.</p>
+                    <p>
+                        This course currently has no lesson content.
+                    </p>
                 </div>
             `;
             return;
@@ -222,7 +287,7 @@
             const id = String(lesson.id);
             const complete = viewed.has(id);
 
-            const sections = (lesson.content || []).map(section => `
+            const sections = (lesson.content || []).map((section) => `
                 <section class="lesson-content-block">
                     <h4>${escapeHTML(section.heading || "")}</h4>
                     <p>${escapeHTML(section.text || "")}</p>
@@ -233,20 +298,26 @@
                 ? `
                     <h4>Key safety actions</h4>
                     <ul class="lesson-action-list">
-                        ${lesson.key_actions.map(action =>
-                            `<li>${escapeHTML(action)}</li>`
-                        ).join("")}
+                        ${lesson.key_actions.map((action) => `
+                            <li>${escapeHTML(action)}</li>
+                        `).join("")}
                     </ul>
                 `
                 : "";
 
             return `
-                <article class="lesson-card" id="lesson-${index + 1}">
+                <article
+                    class="lesson-card"
+                    id="lesson-${index + 1}"
+                >
                     <div class="lesson-card-heading">
                         <div>
-                            <span class="lesson-number">Lesson ${index + 1}</span>
+                            <span class="lesson-number">
+                                Lesson ${index + 1}
+                            </span>
                             <h3>${escapeHTML(lesson.title)}</h3>
                         </div>
+
                         <span class="lesson-duration">
                             ${Number(lesson.duration_minutes) || 5} min
                         </span>
@@ -257,11 +328,17 @@
 
                     <button
                         type="button"
-                        class="learn-btn ${complete ? "learn-btn-secondary" : "learn-btn-primary"}"
+                        class="learn-btn ${
+                            complete
+                                ? "learn-btn-secondary"
+                                : "learn-btn-primary"
+                        }"
                         data-complete-lesson="${escapeHTML(id)}"
                         ${complete ? "disabled" : ""}
                     >
-                        ${complete ? "Lesson completed" : "Mark as completed"}
+                        ${complete
+                            ? "Lesson completed"
+                            : "Mark as completed"}
                     </button>
                 </article>
             `;
@@ -269,18 +346,26 @@
 
         container.innerHTML = lessonHTML + renderQuiz();
 
-        container.querySelectorAll("[data-complete-lesson]").forEach(button => {
-            button.addEventListener("click", () => completeLesson(button));
-        });
+        container.querySelectorAll("[data-complete-lesson]")
+            .forEach((button) => {
+                button.addEventListener("click", () => {
+                    completeLesson(button);
+                });
+            });
 
         const quizForm = $("courseQuizForm");
-        if (quizForm) quizForm.addEventListener("submit", gradeQuiz);
+
+        if (quizForm) {
+            quizForm.addEventListener("submit", gradeQuiz);
+        }
     }
 
+    // Save lesson completion to the backend.
     async function completeLesson(button) {
         if (saving) return;
 
         const id = button.dataset.completeLesson;
+
         if (!id || viewed.has(id)) return;
 
         saving = true;
@@ -289,9 +374,13 @@
 
         const next = new Set(viewed);
         next.add(id);
+
         const nextViewed = [...next];
+
         const percentage = course.lessons.length
-            ? Math.round(nextViewed.length / course.lessons.length * 100)
+            ? Math.round(
+                nextViewed.length / course.lessons.length * 100
+            )
             : 0;
 
         try {
@@ -299,55 +388,95 @@
                 `/api/courses/${encodeURIComponent(course.slug)}/progress`,
                 {
                     method: "POST",
-                    body: { progress: percentage, viewed_sections: nextViewed }
+                    body: {
+                        progress: percentage,
+                        viewed_sections: nextViewed
+                    }
                 }
             );
 
             viewed = new Set(
-                Array.isArray(result.viewed_sections)
+                Array.isArray(result?.viewed_sections)
                     ? result.viewed_sections.map(String)
                     : nextViewed
             );
 
-            course.progress = Number(result.progress) || percentage;
-            course.completed = Boolean(result.completed);
+            course.progress = Math.max(
+                0,
+                Math.min(
+                    100,
+                    Number(result?.progress ?? percentage) || 0
+                )
+            );
+
+            course.completed = Boolean(result?.completed);
 
             button.textContent = "Lesson completed";
             button.classList.remove("learn-btn-primary");
             button.classList.add("learn-btn-secondary");
 
             updateProgressDisplay();
+
         } catch (error) {
             console.error("Progress save failed:", error);
+
             button.disabled = false;
             button.textContent = "Retry completion";
-            alert(error.message || "Unable to save progress. Please try again.");
+
+            if (typeof window.showToast === "function") {
+                window.showToast(
+                    error.message || "Unable to save progress.",
+                    "error"
+                );
+            } else {
+                alert(
+                    error.message ||
+                    "Unable to save progress. Please try again."
+                );
+            }
         } finally {
             saving = false;
         }
     }
 
+    // Update the visible progress indicators.
     function updateProgressDisplay() {
+        if (!course) return;
+
         const total = course.lessons.length;
         const done = viewed.size;
 
         setText("courseProgressPercent", `${course.progress}%`);
         setText("courseCompletedLessons", done);
-        setText("courseRemainingLessons", Math.max(0, total - done));
+        setText(
+            "courseRemainingLessons",
+            Math.max(0, total - done)
+        );
 
         const fill = $("courseProgressFill");
-        if (fill) fill.style.width = `${course.progress}%`;
+
+        if (fill) {
+            fill.style.width = `${course.progress}%`;
+        }
 
         const bar = $("courseProgressBar");
-        if (bar) bar.setAttribute("aria-valuenow", String(course.progress));
+
+        if (bar) {
+            bar.setAttribute(
+                "aria-valuenow",
+                String(course.progress)
+            );
+        }
 
         const resume = $("resumeCourse");
+
         if (resume && course.completed) {
             resume.innerHTML =
                 '<i class="bi bi-check-circle" aria-hidden="true"></i> Course completed';
         }
     }
 
+    // Check answers and show the quiz score.
     function gradeQuiz(event) {
         event.preventDefault();
 
@@ -359,61 +488,91 @@
                 `input[name="question-${index}"]:checked`
             );
 
-            if (selected && Number(selected.value) === Number(question.correct_index)) {
+            if (
+                selected &&
+                Number(selected.value) === Number(question.correct_index)
+            ) {
                 correct++;
             }
         });
 
         const total = course.quiz.length;
-        const score = total ? Math.round(correct / total * 100) : 0;
-        const result = $("courseQuizResult");
+        const score = total
+            ? Math.round(correct / total * 100)
+            : 0;
 
+        const result = $("courseQuizResult");
         if (!result) return;
 
         result.hidden = false;
         result.innerHTML = `
-            <strong>Your score: ${score}% (${correct}/${total})</strong>
-            <p>${score >= 70
-                ? "Good work! Review any topics you found difficult."
-                : "Review the lessons and try the quiz again."}</p>
+            <strong>
+                Your score: ${score}% (${correct}/${total})
+            </strong>
+            <p>
+                ${score >= 70
+                    ? "Good work! Review any topics you found difficult."
+                    : "Review the lessons and try the quiz again."}
+            </p>
         `;
     }
 
+    // Populate the main course page.
     function renderCourse() {
         setText("courseCategory", categoryLabel(course.category));
         setText("courseTitle", course.title);
+
         setText(
             "courseDescription",
-            course.description || "Learn practical safety steps for this disaster."
+            course.description ||
+                "Learn practical safety steps for this disaster."
         );
-        setText("courseDuration",
-            course.duration ? `${course.duration} minutes` : "Self-paced");
+
+        setText(
+            "courseDuration",
+            course.duration
+                ? `${course.duration} minutes`
+                : "Self-paced"
+        );
+
         setText("courseLevel", "All levels");
         setText("courseLessonCount", course.lessons.length);
         setText("courseCompletedLessons", viewed.size);
+
         setText(
             "courseRemainingLessons",
             Math.max(0, course.lessons.length - viewed.size)
         );
-        setText("courseQuizCount", course.quiz.length ? 1 : 0);
+
+        setText(
+            "courseQuizCount",
+            course.quiz.length ? 1 : 0
+        );
 
         renderObjectives();
         renderLessons();
         updateProgressDisplay();
 
         const resume = $("resumeCourse");
-        if (resume) resume.href = "#lessonList";
+
+        if (resume) {
+            resume.href = "#lessonList";
+        }
 
         setHidden("courseLoading", true);
         setHidden("courseError", true);
         setHidden("courseContent", false);
     }
 
+    // Load course details from the existing backend API.
     async function loadCourse() {
         const slug = getSlug();
 
         if (!slug) {
-            showError("The URL is missing a course slug. Return to Learn and select a course.");
+            showError(
+                "The URL is missing a course slug. " +
+                "Return to Learn and select a course."
+            );
             return;
         }
 
@@ -426,25 +585,46 @@
 
             course = normalizeCourse(data);
             viewed = new Set(course.viewedSections);
+
             renderCourse();
+
         } catch (error) {
-            console.error("[AapdaSetu Learn] Course loading failed:", error);
+            console.error(
+                "[AapdaSetu Learn] Course loading failed:",
+                error
+            );
 
             if (error.status === 401) {
-                showError("Your session has expired. Sign in again and reopen this course.");
+                showError(
+                    "Your session has expired. Sign in again " +
+                    "and reopen this course."
+                );
             } else if (error.status === 404) {
-                showError(`Course "${slug}" was not found. Check the slug in your database.`);
+                showError(
+                    `Course "${slug}" was not found. ` +
+                    "Check the slug in your database."
+                );
             } else {
-                showError(error.message || "Unable to load course details.");
+                showError(
+                    error.message || "Unable to load course details."
+                );
             }
         }
     }
 
+    // Initialize after the page DOM is available.
     function init() {
         $("retryCourse")?.addEventListener("click", loadCourse);
 
-        if (!$("courseLoading") || !$("courseContent") || !$("courseError")) {
-            console.error("Course page is missing required loading/content/error elements.");
+        if (
+            !$("courseLoading") ||
+            !$("courseContent") ||
+            !$("courseError")
+        ) {
+            console.error(
+                "Course page is missing required " +
+                "loading/content/error elements."
+            );
             return;
         }
 
@@ -452,7 +632,11 @@
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init, { once: true });
+        document.addEventListener(
+            "DOMContentLoaded",
+            init,
+            { once: true }
+        );
     } else {
         init();
     }
