@@ -13,7 +13,7 @@ from app.schemas import schemas
 router = APIRouter(prefix="/api/courses", tags=["courses"])
 
 
-# Lesson IDs must remain stable because they are stored in CourseProgress.
+# Keep lesson IDs stable because they are stored in CourseProgress.
 LESSONS = {
     "earthquake": [
         {
@@ -23,13 +23,17 @@ LESSONS = {
             "content": [
                 {
                     "heading": "What is an earthquake?",
-                    "text": "An earthquake occurs when energy is suddenly released "
-                    "inside the Earth, producing seismic waves that shake the ground."
+                    "text": (
+                        "An earthquake occurs when energy is suddenly released "
+                        "inside the Earth, producing seismic waves that shake the ground."
+                    ),
                 },
                 {
                     "heading": "Possible hazards",
-                    "text": "Ground shaking can damage buildings and roads. Falling "
-                    "objects, fires, and aftershocks may create additional danger."
+                    "text": (
+                        "Ground shaking can damage buildings and roads. Falling "
+                        "objects, fires, and aftershocks may create additional danger."
+                    ),
                 },
             ],
             "key_actions": [
@@ -45,8 +49,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Prepare your home",
-                    "text": "Secure heavy furniture, keep exits clear, and learn how "
-                    "to shut off utilities if it is safe to do so."
+                    "text": (
+                        "Secure heavy furniture, keep exits clear, and learn how "
+                        "to shut off utilities if it is safe to do so."
+                    ),
                 }
             ],
             "key_actions": [
@@ -62,13 +68,17 @@ LESSONS = {
             "content": [
                 {
                     "heading": "If you are indoors",
-                    "text": "Drop to your hands and knees. Cover your head and neck "
-                    "under a sturdy table if available, and hold on until shaking stops."
+                    "text": (
+                        "Drop to your hands and knees. Cover your head and neck "
+                        "under a sturdy table if available, and hold on until shaking stops."
+                    ),
                 },
                 {
                     "heading": "If you are outdoors",
-                    "text": "Move to an open area away from buildings, trees, "
-                    "streetlights, and power lines."
+                    "text": (
+                        "Move to an open area away from buildings, trees, "
+                        "streetlights, and power lines."
+                    ),
                 },
             ],
             "key_actions": [
@@ -84,8 +94,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Stay alert",
-                    "text": "Aftershocks may occur. Damaged buildings can collapse, "
-                    "and leaking gas or damaged electrical systems can cause fires."
+                    "text": (
+                        "Aftershocks may occur. Damaged buildings can collapse, "
+                        "and leaking gas or damaged electrical systems can cause fires."
+                    ),
                 }
             ],
             "key_actions": [
@@ -104,9 +116,11 @@ LESSONS = {
             "content": [
                 {
                     "heading": "What causes floods?",
-                    "text": "Flooding can result from heavy rainfall, overflowing "
-                    "rivers, storm surges, or drainage systems that cannot handle "
-                    "large amounts of water."
+                    "text": (
+                        "Flooding can result from heavy rainfall, overflowing rivers, "
+                        "storm surges, or drainage systems that cannot handle "
+                        "large amounts of water."
+                    ),
                 }
             ],
             "key_actions": [
@@ -122,8 +136,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Prepare in advance",
-                    "text": "Keep essential supplies, medicines, drinking water, "
-                    "important documents, and a charged phone ready."
+                    "text": (
+                        "Keep essential supplies, medicines, drinking water, "
+                        "important documents, and a charged phone ready."
+                    ),
                 }
             ],
             "key_actions": [
@@ -139,8 +155,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Avoid floodwater",
-                    "text": "Floodwater can hide open drains, debris, strong currents, "
-                    "and electrical hazards. Never walk or drive through floodwater."
+                    "text": (
+                        "Floodwater can hide open drains, debris, strong currents, "
+                        "and electrical hazards. Never walk or drive through floodwater."
+                    ),
                 }
             ],
             "key_actions": [
@@ -156,8 +174,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Return only when safe",
-                    "text": "Wait for official clearance. Flood-damaged buildings "
-                    "may be unstable, and water or food may be contaminated."
+                    "text": (
+                        "Wait for official clearance. Flood-damaged buildings may "
+                        "be unstable, and water or food may be contaminated."
+                    ),
                 }
             ],
             "key_actions": [
@@ -171,72 +191,304 @@ LESSONS = {
     "cyclone": [
         {
             "id": "cyclone-1",
-            "title": "Understanding Cyclones",
-            "duration_minutes": 5,
+            "title": "Understand Cyclones and Their Hazards",
+            "duration_minutes": 7,
             "content": [
                 {
-                    "heading": "Cyclone hazards",
-                    "text": "Cyclones can bring destructive winds, heavy rain, coastal "
-                    "storm surges, flooding, and landslides."
-                }
+                    "heading": "What is a tropical cyclone?",
+                    "text": (
+                        "A tropical cyclone is an organised rotating storm that "
+                        "develops over warm ocean water. It can bring destructive "
+                        "winds, intense rain, rough seas and dangerous coastal "
+                        "flooding. In India, cyclones may affect the Bay of Bengal "
+                        "and Arabian Sea coasts, and their impacts can extend far inland."
+                    ),
+                },
+                {
+                    "heading": "Know the main hazards",
+                    "text": (
+                        "Wind can damage roofs, trees and power lines. Heavy rain "
+                        "can trigger river, urban and flash flooding. Storm surge "
+                        "is an abnormal rise of sea water pushed toward the coast "
+                        "by a storm; it can inundate low-lying areas, especially "
+                        "when combined with high tide. Landslides may occur in "
+                        "vulnerable hilly areas after prolonged rain."
+                    ),
+                },
+                {
+                    "heading": "Landfall does not mean danger is over",
+                    "text": (
+                        "The centre crossing the coast is called landfall. Strong "
+                        "winds, heavy rain and flooding may continue after landfall, "
+                        "and inland communities can also be affected. Forecasts "
+                        "describe uncertainty, so use official local warnings "
+                        "rather than judging danger from the sky outside."
+                    ),
+                },
             ],
             "key_actions": [
-                "Monitor official meteorological warnings.",
-                "Know your local evacuation routes and shelters.",
-                "Follow instructions from local authorities.",
+                "Know whether your home, school or workplace is in a low-lying or flood-prone area.",
+                "Identify the nearest official cyclone shelter and more than one safe route.",
+                "Follow IMD forecasts and district administration instructions; do not rely on forwarded rumours.",
             ],
+            "takeaway": (
+                "Cyclones are more than wind: storm surge and flooding can be "
+                "deadly even when winds seem manageable."
+            ),
+            "media": {
+                "type": "video",
+                "title": "NDMA: What to do before and during a cyclone",
+                "url": "https://www.youtube.com/watch?v=B9qR2e3xyJo",
+                "source": "National Disaster Management Authority of India",
+            },
         },
         {
             "id": "cyclone-2",
-            "title": "Preparing Before a Cyclone",
-            "duration_minutes": 5,
+            "title": "Read Official Warnings and Alerts",
+            "duration_minutes": 7,
             "content": [
                 {
-                    "heading": "Prepare your household",
-                    "text": "Secure loose outdoor items, protect important documents, "
-                    "and keep emergency supplies ready."
-                }
+                    "heading": "Understand India's warning sequence",
+                    "text": (
+                        "IMD products can include a pre-cyclone watch, cyclone "
+                        "alert, cyclone warning and post-landfall outlook. These "
+                        "are operational products for different lead times and "
+                        "audiences; the exact timing and wording can vary with "
+                        "the system. Do not treat a generic online timeline as "
+                        "a promise about when danger will arrive."
+                    ),
+                },
+                {
+                    "heading": "What you should do when an alert is issued",
+                    "text": (
+                        "Check the latest district-specific bulletin, expected "
+                        "wind and rainfall, storm-surge information where available, "
+                        "and the areas named in the warning. Prepare early, keep "
+                        "your phone charged, and act on evacuation directions "
+                        "from local authorities. If an alert changes, use the "
+                        "newest official update."
+                    ),
+                },
+                {
+                    "heading": "Trusted information sources",
+                    "text": (
+                        "Use the India Meteorological Department (IMD) for cyclone "
+                        "bulletins and weather warnings, NDMA's SACHET portal for "
+                        "official alerts and preparedness guidance, and your "
+                        "district or state disaster-management authority for "
+                        "local shelters and evacuation orders."
+                    ),
+                },
             ],
             "key_actions": [
-                "Charge phones and power banks.",
-                "Store drinking water and essential medicines.",
-                "Evacuate high-risk areas when instructed.",
+                "Bookmark the IMD cyclone page and NDMA SACHET alert portal.",
+                "Share verified instructions, not unconfirmed messages or old screenshots.",
+                "If authorities order evacuation, leave promptly rather than waiting for stronger wind.",
             ],
+            "takeaway": (
+                "A warning is an instruction to prepare or act—not a reason "
+                "to wait and see."
+            ),
+            "media": {
+                "type": "link",
+                "title": "Live official cyclone information",
+                "url": "https://mausam.imd.gov.in/imd_latest/contents/cyclone.php",
+                "source": "India Meteorological Department",
+            },
         },
         {
             "id": "cyclone-3",
-            "title": "Safety During a Cyclone",
-            "duration_minutes": 5,
+            "title": "Prepare Your Household and Emergency Kit",
+            "duration_minutes": 8,
             "content": [
                 {
-                    "heading": "Take shelter",
-                    "text": "Stay indoors in a sturdy building, away from windows "
-                    "and glass doors. Do not go outside during a temporary lull "
-                    "unless authorities confirm it is safe."
-                }
+                    "heading": "Make a household plan",
+                    "text": (
+                        "Agree on where everyone will meet, who will collect "
+                        "children or support a family member, and how you will "
+                        "contact one another if mobile networks fail. Identify "
+                        "an accessible shelter and transport option in advance. "
+                        "Keep a written contact list with essential medicines "
+                        "and medical needs."
+                    ),
+                },
+                {
+                    "heading": "Build a practical emergency kit",
+                    "text": (
+                        "Pack drinking water, ready-to-eat food, regular medicines, "
+                        "first-aid supplies, a torch and spare batteries, a "
+                        "battery-powered radio if available, power bank, phone "
+                        "charger, hygiene items, cash, masks, and copies of "
+                        "important documents in a waterproof pouch. Plan for "
+                        "household needs and keep supplies easy to carry."
+                    ),
+                },
+                {
+                    "heading": "Reduce damage before the storm",
+                    "text": (
+                        "Bring loose outdoor objects inside if it is safe, secure "
+                        "doors and windows, clear drains only before conditions "
+                        "become dangerous, and move valuables and electrical "
+                        "items above likely flood levels. Do not climb onto a "
+                        "roof or go outside in high winds to make last-minute repairs."
+                    ),
+                },
             ],
             "key_actions": [
-                "Follow official evacuation and shelter instructions.",
-                "Avoid beaches, flooded roads, and exposed coastal areas.",
-                "Keep emergency alerts available if possible.",
+                "Charge phones and power banks before the weather deteriorates.",
+                "Keep medicines, infant supplies, assistive devices and pet essentials ready.",
+                "Keep important documents protected and the evacuation bag near an exit.",
             ],
+            "takeaway": (
+                "Prepare early, while it is still safe to travel and complete "
+                "household tasks."
+            ),
         },
         {
             "id": "cyclone-4",
-            "title": "Safety After a Cyclone",
-            "duration_minutes": 5,
+            "title": "Evacuate Safely Before Coastal Flooding",
+            "duration_minutes": 7,
             "content": [
                 {
-                    "heading": "Watch for hidden hazards",
-                    "text": "Flooding, unstable structures, debris, and fallen "
-                    "electrical wires may remain dangerous after winds ease."
-                }
+                    "heading": "Who may need to evacuate?",
+                    "text": (
+                        "People in low-lying coastal settlements, storm-surge "
+                        "zones, river mouths, flood-prone areas, unsafe buildings "
+                        "and locations identified by local authorities may need "
+                        "to move to a designated cyclone shelter or safer inland "
+                        "location. Follow the evacuation order for your area "
+                        "even if the weather currently looks calm."
+                    ),
+                },
+                {
+                    "heading": "Leave early and use safe routes",
+                    "text": (
+                        "Take the recommended route and go to the designated "
+                        "shelter or location. Do not walk or drive through "
+                        "floodwater, cross flowing streams, or travel toward "
+                        "the shoreline to watch waves. Roads can become blocked "
+                        "quickly, so do not delay to protect possessions."
+                    ),
+                },
+                {
+                    "heading": "Support people who need assistance",
+                    "text": (
+                        "Plan transport and assistance for children, older adults, "
+                        "people with disabilities, pregnant people, and anyone "
+                        "who needs regular medical support. Keep pets secured "
+                        "and follow shelter guidance. Tell a trusted person "
+                        "where you are going if communication is available."
+                    ),
+                },
             ],
             "key_actions": [
-                "Wait for official advice before returning home.",
-                "Stay away from downed power lines.",
-                "Avoid damaged buildings.",
+                "Follow evacuation orders immediately and use official routes.",
+                "Carry essential medicines, water, identification and emergency contacts.",
+                "Never go to the beach, sea wall or riverbank during a cyclone warning.",
             ],
+            "takeaway": (
+                "Life safety comes first; belongings can be replaced, but "
+                "evacuation routes may close rapidly."
+            ),
+        },
+        {
+            "id": "cyclone-5",
+            "title": "Stay Safe During the Cyclone",
+            "duration_minutes": 7,
+            "content": [
+                {
+                    "heading": "If you are sheltering indoors",
+                    "text": (
+                        "Stay in a sturdy building or designated shelter, away "
+                        "from windows and glass doors. Use an interior room on "
+                        "a lower level that is not at risk of flooding. Keep "
+                        "your emergency kit, phone and radio close, and follow "
+                        "official updates. Avoid candles where possible; use "
+                        "a torch to reduce fire risk."
+                    ),
+                },
+                {
+                    "heading": "Understand the eye of the storm",
+                    "text": (
+                        "Some cyclones have a relatively calm eye. This lull "
+                        "can be temporary; destructive winds may return from "
+                        "another direction. Do not go outside because the wind "
+                        "has suddenly eased. Remain sheltered until authorities "
+                        "confirm the danger has passed."
+                    ),
+                },
+                {
+                    "heading": "Avoid secondary dangers",
+                    "text": (
+                        "Stay away from floodwater, damaged electrical equipment, "
+                        "windows, trees and exposed coastal areas. Do not use "
+                        "generators, charcoal stoves or fuel-burning equipment "
+                        "indoors because carbon monoxide can build up. If water "
+                        "enters the building, move to a safer higher level if "
+                        "possible and follow emergency instructions."
+                    ),
+                },
+            ],
+            "key_actions": [
+                "Stay sheltered and keep away from windows.",
+                "Do not touch electrical equipment or wires in wet areas.",
+                "Never use a generator or charcoal stove inside a home, garage or enclosed space.",
+            ],
+            "takeaway": (
+                "A temporary calm is not an all-clear. Stay sheltered until "
+                "official advice says it is safe."
+            ),
+            "media": {
+                "type": "video",
+                "title": "NDMA: Safety from cyclones while indoors",
+                "url": "https://www.youtube.com/watch?v=xNwo_a57KGc",
+                "source": "National Disaster Management Authority of India",
+            },
+        },
+        {
+            "id": "cyclone-6",
+            "title": "Recover Safely After the Cyclone",
+            "duration_minutes": 7,
+            "content": [
+                {
+                    "heading": "Wait for the official all-clear",
+                    "text": (
+                        "Do not return to evacuated areas until local authorities "
+                        "say it is safe. Roads, bridges, buildings and slopes "
+                        "may be damaged even after the rain and wind ease. Avoid "
+                        "sightseeing or entering restricted areas."
+                    ),
+                },
+                {
+                    "heading": "Watch for hidden hazards",
+                    "text": (
+                        "Stay well away from fallen power lines and report them "
+                        "to the electricity provider or emergency authorities. "
+                        "Do not enter damaged buildings, touch wet electrical "
+                        "appliances, or walk through standing water that may "
+                        "hide open drains, debris, contamination or live electricity."
+                    ),
+                },
+                {
+                    "heading": "Protect health and help safely",
+                    "text": (
+                        "Use safe drinking water and discard food that may have "
+                        "been contaminated or left unrefrigerated for an unsafe "
+                        "period. Clean injuries and seek medical help when needed. "
+                        "Check on neighbours only when routes are safe, and use "
+                        "official channels to report urgent needs or damage."
+                    ),
+                },
+            ],
+            "key_actions": [
+                "Wait for official clearance before returning home.",
+                "Avoid downed wires, damaged structures and floodwater.",
+                "Follow local advice about drinking water, food safety and cleanup.",
+            ],
+            "takeaway": (
+                "Recovery can remain dangerous for days; keep following "
+                "official updates after landfall."
+            ),
         },
     ],
 
@@ -248,8 +500,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "How wildfires spread",
-                    "text": "Wildfires can spread through dry vegetation and are "
-                    "affected by wind, heat, and available fuel."
+                    "text": (
+                        "Wildfires can spread through dry vegetation and are "
+                        "affected by wind, heat, and available fuel."
+                    ),
                 }
             ],
             "key_actions": [
@@ -265,8 +519,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Plan for evacuation",
-                    "text": "Keep essential items ready, plan transport, and identify "
-                    "safe destinations outside the threatened area."
+                    "text": (
+                        "Keep essential items ready, plan transport, and identify "
+                        "safe destinations outside the threatened area."
+                    ),
                 }
             ],
             "key_actions": [
@@ -282,8 +538,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Leave early",
-                    "text": "Evacuate when instructed. Smoke can harm breathing, "
-                    "and fire direction can change rapidly with the wind."
+                    "text": (
+                        "Evacuate when instructed. Smoke can harm breathing, "
+                        "and fire direction can change rapidly with the wind."
+                    ),
                 }
             ],
             "key_actions": [
@@ -299,8 +557,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Avoid the burn area",
-                    "text": "Hot spots, falling trees, damaged power lines, and "
-                    "unstable ground can remain dangerous after a fire."
+                    "text": (
+                        "Hot spots, falling trees, damaged power lines, and "
+                        "unstable ground can remain dangerous after a fire."
+                    ),
                 }
             ],
             "key_actions": [
@@ -319,9 +579,11 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Tornado hazards",
-                    "text": "A tornado is a violently rotating column of air "
-                    "associated with a thunderstorm. Flying debris and structural "
-                    "damage are major hazards."
+                    "text": (
+                        "A tornado is a violently rotating column of air "
+                        "associated with a thunderstorm. Flying debris and "
+                        "structural damage are major hazards."
+                    ),
                 }
             ],
             "key_actions": [
@@ -337,8 +599,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Choose your shelter",
-                    "text": "Identify a basement or a small interior room on the "
-                    "lowest floor, away from windows."
+                    "text": (
+                        "Identify a basement or a small interior room on the "
+                        "lowest floor, away from windows."
+                    ),
                 }
             ],
             "key_actions": [
@@ -354,8 +618,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Take cover immediately",
-                    "text": "Move to your designated shelter. Protect your head "
-                    "and neck with your arms or sturdy padding."
+                    "text": (
+                        "Move to your designated shelter. Protect your head "
+                        "and neck with your arms or sturdy padding."
+                    ),
                 }
             ],
             "key_actions": [
@@ -372,8 +638,10 @@ LESSONS = {
             "content": [
                 {
                     "heading": "Avoid damaged areas",
-                    "text": "Debris, broken glass, unstable buildings, gas leaks, "
-                    "and fallen power lines can cause serious injuries."
+                    "text": (
+                        "Debris, broken glass, unstable buildings, gas leaks, "
+                        "and fallen power lines can cause serious injuries."
+                    ),
                 }
             ],
             "key_actions": [
@@ -437,26 +705,99 @@ QUIZZES = {
     ],
     "cyclone": [
         {
-            "question": "Where should you shelter during a cyclone?",
+            "question": "Which hazard can push seawater onto low-lying coastal land?",
             "options": [
-                "On the beach",
-                "Beside a window",
-                "In a sturdy building away from windows",
-                "Under a tree",
+                "Storm surge",
+                "Heat index",
+                "Aftershock",
+                "Drought",
             ],
-            "correct_index": 2,
-            "topic": "Shelter",
+            "correct_index": 0,
+            "topic": "Hazards",
         },
         {
-            "question": "When should you evacuate a high-risk area?",
+            "question": "Which source should you use for official cyclone forecasts in India?",
             "options": [
-                "Only after flooding begins",
-                "When authorities instruct you to evacuate",
-                "After the storm has passed",
-                "Never",
+                "Unverified forwarded messages",
+                "India Meteorological Department (IMD)",
+                "A random social media post",
+                "A guess based on the sky",
+            ],
+            "correct_index": 1,
+            "topic": "Warnings",
+        },
+        {
+            "question": (
+                "When local authorities order evacuation from a low-lying "
+                "coastal area, you should:"
+            ),
+            "options": [
+                "Wait until water reaches the road",
+                "Leave promptly using the advised route",
+                "Go to the beach to check waves",
+                "Stay to protect possessions",
             ],
             "correct_index": 1,
             "topic": "Evacuation",
+        },
+        {
+            "question": "Which item is useful in a cyclone emergency kit?",
+            "options": [
+                "Only decorative items",
+                "A torch, batteries, medicines and drinking water",
+                "A candle as the only light source",
+                "Heavy furniture",
+            ],
+            "correct_index": 1,
+            "topic": "Preparation",
+        },
+        {
+            "question": (
+                "Why must you stay indoors during a temporary calm in a cyclone?"
+            ),
+            "options": [
+                "The storm may be passing through its eye and winds can return",
+                "It proves the cyclone has ended",
+                "It means all roads are safe",
+                "It means there is no flood risk",
+            ],
+            "correct_index": 0,
+            "topic": "Storm behaviour",
+        },
+        {
+            "question": "What is the safest general action during severe cyclone winds?",
+            "options": [
+                "Stand beside a glass window",
+                "Stay in a sturdy shelter away from windows",
+                "Go outside to inspect the roof",
+                "Stand under a tree",
+            ],
+            "correct_index": 1,
+            "topic": "Shelter",
+        },
+        {
+            "question": (
+                "After a cyclone, a fallen electrical wire is on the road. You should:"
+            ),
+            "options": [
+                "Move it with a stick",
+                "Stay far away and report it",
+                "Drive over it quickly",
+                "Pour water on it",
+            ],
+            "correct_index": 1,
+            "topic": "Recovery",
+        },
+        {
+            "question": "When is it safe to return to an evacuated area?",
+            "options": [
+                "As soon as the wind eases",
+                "When neighbours start returning",
+                "After official clearance and local safety guidance",
+                "Immediately after landfall",
+            ],
+            "correct_index": 2,
+            "topic": "Recovery",
         },
     ],
     "wildfire": [
@@ -511,9 +852,18 @@ QUIZZES = {
 
 
 def _get_course_or_404(slug: str, db: Session) -> models.Course:
-    course = db.query(models.Course).filter(models.Course.slug == slug).first()
+    course = (
+        db.query(models.Course)
+        .filter(models.Course.slug == slug)
+        .first()
+    )
+
     if course is None:
-        raise HTTPException(status_code=404, detail=f"Course '{slug}' was not found.")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Course '{slug}' was not found.",
+        )
+
     return course
 
 
@@ -530,6 +880,7 @@ def _get_progress(course_id: int, user_id: int, db: Session):
 
 def _course_summary(course, progress=None) -> dict:
     lessons = LESSONS.get(course.slug, [])
+
     return {
         "id": course.id,
         "slug": course.slug,
@@ -538,10 +889,14 @@ def _course_summary(course, progress=None) -> dict:
         "disaster_type": course.disaster_type,
         "total_sections": len(lessons) or int(course.total_sections or 0),
         "lessons_count": len(lessons),
-        "duration_minutes": sum(x["duration_minutes"] for x in lessons),
+        "duration_minutes": sum(
+            lesson["duration_minutes"] for lesson in lessons
+        ),
         "quiz_count": 1 if QUIZZES.get(course.slug) else 0,
         "progress": int(progress.progress or 0) if progress else 0,
-        "viewed_sections": list(progress.viewed_sections or []) if progress else [],
+        "viewed_sections": (
+            list(progress.viewed_sections or []) if progress else []
+        ),
         "completed": bool(progress.completed) if progress else False,
     }
 
@@ -551,14 +906,27 @@ def list_courses(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    courses = db.query(models.Course).order_by(models.Course.id.asc()).all()
+    courses = (
+        db.query(models.Course)
+        .order_by(models.Course.id.asc())
+        .all()
+    )
+
     records = (
         db.query(models.CourseProgress)
         .filter(models.CourseProgress.user_id == current_user.id)
         .all()
     )
-    progress_map = {record.course_id: record for record in records}
-    return [_course_summary(course, progress_map.get(course.id)) for course in courses]
+
+    progress_map = {
+        record.course_id: record
+        for record in records
+    }
+
+    return [
+        _course_summary(course, progress_map.get(course.id))
+        for course in courses
+    ]
 
 
 @router.get("/{slug}")
@@ -569,22 +937,44 @@ def get_course(
 ):
     course = _get_course_or_404(slug, db)
     progress = _get_progress(course.id, current_user.id, db)
+
     lessons = LESSONS.get(course.slug, [])
     quiz = QUIZZES.get(course.slug, [])
+
+    if not lessons:
+        raise HTTPException(
+            status_code=404,
+            detail="Course content is not available.",
+        )
+
+    objectives = (
+        [
+            "Explain cyclone wind, rainfall, storm-surge and flood hazards.",
+            "Interpret official warnings and identify trusted information sources.",
+            "Prepare a household plan and a practical emergency kit.",
+            "Choose safer evacuation and shelter actions before and during a cyclone.",
+            "Recognise post-cyclone hazards and recover safely.",
+        ]
+        if course.slug == "cyclone"
+        else [
+            "Understand the main hazards associated with this disaster.",
+            "Learn how to prepare before an emergency.",
+            "Recognise safer actions during and after the event.",
+        ]
+    )
 
     return {
         **_course_summary(course, progress),
         "lessons": lessons,
         "quiz": quiz,
-        "objectives": [
-            "Understand the main hazards associated with this disaster.",
-            "Learn how to prepare before an emergency.",
-            "Recognise safer actions during and after the event.",
-        ],
+        "objectives": objectives,
     }
 
 
-@router.post("/{slug}/progress", response_model=schemas.CourseProgressOut)
+@router.post(
+    "/{slug}/progress",
+    response_model=schemas.CourseProgressOut,
+)
 def upsert_progress(
     slug: str,
     payload: schemas.CourseProgressUpdate,
@@ -594,7 +984,11 @@ def upsert_progress(
     course = _get_course_or_404(slug, db)
     lessons = LESSONS.get(course.slug, [])
 
-    valid_ids = {lesson["id"] for lesson in lessons}
+    valid_ids = {
+        lesson["id"]
+        for lesson in lessons
+    }
+
     requested = payload.viewed_sections or []
 
     if any(not isinstance(item, str) for item in requested):
@@ -622,12 +1016,14 @@ def upsert_progress(
         db.add(record)
 
     existing = [
-        item for item in (record.viewed_sections or [])
+        item
+        for item in (record.viewed_sections or [])
         if isinstance(item, str) and item in valid_ids
     ]
+
     merged = list(dict.fromkeys(existing + requested))
 
-    # Calculate progress on the server; do not trust the client's percentage.
+    # Calculate progress on the server rather than trusting client percentages.
     calculated_progress = (
         round((len(merged) / len(lessons)) * 100)
         if lessons
@@ -635,11 +1031,15 @@ def upsert_progress(
     )
 
     record.viewed_sections = merged
-    record.progress = max(int(record.progress or 0), calculated_progress)
+    record.progress = max(
+        int(record.progress or 0),
+        calculated_progress,
+    )
 
     if lessons and len(merged) == len(lessons):
         record.progress = 100
         record.completed = True
+
         if record.completed_at is None:
             record.completed_at = datetime.utcnow()
 
