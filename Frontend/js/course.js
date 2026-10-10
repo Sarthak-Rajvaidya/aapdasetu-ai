@@ -1,5 +1,9 @@
 
-/* AapdaSetu AI — Course Details, Lessons and Knowledge Quiz */
+/* ============================================================
+   AapdaSetu AI — Course Details, Lessons & Knowledge Quiz
+   File: Frontend/course.js
+   ============================================================ */
+
 (() => {
     "use strict";
 
@@ -8,6 +12,8 @@
     let course = null;
     let viewed = new Set();
     let saving = false;
+
+    /* -------------------- Utilities -------------------- */
 
     const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({
         "&": "&amp;",
@@ -51,7 +57,360 @@
         setHidden("courseError", true);
     }
 
-    /* -------------------- API -------------------- */
+    function categoryLabel(value) {
+        const labels = {
+            earthquake: "Earthquake Safety",
+            flood: "Flood Preparedness",
+            cyclone: "Cyclone Preparedness",
+            wildfire: "Wildfire Safety",
+            tornado: "Tornado Safety"
+        };
+
+        const key = String(value || "general").toLowerCase();
+        return labels[key] || key.replace(/[-_]/g, " ");
+    }
+
+    /* -------------------- Dark Theme Fix -------------------- */
+
+    function injectCourseStyles() {
+        if ($("aapda-course-enhanced-styles")) return;
+
+        const style = document.createElement("style");
+        style.id = "aapda-course-enhanced-styles";
+
+        style.textContent = `
+            /* Main lesson cards: prevent white cards with pale text */
+            #lessonList {
+                display: grid;
+                gap: 24px;
+                min-width: 0;
+            }
+
+            #lessonList .lesson-card,
+            #lessonList .course-state {
+                box-sizing: border-box;
+                min-width: 0;
+                padding: clamp(18px, 3vw, 30px);
+                color: #e5edf8 !important;
+                background: #101e32 !important;
+                border: 1px solid #263b55 !important;
+                border-radius: 18px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+            }
+
+            #lessonList .lesson-card h2,
+            #lessonList .lesson-card h3,
+            #lessonList .lesson-card h4,
+            #lessonList .lesson-card legend,
+            #lessonList .course-state h3 {
+                color: #f8fafc !important;
+                opacity: 1 !important;
+                line-height: 1.5;
+            }
+
+            #lessonList .lesson-card p,
+            #lessonList .lesson-card li,
+            #lessonList .lesson-card label,
+            #lessonList .lesson-card .lesson-description,
+            #lessonList .course-state p {
+                color: #cbd5e1 !important;
+                opacity: 1 !important;
+            }
+
+            #lessonList .lesson-card .lesson-card-heading {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+
+            #lessonList .lesson-number {
+                display: inline-block;
+                margin-bottom: 8px;
+                color: #5eead4 !important;
+                font-size: .8rem;
+                font-weight: 700;
+                letter-spacing: .07em;
+                text-transform: uppercase;
+            }
+
+            #lessonList .lesson-duration {
+                flex-shrink: 0;
+                padding: 6px 10px;
+                color: #cbd5e1 !important;
+                background: #1e3048 !important;
+                border-radius: 999px;
+                font-size: .82rem;
+            }
+
+            #lessonList .lesson-reading-time {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+                margin: 16px 0 24px;
+                color: #94a3b8 !important;
+                font-size: .8rem;
+                letter-spacing: .05em;
+            }
+
+            #lessonList .lesson-section-kicker {
+                display: block;
+                margin-bottom: 8px;
+                color: #5eead4 !important;
+                font-size: .75rem;
+                font-weight: 700;
+                letter-spacing: .08em;
+            }
+
+            #lessonList .lesson-content-block {
+                max-width: 78ch;
+                margin: 26px 0;
+            }
+
+            #lessonList .lesson-content-block h4,
+            #lessonList .lesson-media-card h4,
+            #lessonList .lesson-action-heading {
+                margin: 0 0 10px;
+                color: #f1f5f9 !important;
+                font-size: 1.08rem;
+                line-height: 1.5;
+            }
+
+            #lessonList .lesson-content-block p,
+            #lessonList .lesson-takeaway p,
+            #lessonList .lesson-media-card p {
+                margin: 0;
+                color: #cbd5e1 !important;
+                font-size: 1rem;
+                line-height: 1.9;
+                white-space: pre-line;
+                overflow-wrap: anywhere;
+            }
+
+            #lessonList .lesson-takeaway {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                margin: 26px 0;
+                padding: 20px;
+                color: #dbeafe !important;
+                background: #172b46 !important;
+                border: 1px solid #2b4770 !important;
+                border-radius: 14px;
+            }
+
+            #lessonList .lesson-takeaway > i {
+                color: #93c5fd !important;
+                margin-top: 3px;
+            }
+
+            #lessonList .lesson-takeaway strong {
+                display: block;
+                margin-bottom: 8px;
+                color: #93c5fd !important;
+            }
+
+            #lessonList .lesson-action-list {
+                margin: 0 0 24px;
+                padding-left: 24px;
+            }
+
+            #lessonList .lesson-action-list li {
+                margin: 10px 0;
+                padding-left: 3px;
+                line-height: 1.8;
+            }
+
+            #lessonList .lesson-card > h4 {
+                margin-top: 24px;
+                color: #f8fafc !important;
+            }
+
+            #lessonList .lesson-media-card {
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+                margin: 26px 0;
+                padding: 20px;
+                background: #14243a !important;
+                border: 1px solid #33465e !important;
+                border-radius: 14px;
+            }
+
+            #lessonList .lesson-media-icon {
+                display: grid;
+                flex-shrink: 0;
+                width: 44px;
+                height: 44px;
+                place-items: center;
+                color: #5eead4 !important;
+                background: #1e3a4b !important;
+                border-radius: 12px;
+                font-size: 1.25rem;
+            }
+
+            #lessonList .lesson-resource-link {
+                display: inline-block;
+                margin-top: 12px;
+                color: #5eead4 !important;
+                font-weight: 700;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+
+            #lessonList .lesson-resource-link:hover {
+                color: #99f6e4 !important;
+            }
+
+            #lessonList .lesson-card .learn-btn {
+                margin-top: 12px;
+            }
+
+            #lessonList .lesson-card .learn-btn:disabled {
+                opacity: .85;
+                cursor: default;
+            }
+
+            /* Quiz */
+            #lessonList .quiz-question {
+                min-width: 0;
+                margin: 22px 0;
+                padding: 18px;
+                color: #e2e8f0 !important;
+                background: #132239 !important;
+                border: 1px solid #33465e !important;
+                border-radius: 14px;
+            }
+
+            #lessonList .quiz-question legend {
+                max-width: 100%;
+                padding: 0 6px;
+                font-weight: 700;
+                white-space: normal;
+            }
+
+            #lessonList .quiz-option {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                margin: 10px 0;
+                padding: 12px;
+                color: #e2e8f0 !important;
+                background: #14243a !important;
+                border: 1px solid #33465e !important;
+                border-radius: 10px;
+                cursor: pointer;
+                line-height: 1.7;
+            }
+
+            #lessonList .quiz-option:hover {
+                background: #1e334d !important;
+            }
+
+            #lessonList .quiz-option input {
+                flex-shrink: 0;
+                margin-top: 5px;
+                accent-color: #2dd4bf;
+            }
+
+            #lessonList .quiz-option span {
+                color: #e2e8f0 !important;
+            }
+
+            #lessonList .quiz-feedback {
+                margin-top: 14px;
+                padding: 16px;
+                border-radius: 12px;
+                line-height: 1.8;
+            }
+
+            #lessonList .quiz-feedback p {
+                margin: 8px 0 0;
+            }
+
+            #lessonList .quiz-feedback.correct {
+                color: #bbf7d0 !important;
+                background: #12352d !important;
+                border: 1px solid #26765d !important;
+            }
+
+            #lessonList .quiz-feedback.incorrect {
+                color: #fed7aa !important;
+                background: #3a281b !important;
+                border: 1px solid #92552a !important;
+            }
+
+            #lessonList .quiz-feedback small {
+                display: block;
+                margin-top: 8px;
+            }
+
+            #lessonList .quiz-score-line {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            #lessonList .quiz-score-icon {
+                color: #5eead4 !important;
+                font-size: 1.5rem;
+            }
+
+            #lessonList .quiz-score-line p {
+                margin: 8px 0 0;
+                color: #cbd5e1 !important;
+                line-height: 1.8;
+            }
+
+            #lessonList .quiz-overall-result {
+                margin-top: 20px;
+                padding: 18px;
+                color: #e2e8f0 !important;
+                background: #17263b !important;
+                border: 1px solid #33465e !important;
+                border-radius: 14px;
+                line-height: 1.8;
+            }
+
+            #lessonList .quiz-overall-result h4,
+            #lessonList .quiz-overall-result strong {
+                color: #f8fafc !important;
+            }
+
+            #lessonList .course-state p {
+                line-height: 1.8;
+            }
+
+            #lessonList button:focus-visible,
+            #lessonList a:focus-visible,
+            #lessonList input:focus-visible {
+                outline: 3px solid #2dd4bf;
+                outline-offset: 3px;
+            }
+
+            @media (max-width: 600px) {
+                #lessonList .lesson-card-heading {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                #lessonList .lesson-takeaway,
+                #lessonList .lesson-media-card {
+                    padding: 15px;
+                }
+
+                #lessonList .quiz-question {
+                    padding: 12px;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    /* -------------------- API Requests -------------------- */
 
     async function requestJSON(path, options = {}) {
         if (typeof window.apiFetch === "function") {
@@ -66,6 +425,7 @@
         if (token) headers.Authorization = `Bearer ${token}`;
 
         let body;
+
         if (options.body !== undefined) {
             headers["Content-Type"] = "application/json";
             body = JSON.stringify(options.body);
@@ -90,9 +450,11 @@
         if (!response.ok) {
             const message = data?.detail || data?.message ||
                 `Request failed (HTTP ${response.status}).`;
+
             const error = new Error(
                 typeof message === "string" ? message : JSON.stringify(message)
             );
+
             error.status = response.status;
             throw error;
         }
@@ -100,7 +462,7 @@
         return data;
     }
 
-    /* -------------------- Course Data -------------------- */
+    /* -------------------- Normalize Course -------------------- */
 
     function normalizeCourse(data) {
         const raw = data?.course ?? data?.data ?? data;
@@ -131,18 +493,7 @@
         };
     }
 
-    function categoryLabel(value) {
-        const labels = {
-            earthquake: "Earthquake Safety",
-            flood: "Flood Preparedness",
-            cyclone: "Cyclone Preparedness",
-            wildfire: "Wildfire Safety",
-            tornado: "Tornado Safety"
-        };
-
-        const key = String(value || "general").toLowerCase();
-        return labels[key] || key.replace(/[-_]/g, " ");
-    }
+    /* -------------------- Objectives -------------------- */
 
     function renderObjectives() {
         const element = $("courseObjectives");
@@ -161,428 +512,7 @@
         ).join("");
     }
 
-    /* -------------------- Sidebar: Videos & Quiz -------------------- */
-
-    function safeExternalURL(value) {
-        try {
-            const url = new URL(String(value || ""), window.location.href);
-
-            if (url.protocol !== "https:" && url.protocol !== "http:") {
-                return "";
-            }
-
-            return url.href;
-        } catch {
-            return "";
-        }
-    }
-
-    function renderSidebarLearningExtras() {
-        const objectives = $("courseObjectives");
-        if (!objectives || !course) return;
-
-        // Remove an old sidebar before rebuilding it.
-        $("courseSidebarExtras")?.remove();
-
-        const mediaLessons = course.lessons
-            .filter(lesson =>
-                lesson.media &&
-                lesson.media.url &&
-                safeExternalURL(lesson.media.url)
-            )
-            .slice(0, 3);
-
-        const videoItems = mediaLessons.map(lesson => {
-            const url = safeExternalURL(lesson.media.url);
-            const isVideo = lesson.media.type === "video";
-
-            return `
-                <a
-                    class="sidebar-video-item"
-                    href="${escapeHTML(url)}"
-                    target="_blank"
-                    rel="noopener noreferrer">
-
-                    <span class="sidebar-play">
-                        <i class="bi ${isVideo ? "bi-play-fill" : "bi-shield-check"}"
-                           aria-hidden="true"></i>
-                    </span>
-
-                    <span class="sidebar-video-copy">
-                        <strong>
-                            ${escapeHTML(
-                                lesson.media.title ||
-                                lesson.title ||
-                                "Safety resource"
-                            )}
-                        </strong>
-                        <small>
-                            ${escapeHTML(lesson.title || "Course resource")}
-                        </small>
-                    </span>
-
-                    <i class="bi bi-arrow-up-right sidebar-external-icon"
-                       aria-hidden="true"></i>
-                </a>
-            `;
-        }).join("");
-
-        const fallbackResources = course.slug === "cyclone"
-            ? `
-                <a class="sidebar-video-item"
-                   href="https://mausam.imd.gov.in/imd_latest/contents/cyclone.php"
-                   target="_blank"
-                   rel="noopener noreferrer">
-
-                    <span class="sidebar-play">
-                        <i class="bi bi-cloud-lightning-rain"
-                           aria-hidden="true"></i>
-                    </span>
-
-                    <span class="sidebar-video-copy">
-                        <strong>Official cyclone updates</strong>
-                        <small>India Meteorological Department</small>
-                    </span>
-
-                    <i class="bi bi-arrow-up-right sidebar-external-icon"
-                       aria-hidden="true"></i>
-                </a>
-
-                <a class="sidebar-video-item"
-                   href="https://sachet.ndma.gov.in/DosDont"
-                   target="_blank"
-                   rel="noopener noreferrer">
-
-                    <span class="sidebar-play">
-                        <i class="bi bi-broadcast" aria-hidden="true"></i>
-                    </span>
-
-                    <span class="sidebar-video-copy">
-                        <strong>Alerts &amp; safety guidance</strong>
-                        <small>NDMA SACHET</small>
-                    </span>
-
-                    <i class="bi bi-arrow-up-right sidebar-external-icon"
-                       aria-hidden="true"></i>
-                </a>
-            `
-            : `
-                <a class="sidebar-video-item"
-                   href="https://sachet.ndma.gov.in/DosDont"
-                   target="_blank"
-                   rel="noopener noreferrer">
-
-                    <span class="sidebar-play">
-                        <i class="bi bi-shield-check" aria-hidden="true"></i>
-                    </span>
-
-                    <span class="sidebar-video-copy">
-                        <strong>Official safety guidance</strong>
-                        <small>NDMA SACHET</small>
-                    </span>
-
-                    <i class="bi bi-arrow-up-right sidebar-external-icon"
-                       aria-hidden="true"></i>
-                </a>
-            `;
-
-        const extras = document.createElement("div");
-        extras.id = "courseSidebarExtras";
-
-        extras.innerHTML = `
-            <section class="sidebar-learning-card">
-                <div class="sidebar-learning-heading">
-                    <span class="sidebar-learning-icon video-icon">
-                        <i class="bi bi-play-circle-fill"
-                           aria-hidden="true"></i>
-                    </span>
-
-                    <div>
-                        <h3>Videos &amp; Resources</h3>
-                        <p>Learn with trusted visual guides</p>
-                    </div>
-                </div>
-
-                <div class="sidebar-video-list">
-                    ${videoItems || fallbackResources}
-                </div>
-            </section>
-
-            <section class="sidebar-learning-card sidebar-quiz-card">
-                <div class="sidebar-learning-heading">
-                    <span class="sidebar-learning-icon quiz-icon">
-                        <i class="bi bi-patch-question-fill"
-                           aria-hidden="true"></i>
-                    </span>
-
-                    <div>
-                        <h3>Test Your Knowledge</h3>
-                        <p>Review what you have learned</p>
-                    </div>
-                </div>
-
-                <div class="sidebar-quiz-summary">
-                    <div class="sidebar-quiz-stat">
-                        <strong>${course.quiz.length}</strong>
-                        <span>Questions</span>
-                    </div>
-
-                    <div class="sidebar-quiz-stat">
-                        <strong>${course.lessons.length}</strong>
-                        <span>Lessons</span>
-                    </div>
-                </div>
-
-                <button
-                    type="button"
-                    class="sidebar-quiz-button"
-                    id="sidebarStartQuiz"
-                    ${course.quiz.length ? "" : "disabled"}>
-
-                    Start knowledge quiz
-                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                </button>
-
-                <p class="sidebar-quiz-note">
-                    Get feedback and explanations after submitting your answers.
-                </p>
-            </section>
-        `;
-
-        // Place videos and quiz directly under "What you'll learn".
-        objectives.insertAdjacentElement("afterend", extras);
-
-        $("sidebarStartQuiz")?.addEventListener("click", () => {
-            const quiz = $("courseKnowledgeQuiz");
-
-            if (quiz) {
-                quiz.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            } else {
-                $("lessonList")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            }
-        });
-
-        injectSidebarLearningStyles();
-    }
-
-    function injectSidebarLearningStyles() {
-        if ($("aapda-sidebar-learning-styles")) return;
-
-        const style = document.createElement("style");
-        style.id = "aapda-sidebar-learning-styles";
-
-        style.textContent = `
-            #courseSidebarExtras {
-                display: grid;
-                gap: 16px;
-                margin-top: 22px;
-                width: 100%;
-                min-width: 0;
-            }
-
-            #courseSidebarExtras .sidebar-learning-card {
-                box-sizing: border-box;
-                min-width: 0;
-                padding: 18px;
-                color: #e2e8f0;
-                background: linear-gradient(145deg, #12243a, #0d1b2e);
-                border: 1px solid #263b55;
-                border-radius: 16px;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
-            }
-
-            #courseSidebarExtras .sidebar-learning-heading {
-                display: flex;
-                align-items: center;
-                gap: 11px;
-                margin-bottom: 15px;
-            }
-
-            #courseSidebarExtras .sidebar-learning-icon {
-                display: grid;
-                place-items: center;
-                flex-shrink: 0;
-                width: 40px;
-                height: 40px;
-                border-radius: 12px;
-                font-size: 1.1rem;
-            }
-
-            #courseSidebarExtras .video-icon {
-                color: #67e8f9;
-                background: #123846;
-            }
-
-            #courseSidebarExtras .quiz-icon {
-                color: #c4b5fd;
-                background: #2b2450;
-            }
-
-            #courseSidebarExtras h3 {
-                margin: 0 0 4px;
-                color: #f8fafc;
-                font-size: 1rem;
-                font-weight: 700;
-                line-height: 1.4;
-            }
-
-            #courseSidebarExtras .sidebar-learning-heading p {
-                margin: 0;
-                color: #94a3b8;
-                font-size: .8rem;
-                line-height: 1.5;
-            }
-
-            #courseSidebarExtras .sidebar-video-list {
-                display: grid;
-                gap: 9px;
-            }
-
-            #courseSidebarExtras .sidebar-video-item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                min-width: 0;
-                padding: 11px;
-                color: #e2e8f0;
-                background: #14263d;
-                border: 1px solid #263b55;
-                border-radius: 11px;
-                text-decoration: none;
-                transition: background .2s, border-color .2s;
-            }
-
-            #courseSidebarExtras .sidebar-video-item:hover {
-                color: #f8fafc;
-                background: #1a304b;
-                border-color: #3b7187;
-            }
-
-            #courseSidebarExtras .sidebar-play {
-                display: grid;
-                place-items: center;
-                flex-shrink: 0;
-                width: 32px;
-                height: 32px;
-                color: #67e8f9;
-                background: #123846;
-                border-radius: 9px;
-            }
-
-            #courseSidebarExtras .sidebar-video-copy {
-                display: grid;
-                gap: 3px;
-                flex: 1;
-                min-width: 0;
-            }
-
-            #courseSidebarExtras .sidebar-video-copy strong {
-                color: #eaf2ff;
-                font-size: .82rem;
-                line-height: 1.45;
-                overflow-wrap: anywhere;
-            }
-
-            #courseSidebarExtras .sidebar-video-copy small {
-                color: #94a3b8;
-                font-size: .73rem;
-                line-height: 1.4;
-            }
-
-            #courseSidebarExtras .sidebar-external-icon {
-                flex-shrink: 0;
-                color: #64748b;
-                font-size: .8rem;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-card {
-                background: linear-gradient(145deg, #171d3b, #111b30);
-                border-color: #33385e;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-summary {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
-                margin: 14px 0;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-stat {
-                display: grid;
-                gap: 5px;
-                padding: 12px 10px;
-                background: #172641;
-                border: 1px solid #2c3c5b;
-                border-radius: 11px;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-stat strong {
-                color: #c4b5fd;
-                font-size: 1.3rem;
-                line-height: 1.2;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-stat span {
-                color: #a5b4cc;
-                font-size: .76rem;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-button {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-                width: 100%;
-                padding: 12px 14px;
-                color: #081522;
-                background: linear-gradient(100deg, #67e8f9, #5eead4);
-                border: 0;
-                border-radius: 10px;
-                font: inherit;
-                font-size: .85rem;
-                font-weight: 700;
-                cursor: pointer;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-button:hover:not(:disabled) {
-                filter: brightness(1.06);
-            }
-
-            #courseSidebarExtras .sidebar-quiz-button:disabled {
-                opacity: .5;
-                cursor: not-allowed;
-            }
-
-            #courseSidebarExtras .sidebar-quiz-note {
-                margin: 10px 0 0;
-                color: #94a3b8;
-                font-size: .76rem;
-                line-height: 1.6;
-            }
-
-            @media (max-width: 900px) {
-                #courseSidebarExtras {
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                }
-            }
-
-            @media (max-width: 560px) {
-                #courseSidebarExtras {
-                    grid-template-columns: minmax(0, 1fr);
-                }
-            }
-        `;
-
-        document.head.appendChild(style);
-    }
-
-    /* -------------------- Quiz -------------------- */
+    /* -------------------- Quiz Rendering -------------------- */
 
     function renderQuiz() {
         if (!course.quiz.length) {
@@ -597,48 +527,248 @@
         return `
             <section
                 class="lesson-card course-quiz"
-                id="courseKnowledgeQuiz">
+                id="courseKnowledgeQuiz"
+                aria-labelledby="courseQuizHeading">
 
-                <h3>Knowledge check</h3>
-                <p>Answer the following questions to review what you learned.</p>
+                <h3 id="courseQuizHeading">Knowledge check</h3>
+                <p>Answer each question to review what you learned.</p>
 
                 <form id="courseQuizForm">
                     ${course.quiz.map((question, index) => `
                         <fieldset class="quiz-question mb-4">
                             <legend>
-                                ${index + 1}. ${escapeHTML(question.question)}
+                                ${index + 1}. ${escapeHTML(question.question || "Question")}
                             </legend>
 
-                            ${(question.options || []).map((option, optionIndex) => `
-                                <label class="quiz-option d-block mb-2">
-                                    <input
-                                        type="radio"
-                                        name="question-${index}"
-                                        value="${optionIndex}"
-                                        required
-                                    >
-                                    ${escapeHTML(option)}
-                                </label>
-                            `).join("")}
+                            ${(Array.isArray(question.options) ? question.options : [])
+                                .map((option, optionIndex) => `
+                                    <label class="quiz-option d-block mb-2">
+                                        <input
+                                            type="radio"
+                                            name="question-${index}"
+                                            value="${optionIndex}"
+                                            required>
+                                        <span>${escapeHTML(option)}</span>
+                                    </label>
+                                `).join("")}
+
+                            <div
+                                class="quiz-feedback"
+                                id="quizFeedback-${index}"
+                                aria-live="polite"
+                                hidden>
+                            </div>
                         </fieldset>
                     `).join("")}
 
-                    <button class="learn-btn learn-btn-primary" type="submit">
+                    <button
+                        class="learn-btn learn-btn-primary"
+                        id="courseQuizSubmit"
+                        type="submit">
                         Check answers
+                    </button>
+
+                    <button
+                        class="learn-btn learn-btn-secondary"
+                        id="courseQuizRetry"
+                        type="button"
+                        hidden>
+                        Try again
                     </button>
                 </form>
 
                 <div
                     id="courseQuizResult"
-                    class="mt-3"
+                    class="quiz-overall-result mt-3"
                     role="status"
+                    aria-live="polite"
                     hidden>
                 </div>
             </section>
         `;
     }
 
-    /* -------------------- Lessons -------------------- */
+    function attachQuizHandlers() {
+        const quizForm = $("courseQuizForm");
+        if (quizForm) quizForm.addEventListener("submit", gradeQuiz);
+
+        const retryButton = $("courseQuizRetry");
+        if (retryButton) retryButton.addEventListener("click", retryQuiz);
+    }
+
+    function gradeQuiz(event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        if (!form.reportValidity()) return;
+
+        let correct = 0;
+        const total = course.quiz.length;
+
+        course.quiz.forEach((question, index) => {
+            const selected = form.querySelector(
+                `input[name="question-${index}"]:checked`
+            );
+
+            const feedback = $(`quizFeedback-${index}`);
+            if (!selected || !feedback) return;
+
+            const selectedIndex = Number(selected.value);
+            const correctIndex = Number(question.correct_index);
+            const isCorrect = selectedIndex === correctIndex;
+
+            if (isCorrect) correct++;
+
+            const options = Array.isArray(question.options)
+                ? question.options
+                : [];
+
+            feedback.hidden = false;
+            feedback.className =
+                `quiz-feedback ${isCorrect ? "correct" : "incorrect"}`;
+
+            feedback.innerHTML = `
+                <strong>
+                    ${isCorrect ? "✓ Correct answer!" : "✗ Incorrect answer"}
+                </strong>
+                <p>
+                    <strong>Your answer:</strong>
+                    ${escapeHTML(options[selectedIndex] ?? "No answer")}
+                </p>
+                <p>
+                    <strong>Correct answer:</strong>
+                    ${escapeHTML(options[correctIndex] ?? "Not provided")}
+                </p>
+                <p>
+                    <strong>Explanation:</strong>
+                    ${escapeHTML(
+                        question.explanation ||
+                        "Review the related lesson to reinforce this concept."
+                    )}
+                </p>
+                ${question.topic
+                    ? `<small><strong>Topic:</strong> ${escapeHTML(question.topic)}</small>`
+                    : ""}
+            `;
+        });
+
+        const score = total ? Math.round(correct / total * 100) : 0;
+        const result = $("courseQuizResult");
+
+        if (result) {
+            result.hidden = false;
+            result.innerHTML = `
+                <div class="quiz-score-line">
+                    <span class="quiz-score-icon">
+                        <i class="bi ${score >= 70 ? "bi-check2-circle" : "bi-arrow-repeat"}"></i>
+                    </span>
+                    <div>
+                        <strong>Your score: ${score}% (${correct}/${total})</strong>
+                        <p>
+                            ${score >= 80
+                                ? "Excellent work! Keep reviewing these safety actions so you can recall them during an emergency."
+                                : score >= 70
+                                    ? "Good work! Review the explanations for any questions you missed."
+                                    : "Review the field guides and explanations, then try the quiz again."}
+                        </p>
+                        <p>
+                            This knowledge check is educational and does not replace
+                            current official emergency instructions.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        form.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.disabled = true;
+        });
+
+        const submitButton = $("courseQuizSubmit");
+        if (submitButton) submitButton.hidden = true;
+
+        const retryButton = $("courseQuizRetry");
+        if (retryButton) retryButton.hidden = false;
+    }
+
+    function retryQuiz() {
+        const form = $("courseQuizForm");
+        if (!form) return;
+
+        form.reset();
+
+        form.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.disabled = false;
+        });
+
+        course.quiz.forEach((_, index) => {
+            const feedback = $(`quizFeedback-${index}`);
+            if (feedback) {
+                feedback.hidden = true;
+                feedback.innerHTML = "";
+            }
+        });
+
+        const result = $("courseQuizResult");
+        if (result) {
+            result.hidden = true;
+            result.innerHTML = "";
+        }
+
+        const submitButton = $("courseQuizSubmit");
+        if (submitButton) submitButton.hidden = false;
+
+        const retryButton = $("courseQuizRetry");
+        if (retryButton) retryButton.hidden = true;
+    }
+
+    /* -------------------- Lesson Media -------------------- */
+
+    function safeExternalURL(value) {
+        try {
+            const url = new URL(String(value || ""));
+            if (url.protocol !== "https:" && url.protocol !== "http:") {
+                return "";
+            }
+            return url.href;
+        } catch {
+            return "";
+        }
+    }
+
+    function renderLessonMedia(media) {
+        if (!media || !media.url) return "";
+
+        const url = safeExternalURL(media.url);
+        if (!url) return "";
+
+        const isVideo = media.type === "video";
+
+        return `
+            <aside class="lesson-media-card">
+                <div class="lesson-media-icon">
+                    <i class="bi ${isVideo ? "bi-play-circle-fill" : "bi-shield-check"}"></i>
+                </div>
+                <div class="lesson-media-copy">
+                    <span class="lesson-section-kicker">
+                        ${isVideo ? "WATCH & LEARN" : "OFFICIAL RESOURCE"}
+                    </span>
+                    <h4>${escapeHTML(media.title || "Recommended resource")}</h4>
+                    <p>${escapeHTML(media.source || "Trusted disaster-preparedness resource")}</p>
+                    <a
+                        class="lesson-resource-link"
+                        href="${escapeHTML(url)}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        ${isVideo ? "Watch video" : "Open official resource"}
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </aside>
+        `;
+    }
+
+    /* -------------------- Render Lessons -------------------- */
 
     function renderLessons() {
         const container = $("lessonList");
@@ -655,7 +785,8 @@
                 </div>
                 ${renderQuiz()}
             `;
-            attachQuizHandler();
+
+            attachQuizHandlers();
             return;
         }
 
@@ -675,51 +806,9 @@
                 </section>
             `).join("");
 
-            const mediaURL = safeExternalURL(lesson.media?.url);
-
-            const media = lesson.media && mediaURL ? `
-                <aside class="lesson-media-card">
-                    <div class="lesson-media-icon">
-                        <i class="bi ${
-                            lesson.media.type === "video"
-                                ? "bi-play-circle-fill"
-                                : "bi-shield-check"
-                        }"></i>
-                    </div>
-
-                    <div class="lesson-media-copy">
-                        <span class="lesson-section-kicker">
-                            ${lesson.media.type === "video"
-                                ? "WATCH & LEARN"
-                                : "OFFICIAL RESOURCE"}
-                        </span>
-
-                        <h4>${escapeHTML(
-                            lesson.media.title || "Recommended resource"
-                        )}</h4>
-
-                        <p>${escapeHTML(
-                            lesson.media.source ||
-                            "Trusted disaster-preparedness resource"
-                        )}</p>
-
-                        <a
-                            class="lesson-resource-link"
-                            href="${escapeHTML(mediaURL)}"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                            ${lesson.media.type === "video"
-                                ? "Watch video"
-                                : "Open official resource"}
-                            <i class="bi bi-arrow-up-right"></i>
-                        </a>
-                    </div>
-                </aside>
-            ` : "";
-
             const takeaway = lesson.takeaway ? `
                 <aside class="lesson-takeaway">
-                    <i class="bi bi-lightbulb-fill"></i>
+                    <i class="bi bi-lightbulb-fill" aria-hidden="true"></i>
                     <div>
                         <strong>Remember this</strong>
                         <p>${escapeHTML(lesson.takeaway)}</p>
@@ -729,21 +818,31 @@
 
             const actions = (lesson.key_actions || []).length
                 ? `
-                    <h4>Key safety actions</h4>
-                    <ul class="lesson-action-list">
-                        ${lesson.key_actions.map(action =>
-                            `<li>${escapeHTML(action)}</li>`
-                        ).join("")}
-                    </ul>
+                    <section class="lesson-action-panel">
+                        <h4 class="lesson-action-heading">Key safety actions</h4>
+                        <ul class="lesson-action-list">
+                            ${lesson.key_actions.map(action =>
+                                `<li>${escapeHTML(action)}</li>`
+                            ).join("")}
+                        </ul>
+                    </section>
                 `
                 : "";
 
+            const media = renderLessonMedia(lesson.media);
+
             return `
-                <article class="lesson-card" id="lesson-${index + 1}">
+                <article
+                    class="lesson-card"
+                    id="lesson-${index + 1}"
+                    aria-labelledby="lesson-title-${index + 1}">
+
                     <div class="lesson-card-heading">
                         <div>
                             <span class="lesson-number">Lesson ${index + 1}</span>
-                            <h3>${escapeHTML(lesson.title)}</h3>
+                            <h3 id="lesson-title-${index + 1}">
+                                ${escapeHTML(lesson.title || `Lesson ${index + 1}`)}
+                            </h3>
                         </div>
 
                         <span class="lesson-duration">
@@ -752,27 +851,28 @@
                     </div>
 
                     <div class="lesson-reading-time">
-                        <i class="bi bi-book-half"></i>
+                        <i class="bi bi-book-half" aria-hidden="true"></i>
                         FIELD GUIDE
                         <span>•</span>
                         ${Math.max(2, (lesson.content || []).length * 2)} min read
                     </div>
 
-                    ${sections}
+                    ${sections || `
+                        <p class="lesson-description">
+                            Detailed lesson content is not available yet.
+                        </p>
+                    `}
+
                     ${takeaway}
                     ${media}
                     ${actions}
 
                     <button
                         type="button"
-                        class="learn-btn ${
-                            complete
-                                ? "learn-btn-secondary"
-                                : "learn-btn-primary"
-                        }"
+                        class="learn-btn ${complete ? "learn-btn-secondary" : "learn-btn-primary"}"
                         data-complete-lesson="${escapeHTML(id)}"
                         ${complete ? "disabled" : ""}>
-                        ${complete ? "Lesson completed" : "Mark as completed"}
+                        ${complete ? "✓ Lesson completed" : "Mark as completed"}
                     </button>
                 </article>
             `;
@@ -784,18 +884,10 @@
             button.addEventListener("click", () => completeLesson(button));
         });
 
-        attachQuizHandler();
+        attachQuizHandlers();
     }
 
-    function attachQuizHandler() {
-        const quizForm = $("courseQuizForm");
-
-        if (quizForm) {
-            quizForm.addEventListener("submit", gradeQuiz);
-        }
-    }
-
-    /* -------------------- Save Lesson Progress -------------------- */
+    /* -------------------- Save Progress -------------------- */
 
     async function completeLesson(button) {
         if (saving) return;
@@ -812,12 +904,12 @@
 
         const nextViewed = [...next];
 
-        const validCount = nextViewed.filter(sectionId =>
+        const validCompletedCount = nextViewed.filter(sectionId =>
             course.lessons.some(lesson => String(lesson.id) === sectionId)
         ).length;
 
         const percentage = course.lessons.length
-            ? Math.round(validCount / course.lessons.length * 100)
+            ? Math.round(validCompletedCount / course.lessons.length * 100)
             : 0;
 
         try {
@@ -845,17 +937,27 @@
 
             course.completed = Boolean(result?.completed);
 
-            button.textContent = "Lesson completed";
-            button.classList.remove("learn-btn-primary");
-            button.classList.add("learn-btn-secondary");
-
+            // Refresh lesson state without reloading the page.
+            renderLessons();
             updateProgressDisplay();
+
+            if (typeof window.showToast === "function") {
+                window.showToast("Lesson progress saved.", "success");
+            }
         } catch (error) {
-            console.error("Progress save failed:", error);
+            console.error("[AapdaSetu Learn] Progress save failed:", error);
+
             button.disabled = false;
             button.textContent = "Retry completion";
 
-            alert(error.message || "Unable to save progress. Please try again.");
+            if (typeof window.showToast === "function") {
+                window.showToast(
+                    error.message || "Unable to save progress. Please try again.",
+                    "error"
+                );
+            } else {
+                alert(error.message || "Unable to save progress. Please try again.");
+            }
         } finally {
             saving = false;
         }
@@ -864,8 +966,9 @@
     /* -------------------- Progress Display -------------------- */
 
     function updateProgressDisplay() {
-        const total = course.lessons.length;
+        if (!course) return;
 
+        const total = course.lessons.length;
         const done = course.lessons.filter(lesson =>
             viewed.has(String(lesson.id))
         ).length;
@@ -874,6 +977,7 @@
             ? Math.round(done / total * 100)
             : 0;
 
+        // The completion percentage is derived from known lesson IDs.
         course.progress = percentage;
 
         setText("courseProgressPercent", `${percentage}%`);
@@ -911,100 +1015,6 @@
         }
     }
 
-    /* -------------------- Quiz Scoring -------------------- */
-
-    function gradeQuiz(event) {
-        event.preventDefault();
-
-        const form = event.currentTarget;
-
-        if (!form.reportValidity()) return;
-
-        let correct = 0;
-
-        course.quiz.forEach((question, index) => {
-            const selected = form.querySelector(
-                `input[name="question-${index}"]:checked`
-            );
-
-            const selectedIndex = selected ? Number(selected.value) : -1;
-            const correctIndex = Number(question.correct_index);
-            const isCorrect = selectedIndex === correctIndex;
-
-            if (isCorrect) correct++;
-
-            // Display explanations when the backend provides them.
-            const fieldset = form.querySelectorAll("fieldset")[index];
-            if (!fieldset) return;
-
-            let feedback = fieldset.querySelector(".quiz-feedback");
-
-            if (!feedback) {
-                feedback = document.createElement("div");
-                feedback.className = "quiz-feedback";
-                feedback.setAttribute("aria-live", "polite");
-                fieldset.appendChild(feedback);
-            }
-
-            const options = Array.isArray(question.options)
-                ? question.options
-                : [];
-
-            feedback.className =
-                `quiz-feedback ${isCorrect ? "correct" : "incorrect"}`;
-
-            feedback.innerHTML = `
-                <strong>${isCorrect ? "✓ Correct answer" : "✗ Incorrect answer"}</strong>
-                <p>
-                    <strong>Correct answer:</strong>
-                    ${escapeHTML(options[correctIndex] ?? "Not provided")}
-                </p>
-                <p>
-                    <strong>Explanation:</strong>
-                    ${escapeHTML(
-                        question.explanation ||
-                        "Review the related lesson to reinforce this concept."
-                    )}
-                </p>
-            `;
-        });
-
-        const total = course.quiz.length;
-        const score = total ? Math.round(correct / total * 100) : 0;
-        const result = $("courseQuizResult");
-
-        if (!result) return;
-
-        result.hidden = false;
-        result.innerHTML = `
-            <div class="quiz-score-line">
-                <span class="quiz-score-icon">
-                    <i class="bi ${
-                        score >= 70
-                            ? "bi-check2-circle"
-                            : "bi-arrow-repeat"
-                    }"></i>
-                </span>
-
-                <div>
-                    <strong>Your score: ${score}% (${correct}/${total})</strong>
-                    <p>
-                        ${score >= 70
-                            ? "Good work! Review any explanations for questions you missed."
-                            : "Review the field guides and try again. In a real emergency, follow current official instructions."}
-                    </p>
-                </div>
-            </div>
-        `;
-
-        form.querySelectorAll('input[type="radio"]').forEach(input => {
-            input.disabled = true;
-        });
-
-        const submitButton = form.querySelector('button[type="submit"]');
-        if (submitButton) submitButton.disabled = true;
-    }
-
     /* -------------------- Official Resources -------------------- */
 
     function renderOfficialResources() {
@@ -1031,8 +1041,7 @@
             <div class="official-resource-grid">
                 <a class="official-resource"
                    href="https://mausam.imd.gov.in/imd_latest/contents/cyclone.php"
-                   target="_blank"
-                   rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer">
                     <span class="official-resource-icon">
                         <i class="bi bi-cloud-lightning-rain"></i>
                     </span>
@@ -1045,8 +1054,7 @@
 
                 <a class="official-resource"
                    href="https://sachet.ndma.gov.in/DosDont"
-                   target="_blank"
-                   rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer">
                     <span class="official-resource-icon">
                         <i class="bi bi-broadcast"></i>
                     </span>
@@ -1059,8 +1067,7 @@
 
                 <a class="official-resource"
                    href="https://www.youtube.com/watch?v=B9qR2e3xyJo"
-                   target="_blank"
-                   rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer">
                     <span class="official-resource-icon">
                         <i class="bi bi-play-circle"></i>
                     </span>
@@ -1104,14 +1111,7 @@
         renderObjectives();
         renderLessons();
         renderOfficialResources();
-
-        // New sidebar cards appear beneath "What you'll learn".
-        renderSidebarLearningExtras();
-
         updateProgressDisplay();
-
-        const resume = $("resumeCourse");
-        if (resume) resume.href = "#lessonList";
 
         setHidden("courseLoading", true);
         setHidden("courseError", true);
@@ -1145,6 +1145,7 @@
                 )
             );
 
+            injectCourseStyles();
             renderCourse();
         } catch (error) {
             console.error("[AapdaSetu Learn] Course loading failed:", error);
@@ -1170,7 +1171,7 @@
 
         if (!$("courseLoading") || !$("courseContent") || !$("courseError")) {
             console.error(
-                "Course page is missing required loading/content/error elements."
+                "[AapdaSetu Learn] Course page is missing required loading/content/error elements."
             );
             return;
         }
