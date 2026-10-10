@@ -1225,7 +1225,9 @@ function arrangeCourseLayout() {
         renderObjectives();
         renderLessons();
         renderOfficialResources();
+        arrangeCourseLayout();
         updateProgressDisplay();
+
 
         setHidden("courseLoading", true);
         setHidden("courseError", true);
