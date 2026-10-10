@@ -1081,6 +1081,120 @@
         `;
     }
 
+    
+/* -------------------- Full-width Course Layout -------------------- */
+
+function arrangeCourseLayout() {
+    const lessonSection = $("courseLessons");
+    const objectives = $("courseObjectives");
+
+    if (!lessonSection || !objectives) return;
+
+    // Find the sidebar that contains "What you'll learn".
+    const sidebar = objectives.closest("aside");
+    if (!sidebar) return;
+
+    // Find the original Bootstrap row containing the syllabus and sidebar.
+    const layoutRow = lessonSection.closest(".row");
+
+    // Move the objectives card above the syllabus row.
+    if (layoutRow && sidebar.parentElement !== layoutRow.parentElement) {
+        layoutRow.parentElement.insertBefore(sidebar, layoutRow);
+    } else if (layoutRow && sidebar.parentElement === layoutRow) {
+        layoutRow.parentElement.insertBefore(sidebar, layoutRow);
+    }
+
+    // Make the objectives card use the full width.
+    sidebar.style.width = "100%";
+    sidebar.style.maxWidth = "100%";
+    sidebar.style.marginBottom = "24px";
+
+    // Remove the old two-column layout.
+    if (layoutRow) {
+        layoutRow.style.display = "block";
+        layoutRow.style.width = "100%";
+        layoutRow.style.marginLeft = "0";
+        layoutRow.style.marginRight = "0";
+    }
+
+    // Expand the syllabus column to full width.
+    const syllabusColumn = lessonSection.closest('[class*="col-"]');
+
+    if (syllabusColumn) {
+        syllabusColumn.style.width = "100%";
+        syllabusColumn.style.maxWidth = "100%";
+        syllabusColumn.style.flex = "0 0 100%";
+        syllabusColumn.style.paddingLeft = "0";
+        syllabusColumn.style.paddingRight = "0";
+    }
+
+    // Ensure the lesson section itself fills the available space.
+    lessonSection.style.width = "100%";
+    lessonSection.style.maxWidth = "100%";
+    lessonSection.style.boxSizing = "border-box";
+
+    // Remove the sidebar's extra learning-tip content to avoid a large,
+    // mostly empty card after moving the objectives.
+    const headings = [...sidebar.querySelectorAll("h2, h3, h4")];
+
+    const learningTipHeading = headings.find(heading =>
+        heading.textContent.trim().toLowerCase() === "learning tip"
+    );
+
+    if (learningTipHeading) {
+        const divider = learningTipHeading.previousElementSibling;
+
+        learningTipHeading.remove();
+        divider?.remove();
+
+        const next = sidebar.querySelector(".course-muted.mb-0");
+        next?.remove();
+    }
+
+    // Give the objectives card the same dark visual theme.
+    sidebar.style.background = "#0d1b2e";
+    sidebar.style.border = "1px solid #263b55";
+    sidebar.style.borderRadius = "16px";
+    sidebar.style.padding = "24px";
+    sidebar.style.boxSizing = "border-box";
+
+    if (!$("aapda-full-width-layout-styles")) {
+        const style = document.createElement("style");
+        style.id = "aapda-full-width-layout-styles";
+
+        style.textContent = `
+            #courseContent .course-panel {
+                box-sizing: border-box;
+            }
+
+            #courseContent #courseLessons {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            #courseContent #lessonList {
+                width: 100%;
+                min-width: 0;
+            }
+
+            #courseContent #lessonList .lesson-card {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            @media (max-width: 767px) {
+                #courseContent .course-panel {
+                    padding: 18px;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+}
+
+
     /* -------------------- Render Course -------------------- */
 
     function renderCourse() {
