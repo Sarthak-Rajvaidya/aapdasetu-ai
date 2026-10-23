@@ -5,6 +5,7 @@ Keep the existing authentication dependency and progress database models.
 Lesson IDs are stable because saved progress refers to these IDs.
 """
 
+from collections import Counter
 from datetime import datetime
 from threading import Lock
 
@@ -1021,11 +1022,8 @@ LESSONS = {
 # ---------------------------------------------------------------------------
 # Quizzes
 #
-# correct_index is retained for compatibility with the existing frontend.
-# Explanations are returned for useful learning feedback.
-#
-# For a public certification exam, move answer keys to a server-side grading
-# endpoint so the browser never receives the correct answers in advance.
+# Answer keys are server-only. The course endpoint returns only questions and
+# options; submissions are graded here and stored as quiz attempts.
 # ---------------------------------------------------------------------------
 
 def _q(question, options, correct_index, explanation, topic):
@@ -1605,7 +1603,14 @@ def get_course(
     return {
         **_course_summary(course, progress),
         "lessons": lessons,
-        "quiz": QUIZZES.get(course.slug, []),
+        "quiz": [
+            {
+                "question": question["question"],
+                "options": list(question["options"]),
+                "topic": question.get("topic", "general"),
+            }
+            for question in QUIZZES.get(course.slug, [])
+        ],
         "objectives": objectives,
         "resources": (
             [IMD_CYCLONE_RESOURCE, NDMA_ALERT_RESOURCE]
@@ -1613,6 +1618,105 @@ def get_course(
             else []
         ),
     }
+
+
+@router.post("/{slug}/quiz/submit", response_model=schemas.QuizResultOut)
+def submit_course_quiz(
+    slug: str,
+    payload: schemas.QuizSubmission,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """Grade the course quiz server-side and persist the attempt."""
+    course = _get_course_or_404(slug, db)
+    questions = QUIZZES.get(course.slug)
+    if not questions:
+        raise HTTPException(status_code=404, detail="Quiz not found for this course.")
+
+    total = len(questions)
+    if len(payload.answers) != total:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Submit exactly {total} answers for this quiz.",
+        )
+
+    if payload.time_taken_seconds < 0 or payload.time_taken_seconds > 86400:
+        raise HTTPException(
+            status_code=422,
+            detail="Quiz time must be between 0 and 86400 seconds.",
+        )
+
+    indexes = [answer.question_index for answer in payload.answers]
+    if len(set(indexes)) != total or set(indexes) != set(range(total)):
+        raise HTTPException(
+            status_code=422,
+            detail="Each quiz question must be answered exactly once.",
+        )
+
+    correct_count = 0
+    weak_topics = Counter()
+    for answer in payload.answers:
+        question = questions[answer.question_index]
+        if answer.selected_option < 0 or answer.selected_option >= len(question["options"]):
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid option for question {answer.question_index}.",
+            )
+        if answer.selected_option == question["correct_index"]:
+            correct_count += 1
+        else:
+            weak_topics[question.get("topic", "general")] += 1
+
+    score = round(100 * correct_count / total) if total else 0
+    quiz_record = (
+        db.query(models.Quiz)
+        .filter(models.Quiz.slug == f"{course.slug}-quiz")
+        .first()
+    )
+    if quiz_record is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Quiz storage is not configured for this course.",
+        )
+
+    attempt = models.QuizAttempt(
+        user_id=current_user.id,
+        quiz_id=quiz_record.id,
+        score=score,
+        correct_count=correct_count,
+        total_questions=total,
+        weak_topics=[topic for topic, _ in weak_topics.most_common()],
+        time_taken_seconds=payload.time_taken_seconds,
+    )
+    db.add(attempt)
+    db.commit()
+
+    # Achievement evaluation is intentionally best-effort only after the
+    # attempt is saved; it must not cause the saved result to be lost.
+    try:
+        from app.services.achievements import evaluate_achievements
+        evaluate_achievements(db, current_user)
+        db.commit()
+    except Exception:
+        db.rollback()
+
+    recommended = None
+    if score < 80:
+        recommended = {
+            "cyclone": "cyclone",
+            "earthquake": "earthquake",
+            "flood": "flood",
+            "wildfire": "wildfire",
+            "tornado": "tornado",
+        }.get(course.slug)
+
+    return schemas.QuizResultOut(
+        score=score,
+        correct_count=correct_count,
+        total_questions=total,
+        weak_topics=attempt.weak_topics,
+        recommended_course=recommended,
+    )
 
 
 @router.post("/{slug}/progress", response_model=schemas.CourseProgressOut)
