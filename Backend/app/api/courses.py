@@ -1795,3 +1795,5 @@ def upsert_progress(
         )
 
     return record
+
+#Added courses.py to its full extent
